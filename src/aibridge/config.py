@@ -109,6 +109,23 @@ class Settings(BaseSettings):
         default=None,
         validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
     )
+    # Story 05 — gateway executor
+    dogestonia_gateway_origin: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_GATEWAY_ORIGIN",
+    )
+    dogestonia_draft_redirect_base_url: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_DRAFT_REDIRECT_BASE_URL",
+    )
+    aibridge_dry_run: bool = Field(
+        default=False,
+        validation_alias="AIBRIDGE_DRY_RUN",
+    )
+    aibridge_gateway_timeout_seconds: float = Field(
+        default=30.0,
+        validation_alias="AIBRIDGE_GATEWAY_TIMEOUT_SECONDS",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
@@ -129,6 +146,8 @@ class Settings(BaseSettings):
         "dogestonia_schema_id",
         "dogestonia_schema_version",
         "dogestonia_origin_source",
+        "dogestonia_gateway_origin",
+        "dogestonia_draft_redirect_base_url",
         mode="before",
     )
     @classmethod

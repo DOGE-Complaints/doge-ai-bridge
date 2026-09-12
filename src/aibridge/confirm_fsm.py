@@ -62,6 +62,8 @@ _TRANSITIONS: dict[tuple[SessionState, ConfirmAction], SessionState] = {
     (SessionState.INTERPRETATION_CONFIRMED, ConfirmAction.CANCEL): SessionState.CANCELLED,
     (SessionState.AWAITING_SEND_CONFIRM, ConfirmAction.CANCEL): SessionState.CANCELLED,
     (SessionState.INTERVIEWING, ConfirmAction.CANCEL): SessionState.CANCELLED,
+    (SessionState.UNKNOWN_OUTCOME, ConfirmAction.EDIT): SessionState.INTERVIEWING,
+    (SessionState.FAILED, ConfirmAction.EDIT): SessionState.INTERVIEWING,
 }
 
 

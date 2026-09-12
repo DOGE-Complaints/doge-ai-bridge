@@ -20,6 +20,7 @@ from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
+from aibridge.gateway import default_executor_from_settings
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
@@ -181,13 +182,20 @@ def create_app(
     store = dedupe_store or EventDedupeStore()
     app.state.dedupe_store = store
     app.state.settings_override = settings
-    guard = confirmation_guard or reset_confirmation_guard()
-    app.state.confirmation_guard = guard
 
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
     cfg0 = resolve_settings()
+    if confirmation_guard is not None:
+        guard = confirmation_guard
+    else:
+        # G-01: default ASGI path wires GatewayExecutor (not story-04 counter-only).
+        guard = reset_confirmation_guard(
+            ConfirmationGuard(executor=default_executor_from_settings(cfg0))
+        )
+    app.state.confirmation_guard = guard
+
     registry, sessions, deployment = _init_stores(
         cfg0, registry=bundle_registry, sessions=session_store
     )

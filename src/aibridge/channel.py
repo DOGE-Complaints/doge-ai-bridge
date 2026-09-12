@@ -26,6 +26,9 @@ def build_success(
     state: str = "interviewing",
     reply_text: str = "Acknowledged.",
     actions: list[dict[str, str]] | None = None,
+    outcome: str | None = None,
+    draft_id: str | None = None,
+    continuation_url: str | None = None,
 ) -> ChannelSuccessResponse:
     """Bounded OAS envelope."""
     action_models = [
@@ -37,9 +40,9 @@ def build_success(
         state=state,
         reply_text=reply_text,
         actions=action_models,
-        outcome=None,
-        draft_id=None,
-        continuation_url=None,
+        outcome=outcome,
+        draft_id=draft_id,
+        continuation_url=continuation_url,
     )
 
 
@@ -97,6 +100,9 @@ def process_action(
             state=str(result["state"]),
             reply_text=str(result["reply_text"]),
             actions=list(result.get("actions") or []),
+            outcome=result.get("outcome"),
+            draft_id=result.get("draft_id"),
+            continuation_url=result.get("continuation_url"),
         ).model_dump()
 
     body_out, created = store.get_or_create(body.channel, body.event_id, _side_effect)

@@ -20,6 +20,7 @@ from aibridge.confirm_fsm import (
     SessionState,
     next_state,
 )
+from aibridge.gateway import GatewayExecutor, GatewayOutcome, GatewayResult
 
 
 @dataclass
@@ -34,6 +35,10 @@ class ConfirmSession:
     draft_hash: str | None = None
     gateway_authorized: bool = False
     gateway_invocations: int = 0
+    last_outcome: str | None = None
+    draft_id: str | None = None
+    continuation_url: str | None = None
+    unknown_outcome_revision: int | None = None
 
 
 @dataclass
@@ -41,18 +46,46 @@ class ConfirmationGuard:
     """Issues tokens, applies dual-confirm; never equates tool intent with Send."""
 
     tokens: ActionTokenStore = field(default_factory=ActionTokenStore)
+    executor: GatewayExecutor | None = None
     _sessions: dict[str, ConfirmSession] = field(default_factory=dict)
     _by_principal: dict[tuple[str, str], str] = field(default_factory=dict)
 
-    def call_gateway(self, session: ConfirmSession) -> None:
+    def call_gateway(
+        self,
+        session: ConfirmSession,
+        *,
+        body: dict[str, Any] | None = None,
+    ) -> GatewayResult:
         """Gateway call site — only when gateway_authorized (Send consumed)."""
         if not session.gateway_authorized:
             raise RuntimeError("gateway not authorized — Send token required")
-        session.gateway_invocations += 1
+        if self.executor is None:
+            # Legacy counter-only path (tests without HTTP executor).
+            session.gateway_invocations += 1
+            return GatewayResult(
+                outcome=GatewayOutcome.STASHED,  # unused when executor is None
+                reply_text="Send authorized (gateway call site).",
+                http_posted=False,
+            )
+        stash_body = body if body is not None else dict(session.frozen_tool_intent or {})
+        result = self.executor.execute_stash(
+            stash_body,
+            gateway_authorized=session.gateway_authorized,
+        )
+        if result.http_posted:
+            session.gateway_invocations += 1
+        return result
 
     def authorize_from_tool_intent_alone(self, _intent: dict[str, Any]) -> bool:
-        """AC #5: tool intent alone never equals Send permission."""
+        """Tool intent alone never equals Send permission."""
         return False
+
+    def send_blocked_for_revision(self, session: ConfirmSession) -> bool:
+        """AC: unknown_outcome blocks auto Send retry for same revision."""
+        return (
+            session.state is SessionState.UNKNOWN_OUTCOME
+            or session.unknown_outcome_revision == session.revision
+        )
 
     def get_or_create_session(
         self,
@@ -111,6 +144,8 @@ class ConfirmationGuard:
 
     def offer_send_confirm(self, session_id: str) -> list[dict[str, str]]:
         sess = self._sessions[session_id]
+        if self.send_blocked_for_revision(sess):
+            raise IllegalTransitionError(sess.state, ConfirmAction.OFFER_SEND)
         if sess.frozen_tool_intent is None:
             raise IllegalTransitionError(sess.state, ConfirmAction.OFFER_SEND)
         # Tool intent alone must not authorize gateway.
@@ -162,6 +197,12 @@ class ConfirmationGuard:
         sess.frozen_tool_intent = None
         sess.draft_hash = None
         sess.gateway_authorized = False
+        sess.last_outcome = None
+        sess.draft_id = None
+        sess.continuation_url = None
+        # Edit increments revision — clears unknown block for *old* revision only.
+        if sess.unknown_outcome_revision == old_rev:
+            sess.unknown_outcome_revision = None
         return sess
 
     def apply_cancel(self, session_id: str) -> ConfirmSession:
@@ -170,7 +211,35 @@ class ConfirmationGuard:
         self.tokens.invalidate_session_revision(session_id)
         sess.draft_hash = None
         sess.gateway_authorized = False
+        sess.last_outcome = GatewayOutcome.CANCELLED.value
+        sess.draft_id = None
+        sess.continuation_url = None
         return sess
+
+    def _apply_gateway_result(self, sess: ConfirmSession, result: GatewayResult) -> str:
+        sess.last_outcome = result.outcome.value
+        sess.draft_id = result.draft_id
+        sess.continuation_url = result.continuation_url
+        if result.outcome is GatewayOutcome.STASHED:
+            sess.state = next_state(sess.state, ConfirmAction.MARK_STASHED)
+            sess.gateway_authorized = False
+        elif result.outcome is GatewayOutcome.UNKNOWN_OUTCOME:
+            sess.state = next_state(sess.state, ConfirmAction.MARK_UNKNOWN_OUTCOME)
+            sess.unknown_outcome_revision = sess.revision
+            sess.gateway_authorized = False
+        elif result.outcome is GatewayOutcome.DRY_RUN_OK:
+            # Wave-1: validated locally, no stash, no published claim.
+            sess.gateway_authorized = False
+        elif result.outcome is GatewayOutcome.BLOCKED_BY_CONFIRMATION:
+            sess.gateway_authorized = False
+        else:
+            # Other failures from EXECUTING → FAILED when transition exists.
+            if sess.state is SessionState.EXECUTING:
+                sess.state = next_state(sess.state, ConfirmAction.MARK_FAILED)
+            sess.gateway_authorized = False
+            sess.draft_id = None
+            sess.continuation_url = None
+        return result.reply_text
 
     def consume_action_token(
         self,
@@ -219,14 +288,22 @@ class ConfirmationGuard:
         try:
             if rec.action is TokenActionKind.CONFIRM_INTERPRETATION:
                 sess.state = next_state(sess.state, ConfirmAction.CONFIRM_INTERPRETATION)
-                # Never authorize gateway on interpretation.
                 sess.gateway_authorized = False
                 self.tokens.consume(raw_token)
                 self.tokens.invalidate_session_revision(sess.session_id, revision=sess.revision)
                 reply = "Interpretation confirmed."
                 actions: list[dict[str, str]] = []
-                # After interpretation, operator may freeze intent then offer send (P3 helper).
             elif rec.action is TokenActionKind.CONFIRM_SEND:
+                if self.send_blocked_for_revision(sess):
+                    return {
+                        "ok": False,
+                        "http_status": 409,
+                        "code": "conflict",
+                        "message": (
+                            "unknown_outcome blocks auto Send for this revision; "
+                            "see docs/runbooks/unknown-outcome-reconciliation.md"
+                        ),
+                    }
                 if sess.frozen_tool_intent is None:
                     return {
                         "ok": False,
@@ -238,10 +315,12 @@ class ConfirmationGuard:
                 self.tokens.consume(raw_token)
                 self.tokens.invalidate_session_revision(sess.session_id, revision=sess.revision)
                 sess.gateway_authorized = True
-                # Call site gated — story 05 does real HTTP; here only increment if authorized.
-                self.call_gateway(sess)
-                # Wave-1: do not stash; leave executing (HTTP executor out of scope).
-                reply = "Send authorized (gateway call site)."
+                result = self.call_gateway(sess, body=dict(sess.frozen_tool_intent))
+                if self.executor is None:
+                    # Story 04 call-site only (no HTTP executor).
+                    reply = "Send authorized (gateway call site)."
+                else:
+                    reply = self._apply_gateway_result(sess, result)
                 actions = []
             elif rec.action is TokenActionKind.EDIT:
                 self.tokens.consume(raw_token)
@@ -278,6 +357,9 @@ class ConfirmationGuard:
             "gateway_authorized": sess.gateway_authorized,
             "gateway_invocations": sess.gateway_invocations,
             "revision": sess.revision,
+            "outcome": sess.last_outcome,
+            "draft_id": sess.draft_id,
+            "continuation_url": sess.continuation_url,
         }
 
 
