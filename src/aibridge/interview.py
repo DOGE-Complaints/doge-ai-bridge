@@ -10,6 +10,7 @@ from typing import Any
 
 from aibridge.budgets import BudgetBreachError, BudgetGuard
 from aibridge.history import HistoryStore
+from aibridge.metrics import get_metrics
 from aibridge.request_assembly import CacheTelemetry, build_stable_prefix
 from aibridge.responses_client import (
     RecordingResponsesClient,
@@ -91,6 +92,7 @@ class InterviewEngine:
 
             started = time.monotonic()
             response = self.client.create(request)
+            get_metrics().inc_openai_calls()
             elapsed_ms = int((time.monotonic() - started) * 1000)
             if self.budgets is not None:
                 try:

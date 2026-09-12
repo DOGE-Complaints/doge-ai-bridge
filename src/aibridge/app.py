@@ -9,7 +9,7 @@ from typing import Any
 
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import ValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
@@ -21,6 +21,7 @@ from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
 from aibridge.gateway import default_executor_from_settings
+from aibridge.metrics import get_metrics
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
@@ -222,6 +223,19 @@ def create_app(
                 )
         return await call_next(request)
 
+    @app.middleware("http")
+    async def channel_http_error_metrics(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """Count channel-facing HTTP errors (≥400) for Prometheus (G-01)."""
+        response = await call_next(request)
+        if (
+            request.url.path.startswith(CHANNEL_PATH_PREFIX)
+            and response.status_code >= 400
+        ):
+            get_metrics().inc_http_errors()
+        return response
+
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:
         return {"status": "ok"}
@@ -255,6 +269,15 @@ def create_app(
                 content={"status": "not_ready", "reason": dep.error},
             )
         return JSONResponse(status_code=200, content={"status": "ready"})
+
+    @app.get("/metrics")
+    async def metrics() -> PlainTextResponse:
+        """Prometheus text — private network only (no channel Bearer required)."""
+        body = get_metrics().render_prometheus()
+        return PlainTextResponse(
+            content=body,
+            media_type="text/plain; version=0.0.4; charset=utf-8",
+        )
 
     @app.post("/v1/channel/turns")
     async def channel_turns(request: Request) -> JSONResponse:

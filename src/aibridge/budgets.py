@@ -95,5 +95,11 @@ class BudgetGuard:
             )
 
     def _emit(self, metric_reason: str) -> None:
-        # Redacted reason only — no prompt/PII (hooks for story 06 /metrics).
+        # Redacted reason only — no prompt/PII.
         self.metric_events.append({"event": "budget_breach", "reason": metric_reason})
+        try:
+            from aibridge.metrics import get_metrics
+
+            get_metrics().record_budget_stop(metric_reason)
+        except Exception:  # noqa: BLE001 — metrics must not break fail-closed budget path
+            pass

@@ -5,8 +5,10 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
+from aibridge.audit import audit_event
 from aibridge.confirm import ConfirmationGuard, get_confirmation_guard
 from aibridge.dedupe import EventDedupeStore
+from aibridge.metrics import get_metrics
 from aibridge.schemas import (
     ChannelAction,
     ChannelActionRequest,
@@ -64,6 +66,12 @@ def process_turn(
             user_id=body.principal.user_id,
             chat_id=body.principal.chat_id,
         )
+        # Audit: lengths/ids only — never log message.text (privacy-pilot).
+        audit_event(
+            "channel_turn",
+            detail=f"channel={body.channel} text_len={len(body.message.text)}",
+        )
+        get_metrics().inc_turns()
         return build_success(
             session_id=sess.session_id,
             state=sess.state.value,
@@ -91,6 +99,11 @@ def process_action(
             body.action_token,
             user_id=body.principal.user_id,
             chat_id=body.principal.chat_id,
+        )
+        get_metrics().inc_actions()
+        audit_event(
+            "channel_action",
+            detail=f"channel={body.channel} ok={bool(result.get('ok'))}",
         )
         if not result.get("ok"):
             # Signal failure via special marker — process_action unwraps.

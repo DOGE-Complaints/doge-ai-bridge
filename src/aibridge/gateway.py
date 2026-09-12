@@ -8,6 +8,8 @@ from enum import StrEnum
 from typing import Any, Protocol
 from urllib.parse import quote, urlparse
 
+from aibridge.metrics import get_metrics
+
 STASH_PATH = "/story-drafts"
 
 # Operator reconciliation SSOT (do not invent lookup API).
@@ -261,6 +263,7 @@ class GatewayExecutor:
         assert headers["Authorization"] == f"Bearer {self.gateway_bearer}"
 
         try:
+            get_metrics().inc_gateway_posts()
             resp = self.transport.request(
                 "POST",
                 url,
