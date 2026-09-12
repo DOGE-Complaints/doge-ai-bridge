@@ -39,6 +39,9 @@ def store() -> EventDedupeStore:
 
 @pytest.fixture
 def client(settings: Settings, store: EventDedupeStore) -> TestClient:
+    from aibridge.confirm import reset_confirmation_guard
+
+    reset_confirmation_guard()
     app = create_app(settings=settings, dedupe_store=store)
     return TestClient(app)
 

@@ -34,12 +34,19 @@ def test_valid_turn_200_envelope(
 def test_valid_action_200(
     client: TestClient, auth_header: dict[str, str]
 ) -> None:
+    # Story 04: unknown tokens fail closed — use a minted token via app guard.
+    from aibridge.confirm import get_confirmation_guard
+
+    guard = get_confirmation_guard()
+    sess = guard.get_or_create_session(user_id="42", chat_id="99")
+    acts = guard.offer_interpretation_confirm(sess.session_id)
+    tok = next(a["token"] for a in acts if a["style"] == "success")
     payload = {
         "channel": "telegram",
         "event_id": "2002",
         "callback_query_id": "cb-1",
         "principal": {"user_id": "42", "chat_id": "99"},
-        "action_token": "opaque-token-1",
+        "action_token": tok,
     }
     response = client.post(
         "/v1/channel/actions", json=payload, headers=auth_header
