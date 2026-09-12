@@ -1,0 +1,252 @@
+# doge-ai-bridge — Channel façade OpenAPI (n8n ↔ aibridge)
+#
+# Contract SSOT for POST /v1/channel/turns and POST /v1/channel/actions.
+# NOT Story Intake wire (see story-intake-actions.openapi.yaml for postStoryDraftStash).
+# Auth: Authorization: Bearer = AIBRIDGE_CHANNEL_BEARER_TOKEN (never gateway Bearer).
+# Parent: docs/requirements/REQ-01-doge-ai-bridge-runtime.md §6
+#
+openapi: 3.1.0
+info:
+  title: doge-ai-bridge Channel Façade v1
+  version: "1.0.0"
+  description: >
+    Server-to-server API for n8n Telegram UI. Bounded envelopes only.
+    Does not describe gateway Story Intake. callback_ack_text is intentionally omitted;
+    n8n must answerCallbackQuery immediately with neutral/empty text, then call /actions,
+    then Send/Edit Message from reply_text / actions.
+
+servers:
+  - url: http://aibridge.railway.internal:{port}
+    description: Railway private hostname (pilot). Public domain not required.
+    variables:
+      port:
+        default: "8080"
+
+security:
+  - ChannelBearer: []
+
+paths:
+  /v1/channel/turns:
+    post:
+      operationId: processChannelTurn
+      summary: Process an ordinary Telegram message event
+      tags: [channel]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelTurnRequest"
+      responses:
+        "200":
+          description: Event processed or safely replayed from event dedupe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelSuccessResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "413":
+          $ref: "#/components/responses/Error"
+        "422":
+          $ref: "#/components/responses/Error"
+        "429":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
+        "503":
+          $ref: "#/components/responses/Error"
+
+  /v1/channel/actions:
+    post:
+      operationId: processChannelAction
+      summary: Process an inline-button callback with opaque action_token
+      tags: [channel]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelActionRequest"
+      responses:
+        "200":
+          description: Action processed or safely replayed from event dedupe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelSuccessResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+        "413":
+          $ref: "#/components/responses/Error"
+        "422":
+          $ref: "#/components/responses/Error"
+        "429":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
+        "503":
+          $ref: "#/components/responses/Error"
+
+components:
+  securitySchemes:
+    ChannelBearer:
+      type: http
+      scheme: bearer
+      description: >
+        Opaque channel token = AIBRIDGE_CHANNEL_BEARER_TOKEN on aibridge.
+        Distinct from DOGESTONIA_API_BEARER_TOKEN (gateway). n8n Header Auth only.
+
+  schemas:
+    ChannelPrincipal:
+      type: object
+      additionalProperties: false
+      required: [user_id, chat_id]
+      properties:
+        user_id:
+          type: string
+          description: Telegram user id as decimal string
+        chat_id:
+          type: string
+          description: Telegram chat id as decimal string
+
+    ChannelMessage:
+      type: object
+      additionalProperties: false
+      required: [message_id, text]
+      properties:
+        message_id:
+          type: string
+        text:
+          type: string
+          minLength: 1
+        language_code:
+          type: string
+          description: Optional; untrusted hint only
+
+    ChannelTurnRequest:
+      type: object
+      additionalProperties: false
+      required: [channel, event_id, principal, message]
+      properties:
+        channel:
+          type: string
+          enum: [telegram]
+        event_id:
+          type: string
+          description: Telegram update id (dedupe key with channel)
+        principal:
+          $ref: "#/components/schemas/ChannelPrincipal"
+        message:
+          $ref: "#/components/schemas/ChannelMessage"
+
+    ChannelActionRequest:
+      type: object
+      additionalProperties: false
+      required: [channel, event_id, callback_query_id, principal, action_token]
+      properties:
+        channel:
+          type: string
+          enum: [telegram]
+        event_id:
+          type: string
+        callback_query_id:
+          type: string
+        principal:
+          $ref: "#/components/schemas/ChannelPrincipal"
+        action_token:
+          type: string
+          maxLength: 64
+          description: Opaque token from Telegram callback_data only
+
+    ChannelAction:
+      type: object
+      additionalProperties: false
+      required: [label, token, style]
+      properties:
+        label:
+          type: string
+        token:
+          type: string
+          maxLength: 64
+        style:
+          type: string
+          enum: [primary, success, danger, default]
+
+    ChannelSuccessResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - request_id
+        - session_id
+        - state
+        - reply_text
+        - actions
+        - outcome
+        - draft_id
+        - continuation_url
+      properties:
+        request_id:
+          type: string
+        session_id:
+          type: string
+          description: Opaque session reference; not an authorization credential
+        state:
+          type: string
+          description: Session FSM state for display/routing; n8n must not enforce security from this alone
+        reply_text:
+          type: string
+          description: Resident-safe Telegram text; must not claim Story published after stash
+        actions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChannelAction"
+        outcome:
+          type: string
+          nullable: true
+          description: Bounded outcome class or null
+        draft_id:
+          type: string
+          nullable: true
+          description: Only when outcome=stashed
+        continuation_url:
+          type: string
+          nullable: true
+          description: Only when outcome=stashed
+
+    ChannelErrorBody:
+      type: object
+      additionalProperties: false
+      required: [request_id, error]
+      properties:
+        request_id:
+          type: string
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message, retryable]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            retryable:
+              type: boolean
+
+  responses:
+    Error:
+      description: Redacted error envelope
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ChannelErrorBody"

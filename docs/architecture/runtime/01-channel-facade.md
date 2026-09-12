@@ -1,66 +1,91 @@
 # Channel HTTP façade (n8n ↔ aibridge)
 
 **Parent REQ:** [REQ-01 §6–§7](../../requirements/REQ-01-doge-ai-bridge-runtime.md)  
-**Overview:** [00-overview.md](./00-overview.md)
+**Contract SSOT:** [docs/openapi/aibridge-channel-v1.openapi.yaml](../../openapi/aibridge-channel-v1.openapi.yaml)  
+**Overview:** [00-overview.md](./00-overview.md)  
+**n8n ops template:** [docs/ops/n8n-channel-workflow/README.md](../../ops/n8n-channel-workflow/README.md)
 
 ---
 
 ## 1. Role
 
-Expose a **versioned server-to-server API** for n8n. Not a second Story Intake wire contract ([REQ-01 §4](../../requirements/REQ-01-doge-ai-bridge-runtime.md)).
+Versioned **server-to-server** API for n8n. Not Story Intake wire ([story-intake-actions.openapi.yaml](../../openapi/story-intake-actions.openapi.yaml)).
 
 | Endpoint | Purpose |
 |----------|---------|
 | `POST /v1/channel/turns` | Ordinary Telegram message → interview turn |
 | `POST /v1/channel/actions` | Inline callback with opaque `action_token` |
-| `GET /healthz` | Liveness |
-| `GET /readyz` | Readiness (fail-closed invariants) |
-| `GET /metrics` | Prometheus-compatible metrics (private only) |
+| `GET /healthz` / `GET /readyz` | Liveness / readiness |
+| `GET /metrics` | Prometheus-compatible (private only) |
 
-Committed SSOT (when created): `docs/openapi/aibridge-channel-v1.openapi.yaml` — **named in REQ, not on disk yet**.
+Runtime must contract-test live ASGI schemas against the committed channel OpenAPI (not against gateway wire OAS).
 
 ---
 
 ## 2. Authentication (mode C)
 
 - Every `/v1/channel/*` request: `Authorization: Bearer <token>`.
-- Bridge validates against `AIBRIDGE_CHANNEL_BEARER_TOKEN` (+ optional previous during rotation).
-- Must differ from `DOGESTONIA_API_BEARER_TOKEN` or readiness fails ([REQ-01 §7, §15](../../requirements/REQ-01-doge-ai-bridge-runtime.md)).
-- n8n stores the channel token only in Header Auth credential — **never** the gateway Bearer.
-- n8n calls Railway **private** hostname; façade rejects missing Bearer even on private interface.
-- Public domain for aibridge is **not** required for pilot.
+- Validate `AIBRIDGE_CHANNEL_BEARER_TOKEN` (+ optional previous during rotation).
+- Must differ from `DOGESTONIA_API_BEARER_TOKEN` or readiness fails.
+- n8n: Header Auth credential only — **never** gateway Bearer or OpenAI key.
+- Private Railway hostname; reject missing Bearer even on private interface.
 
 ---
 
-## 3. Trust at the boundary
+## 3. Callback acknowledgement (pilot contract)
 
-- Telegram IDs as decimal strings; unknown JSON fields rejected; size-bounded bodies; no CORS.
-- Timestamp, node/pack/operation/origin are **server-owned** — not accepted from n8n ([REQ-01 §6 AIB-CH-02](../../requirements/REQ-01-doge-ai-bridge-runtime.md)).
+**Problem solved:** façade latency must not delay Telegram’s UX ack.
+
+Required n8n order:
+
+1. On `callback_query`: immediately `answerCallbackQuery` with **neutral local text or empty**.
+2. Then `POST /v1/channel/actions` with opaque `action_token` + principal.
+3. Then `Send Message` / `Edit Message` from aibridge `reply_text` / `actions`.
+
+- **Do not** use aibridge fields for the *primary* Telegram acknowledgement.
+- `callback_ack_text` is **removed** from channel v1 success envelope (not in OpenAPI).
+- n8n must **not** make security decisions before aibridge responds; only aibridge decides action outcome.
+
+---
+
+## 4. Trust at the boundary
+
+- Telegram IDs as decimal strings; unknown fields rejected; size-bounded bodies; no CORS.
+- Timestamp, node/pack/operation/origin are **server-owned**.
 - Duplicate `event_id` returns stored response (no second OpenAI call).
-- n8n answers Telegram `answerCallbackQuery`; aibridge does **not** call Telegram.
+- aibridge does **not** call Telegram Bot API.
 
 ---
 
-## 4. n8n mapping (no fork)
+## 5. n8n mapping (no fork)
 
 ```text
 Telegram Trigger
   → Switch
-      message → HTTP POST /v1/channel/turns → Telegram Send (+ actions)
-      callback_query → Answer Callback Query → HTTP POST /v1/channel/actions → Send/Edit
+      message
+        → HTTP POST /v1/channel/turns
+        → Telegram Send Message (+ inline actions from response.actions)
+      callback_query
+        → Telegram Answer Callback Query (neutral/empty, immediate)
+        → HTTP POST /v1/channel/actions
+        → Telegram Send/Edit Message (+ replacement actions)
 ```
 
-([REQ-01 §6 AIB-CH-06](../../requirements/REQ-01-doge-ai-bridge-runtime.md))
+Import the versioned template from [n8n-channel-workflow](../../ops/n8n-channel-workflow/README.md); per node change only Bot credential, private aibridge URL/channel credential, optional labels.
 
 ---
 
-## 5. Wave 1 live proof
+## 6. Contract version compatibility
 
-Minimum to close infrastructure wave:
+- Additive optional response fields: backward compatible within `/v1`.
+- Breaking changes: new major path prefix (e.g. `/v2`), not silent `/v1` mutation.
+- n8n workflow artifact records compatible `aibridge-channel-v1` version; smoke must fail closed on mismatch.
 
-1. aibridge deployed with private networking + channel Bearer.
-2. `/readyz` ready + smoke (unauthenticated → 401).
-3. **Live** n8n HTTP Request to `POST /v1/channel/turns` with Bearer → bounded response.
-4. Mode: interview or `AIBRIDGE_DRY_RUN` — **no** gateway `POST /story-drafts`.
+---
 
-Full Telegram → dual-confirm → stash → SPA = wave 2.
+## 7. Wave 1 live proof
+
+1. Private networking + channel Bearer configured.  
+2. `/readyz` + unauthenticated → 401.  
+3. Live n8n → `POST /v1/channel/turns` → bounded response.  
+4. Interview or `AIBRIDGE_DRY_RUN` — **no** `POST /story-drafts`.
