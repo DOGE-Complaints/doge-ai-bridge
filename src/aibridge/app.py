@@ -18,7 +18,10 @@ from aibridge.auth import is_channel_authorized
 from aibridge.channel import process_action, process_turn
 from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.dedupe import EventDedupeStore
+from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
+from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
+from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
 
 CHANNEL_PATH_PREFIX = "/v1/channel/"
 
@@ -79,6 +82,7 @@ def parse_channel_body(
             content=error_body(code=code, message=message),
         )
 
+
 class BodySizeLimitMiddleware(BaseHTTPMiddleware):
     """Reject oversized bodies with 413 (CORS not enabled — server-to-server)."""
 
@@ -112,10 +116,52 @@ class BodySizeLimitMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
+def _init_stores(
+    settings: Settings,
+    *,
+    registry: BundleRegistry | None,
+    sessions: SessionStore | None,
+) -> tuple[BundleRegistry, SessionStore, DeploymentBundleState | None]:
+    if registry is None:
+        try:
+            registry = open_bundle_registry(settings.database_url)
+        except (NotImplementedError, ImportError, OSError) as exc:
+            registry = MemoryBundleRegistry()
+            return (
+                registry,
+                sessions or MemorySessionStore(),
+                DeploymentBundleState(
+                    loaded=None,
+                    registered=None,
+                    error=f"database_adapter_unavailable:{exc}",
+                ),
+            )
+    if sessions is None:
+        try:
+            sessions = open_session_store(settings.database_url)
+        except (NotImplementedError, ImportError, OSError):
+            sessions = MemorySessionStore()
+
+    deployment: DeploymentBundleState | None = None
+    if settings.content_configured():
+        deployment = verify_and_register_deployment(
+            instructions_dir=settings.dogestonia_instructions_dir,
+            manifest_path=settings.dogestonia_instructions_manifest,
+            source_commit=settings.dogestonia_content_source_commit,
+            wire_oas_path=settings.dogestonia_openapi_path,
+            pack_schema_path=settings.dogestonia_payload_schema_path,
+            tool_schema_path=settings.dogestonia_tool_schema_path,
+            registry=registry,
+        )
+    return registry, sessions, deployment
+
+
 def create_app(
     *,
     settings: Settings | None = None,
     dedupe_store: EventDedupeStore | None = None,
+    bundle_registry: BundleRegistry | None = None,
+    session_store: SessionStore | None = None,
 ) -> FastAPI:
     """Application factory for production and tests."""
     if settings is not None:
@@ -123,7 +169,7 @@ def create_app(
 
     app = FastAPI(
         title="doge-ai-bridge Channel Façade",
-        version="0.1.0",
+        version="0.2.0",
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
@@ -135,7 +181,15 @@ def create_app(
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
-    max_bytes = resolve_settings().aibridge_max_request_bytes
+    cfg0 = resolve_settings()
+    registry, sessions, deployment = _init_stores(
+        cfg0, registry=bundle_registry, sessions=session_store
+    )
+    app.state.bundle_registry = registry
+    app.state.session_store = sessions
+    app.state.deployment_bundle = deployment
+
+    max_bytes = cfg0.aibridge_max_request_bytes
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=max_bytes)
 
     @app.middleware("http")
@@ -170,6 +224,21 @@ def create_app(
             return JSONResponse(
                 status_code=503,
                 content={"status": "not_ready", "reason": "channel_gateway_bearer_equal"},
+            )
+        dep: DeploymentBundleState | None = app.state.deployment_bundle
+        if cfg.content_configured():
+            if dep is None or not dep.ready:
+                reason = "content_bundle_not_ready"
+                if dep is not None and dep.error:
+                    reason = dep.error
+                return JSONResponse(
+                    status_code=503,
+                    content={"status": "not_ready", "reason": reason},
+                )
+        elif dep is not None and dep.error:
+            return JSONResponse(
+                status_code=503,
+                content={"status": "not_ready", "reason": dep.error},
             )
         return JSONResponse(status_code=200, content={"status": "ready"})
 

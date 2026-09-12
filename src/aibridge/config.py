@@ -1,4 +1,4 @@
-"""Runtime configuration for channel façade (story 01 minimal set)."""
+"""Runtime configuration for channel façade + content bundle (stories 01–02)."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Env-backed settings. Story 01 focuses on channel auth + body limits."""
+    """Env-backed settings."""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
@@ -32,14 +32,56 @@ class Settings(BaseSettings):
         validation_alias="AIBRIDGE_MAX_REQUEST_BYTES",
     )
 
+    database_url: str = Field(default="", validation_alias="DATABASE_URL")
+    dogestonia_instructions_dir: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_INSTRUCTIONS_DIR",
+    )
+    dogestonia_instructions_manifest: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_INSTRUCTIONS_MANIFEST",
+    )
+    dogestonia_content_source_commit: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_CONTENT_SOURCE_COMMIT",
+    )
+    dogestonia_openapi_path: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_OPENAPI_PATH",
+    )
+    dogestonia_payload_schema_path: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_PAYLOAD_SCHEMA_PATH",
+    )
+    dogestonia_tool_schema_path: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_TOOL_SCHEMA_PATH",
+    )
+    aibridge_deployment_id: str = Field(
+        default="local",
+        validation_alias="AIBRIDGE_DEPLOYMENT_ID",
+    )
+    aibridge_bundle_gc_grace_seconds: int = Field(
+        default=86400,
+        validation_alias="AIBRIDGE_BUNDLE_GC_GRACE_SECONDS",
+    )
+
     @field_validator(
         "aibridge_channel_bearer_token",
         "aibridge_channel_previous_bearer_token",
         "dogestonia_api_bearer_token",
+        "database_url",
+        "dogestonia_instructions_dir",
+        "dogestonia_instructions_manifest",
+        "dogestonia_content_source_commit",
+        "dogestonia_openapi_path",
+        "dogestonia_payload_schema_path",
+        "dogestonia_tool_schema_path",
+        "aibridge_deployment_id",
         mode="before",
     )
     @classmethod
-    def _strip_tokens(cls, value: object) -> object:
+    def _strip_strings(cls, value: object) -> object:
         if isinstance(value, str):
             return value.strip()
         return value
@@ -59,6 +101,16 @@ class Settings(BaseSettings):
         if self.aibridge_channel_previous_bearer_token:
             tokens.append(self.aibridge_channel_previous_bearer_token)
         return tuple(t for t in tokens if t)
+
+    def content_configured(self) -> bool:
+        """True when deployment expects a local content bundle (story 02)."""
+        return bool(
+            self.dogestonia_content_source_commit
+            and self.dogestonia_instructions_dir
+            and self.dogestonia_instructions_manifest
+            and self.dogestonia_openapi_path
+            and self.dogestonia_payload_schema_path
+        )
 
 
 @lru_cache
