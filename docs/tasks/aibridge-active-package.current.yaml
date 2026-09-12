@@ -1,0 +1,6 @@
+# aibridge-active-package.current.yaml
+# Active: pkg-000000 bootstrap (profile SSOT marker). 2026-09-10T12:21:02Z
+schema_version: 1
+package_file: aibridge-active-packages/pkg-000000-20260910-bootstrap.yaml
+updated_at: "2026-09-10T12:21:02Z"
+activation: active
