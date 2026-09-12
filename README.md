@@ -13,6 +13,11 @@ src/aibridge/auth.py         # channel Bearer (constant-time)
 src/aibridge/schemas.py      # channel OAS models
 src/aibridge/channel.py      # turns/actions stub processor
 src/aibridge/dedupe.py       # (channel, event_id) store
+src/aibridge/content.py      # local manifest load + hashes (no GitHub fetch)
+src/aibridge/registry.py     # content_bundle register-once (memory/sqlite)
+src/aibridge/sessions.py     # session content_bundle_hash pin
+src/aibridge/bundle_gc.py    # GC after grace when unreferenced
+src/aibridge/deployment.py   # startup verify + register
 ```
 
 Entrypoint: `python -m aibridge` (binds `PORT` / Railway `$PORT`).
@@ -29,6 +34,9 @@ pytest -q
 PORT=8080 python -m aibridge
 ```
 
-## Story 01 scope
+## Stories 01–02 scope
 
-Channel façade + Bearer + event dedupe + `/healthz`/`/readyz`. No OpenAI Responses (03), no gateway HTTPS (05).
+- **01:** Channel façade + Bearer + event dedupe + `/healthz`/`/readyz`.
+- **02:** Local content load/hash/pin, register-once registry, session pin, `/readyz` bundle verify, GC + CI packaging note.
+
+No OpenAI Responses (03), no gateway HTTPS (05). Absolute CI instruction/pack paths remain **Unknown** until pinned in env.
