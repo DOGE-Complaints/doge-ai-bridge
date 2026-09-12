@@ -152,6 +152,8 @@ def _init_stores(
             pack_schema_path=settings.dogestonia_payload_schema_path,
             tool_schema_path=settings.dogestonia_tool_schema_path,
             registry=registry,
+            schema_id=settings.dogestonia_schema_id,
+            schema_version=settings.dogestonia_schema_version,
         )
     return registry, sessions, deployment
 

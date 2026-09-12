@@ -65,6 +65,50 @@ class Settings(BaseSettings):
         default=86400,
         validation_alias="AIBRIDGE_BUNDLE_GC_GRACE_SECONDS",
     )
+    openai_api_key: str = Field(default="", validation_alias="OPENAI_API_KEY")
+    openai_model: str = Field(default="", validation_alias="OPENAI_MODEL")
+    openai_store_responses: str = Field(
+        default="false",
+        validation_alias="OPENAI_STORE_RESPONSES",
+    )
+    dogestonia_operation_id: str = Field(
+        default="postStoryDraftStash",
+        validation_alias="DOGESTONIA_OPERATION_ID",
+    )
+    dogestonia_schema_id: str = Field(default="", validation_alias="DOGESTONIA_SCHEMA_ID")
+    dogestonia_schema_version: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_SCHEMA_VERSION",
+    )
+    dogestonia_origin_source: str = Field(
+        default="openai_responses_telegram",
+        validation_alias="DOGESTONIA_ORIGIN_SOURCE",
+    )
+    # Budget placeholders — numeric defaults Unknown until measured (do not invent).
+    aibridge_max_input_tokens: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_INPUT_TOKENS",
+    )
+    aibridge_max_output_tokens: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_OUTPUT_TOKENS",
+    )
+    aibridge_max_responses_calls_per_turn: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_RESPONSES_CALLS_PER_TURN",
+    )
+    aibridge_max_tool_calls_per_turn: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_TOOL_CALLS_PER_TURN",
+    )
+    aibridge_openai_timeout_ms: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_OPENAI_TIMEOUT_MS",
+    )
+    aibridge_max_session_turns: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
@@ -78,6 +122,13 @@ class Settings(BaseSettings):
         "dogestonia_payload_schema_path",
         "dogestonia_tool_schema_path",
         "aibridge_deployment_id",
+        "openai_api_key",
+        "openai_model",
+        "openai_store_responses",
+        "dogestonia_operation_id",
+        "dogestonia_schema_id",
+        "dogestonia_schema_version",
+        "dogestonia_origin_source",
         mode="before",
     )
     @classmethod
@@ -86,8 +137,23 @@ class Settings(BaseSettings):
             return value.strip()
         return value
 
+    @field_validator("openai_store_responses", mode="after")
+    @classmethod
+    def _reject_store_true(cls, value: str) -> str:
+        """AC #1: Responses always store:false — refuse conflicting env."""
+        normalized = (value or "false").strip().lower()
+        if normalized in {"true", "1", "yes", "on"}:
+            raise ValueError(
+                "OPENAI_STORE_RESPONSES must be false (aibridge forces store:false)"
+            )
+        return normalized or "false"
+
     def channel_auth_configured(self) -> bool:
         return bool(self.aibridge_channel_bearer_token)
+
+    def responses_store_false_enforced(self) -> bool:
+        """True when env does not request OpenAI store:true (always expected)."""
+        return self.openai_store_responses in {"", "false", "0", "no", "off"}
 
     def channel_gateway_bearers_equal(self) -> bool:
         channel = self.aibridge_channel_bearer_token
