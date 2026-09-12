@@ -17,6 +17,7 @@ from starlette.types import ASGIApp
 from aibridge.auth import is_channel_authorized
 from aibridge.channel import process_action, process_turn
 from aibridge.config import Settings, get_settings, reset_settings_cache
+from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
@@ -164,6 +165,7 @@ def create_app(
     dedupe_store: EventDedupeStore | None = None,
     bundle_registry: BundleRegistry | None = None,
     session_store: SessionStore | None = None,
+    confirmation_guard: ConfirmationGuard | None = None,
 ) -> FastAPI:
     """Application factory for production and tests."""
     if settings is not None:
@@ -179,6 +181,8 @@ def create_app(
     store = dedupe_store or EventDedupeStore()
     app.state.dedupe_store = store
     app.state.settings_override = settings
+    guard = confirmation_guard or reset_confirmation_guard()
+    app.state.confirmation_guard = guard
 
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
@@ -256,7 +260,7 @@ def create_app(
         parsed = parse_channel_body(raw, ChannelTurnRequest)
         if isinstance(parsed, JSONResponse):
             return parsed
-        response, _created = process_turn(parsed, store)
+        response, _created = process_turn(parsed, store, guard=app.state.confirmation_guard)
         return JSONResponse(status_code=200, content=response)
 
     @app.post("/v1/channel/actions")
@@ -271,8 +275,26 @@ def create_app(
         parsed = parse_channel_body(raw, ChannelActionRequest)
         if isinstance(parsed, JSONResponse):
             return parsed
-        response, _created = process_action(parsed, store)
-        return JSONResponse(status_code=200, content=response)
+        success, _created, err = process_action(
+            parsed, store, guard=app.state.confirmation_guard
+        )
+        if err is not None:
+            status = int(err["http_status"])
+            code = str(err["code"])
+            # Map internal codes to channel error codes.
+            code_map = {
+                "forbidden": "forbidden",
+                "not_found": "not_found",
+                "conflict": "conflict",
+            }
+            return JSONResponse(
+                status_code=status,
+                content=error_body(
+                    code=code_map.get(code, code),
+                    message=str(err["message"]),
+                ),
+            )
+        return JSONResponse(status_code=200, content=success)
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(
