@@ -514,6 +514,16 @@ class GatewayAttemptStore:
             (session_id, revision),
         ).fetchone()
 
+    def list_executing(self) -> list[dict[str, Any]]:
+        rows = self._conn.execute(
+            """
+            SELECT * FROM gateway_attempt
+            WHERE status = 'executing'
+            ORDER BY created_at ASC
+            """
+        ).fetchall()
+        return list(rows or [])
+
     def close(self) -> None:
         self._conn.close()
 

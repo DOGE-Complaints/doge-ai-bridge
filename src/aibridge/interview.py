@@ -173,8 +173,57 @@ class InterviewEngine:
                 }
                 for fc in parsed.function_calls
             ],
+            "replay_items": list(parsed.output_items),
             "cached_input_tokens": cached,
         }
+
+    def submit_function_call_output(
+        self,
+        *,
+        session_id: str,
+        call_id: str,
+        output: str,
+    ) -> dict[str, Any]:
+        """Post-gateway follow-up: function_call_output with original call_id."""
+        with self.locks.hold(session_id):
+            item = {
+                "type": "function_call_output",
+                "call_id": call_id,
+                "output": output,
+            }
+            prior = self.history.list_items(session_id)
+            if self.prompt_channel == "prefix":
+                tool_json = json.dumps(self.tools, sort_keys=True, separators=(",", ":"))
+                prefix = build_stable_prefix(
+                    instructions=self.instructions,
+                    tool_schema_json=tool_json,
+                    pack_id=self.pack_id,
+                )
+                assert_prompt_xor(has_stable_prefix=True, instructions=None)
+                input_items: list[dict[str, Any]] = [
+                    {"type": "message", "role": "system", "content": prefix},
+                    *prior,
+                    item,
+                ]
+                instructions_kw: str | None = None
+            else:
+                assert_prompt_xor(has_stable_prefix=False, instructions=self.instructions)
+                input_items = [*prior, item]
+                instructions_kw = self.instructions or None
+            request = assemble_responses_request(
+                model=self.model,
+                input_items=input_items,
+                tools=self.tools or None,
+                instructions=instructions_kw,
+                max_output_tokens=self.max_output_tokens,
+            )
+            response = self.client.create(request)
+            return self._finalize(
+                session_id=session_id,
+                user_item=item,
+                response=response,
+                started=time.monotonic(),
+            )
 
     def run_turn(self, *, session_id: str, user_text: str) -> dict[str, Any]:
         """Sync path — blocking client.create (tests / non-ASGI)."""

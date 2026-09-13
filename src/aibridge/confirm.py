@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import uuid
 from dataclasses import dataclass, field
 from typing import Any
@@ -39,6 +40,9 @@ class ConfirmSession:
     draft_id: str | None = None
     continuation_url: str | None = None
     unknown_outcome_revision: int | None = None
+    # REQ-03 §5.2 — persisted before /turns returns actions.
+    pending_call_id: str | None = None
+    pending_replay_items: list[dict[str, Any]] | None = None
 
 
 @dataclass
@@ -49,6 +53,8 @@ class ConfirmationGuard:
     executor: GatewayExecutor | None = None
     gateway_attempts: Any | None = None  # GatewayAttemptStore when PG-wired
     confirm_sessions: Any | None = None  # PostgresConfirmSessionStore when PG-wired
+    interview_engine: Any | None = None  # InterviewEngine for function_call_output
+    validation_context: Any | None = None  # coordinator.ValidationContext
     _sessions: dict[str, ConfirmSession] = field(default_factory=dict)
     _by_principal: dict[tuple[str, str], str] = field(default_factory=dict)
 
@@ -117,6 +123,52 @@ class ConfirmationGuard:
             or session.unknown_outcome_revision == session.revision
         )
 
+    def recover_stale_executing(
+        self,
+        *,
+        session_id: str,
+        revision: int,
+    ) -> ConfirmSession | None:
+        """Restart recovery: executing → unknown_outcome; no automatic resend."""
+        sess = self.get_session(session_id)
+        if sess is None:
+            return None
+        if sess.revision != revision:
+            return sess
+        # Prefer gateway_attempt row when wired.
+        if self.gateway_attempts is not None:
+            row = self.gateway_attempts.get(session_id=session_id, revision=revision)
+            if row is None or str(row.get("status")) != "executing":
+                return sess
+            self.gateway_attempts.set_outcome(
+                session_id=session_id,
+                revision=revision,
+                outcome=GatewayOutcome.UNKNOWN_OUTCOME.value,
+            )
+        if sess.state is SessionState.EXECUTING:
+            sess.state = next_state(sess.state, ConfirmAction.MARK_UNKNOWN_OUTCOME)
+        else:
+            sess.state = SessionState.UNKNOWN_OUTCOME
+        sess.unknown_outcome_revision = sess.revision
+        sess.gateway_authorized = False
+        sess.last_outcome = GatewayOutcome.UNKNOWN_OUTCOME.value
+        self._persist_session(sess)
+        return sess
+
+    def recover_all_executing_attempts(self) -> int:
+        """Boot recovery — mark all open executing attempts as unknown_outcome."""
+        if self.gateway_attempts is None or not hasattr(
+            self.gateway_attempts, "list_executing"
+        ):
+            return 0
+        rows = list(self.gateway_attempts.list_executing())
+        for row in rows:
+            self.recover_stale_executing(
+                session_id=str(row["session_id"]),
+                revision=int(row["revision"]),
+            )
+        return len(rows)
+
     def _persist_session(self, sess: ConfirmSession) -> None:
         if self.confirm_sessions is None:
             return
@@ -136,6 +188,8 @@ class ConfirmationGuard:
                 "draft_id": sess.draft_id,
                 "continuation_url": sess.continuation_url,
                 "unknown_outcome_revision": sess.unknown_outcome_revision,
+                "pending_call_id": sess.pending_call_id,
+                "pending_replay_items": sess.pending_replay_items,
             },
         )
 
@@ -156,6 +210,8 @@ class ConfirmationGuard:
             draft_id=st.get("draft_id"),
             continuation_url=st.get("continuation_url"),
             unknown_outcome_revision=st.get("unknown_outcome_revision"),
+            pending_call_id=st.get("pending_call_id"),
+            pending_replay_items=st.get("pending_replay_items"),
         )
         self._sessions[sess.session_id] = sess
         self._by_principal[(sess.user_id, sess.chat_id)] = sess.session_id
@@ -285,6 +341,8 @@ class ConfirmationGuard:
         sess.last_outcome = None
         sess.draft_id = None
         sess.continuation_url = None
+        sess.pending_call_id = None
+        sess.pending_replay_items = None
         # Edit increments revision — clears unknown block for *old* revision only.
         if sess.unknown_outcome_revision == old_rev:
             sess.unknown_outcome_revision = None
@@ -334,8 +392,13 @@ class ConfirmationGuard:
         *,
         user_id: str,
         chat_id: str,
+        execute_gateway: bool = True,
     ) -> dict[str, Any]:
-        """Verify + apply token. Returns result dict for channel envelope."""
+        """Verify + apply token. Returns result dict for channel envelope.
+
+        When ``execute_gateway=False`` on Send, authorization + EXECUTING state
+        are committed but HTTPS is deferred (caller must release turn_lock first).
+        """
         try:
             rec = self.tokens.verify_for_consume(
                 raw_token, user_id=user_id, chat_id=chat_id
@@ -371,6 +434,22 @@ class ConfirmationGuard:
                 "code": "conflict",
                 "message": "Invalid state for token",
             }
+        # Send path: deployment + draft_hash must match frozen session (REQ-03 §4 #5).
+        if rec.action is TokenActionKind.CONFIRM_SEND:
+            if rec.deployment_id != sess.deployment_id:
+                return {
+                    "ok": False,
+                    "http_status": 409,
+                    "code": "conflict",
+                    "message": "Deployment mismatch",
+                }
+            if rec.draft_hash and sess.draft_hash and rec.draft_hash != sess.draft_hash:
+                return {
+                    "ok": False,
+                    "http_status": 409,
+                    "code": "conflict",
+                    "message": "Draft hash mismatch",
+                }
 
         try:
             if rec.action is TokenActionKind.CONFIRM_INTERPRETATION:
@@ -378,6 +457,8 @@ class ConfirmationGuard:
                 sess.gateway_authorized = False
                 self.tokens.consume(raw_token)
                 self.tokens.invalidate_session_revision(sess.session_id, revision=sess.revision)
+                # Interpretation: state only — never gateway HTTP (REQ-03 §4 #4).
+                assert sess.gateway_authorized is False
                 reply = "Interpretation confirmed."
                 actions: list[dict[str, str]] = []
             elif rec.action is TokenActionKind.CONFIRM_SEND:
@@ -402,23 +483,29 @@ class ConfirmationGuard:
                 self.tokens.consume(raw_token)
                 self.tokens.invalidate_session_revision(sess.session_id, revision=sess.revision)
                 sess.gateway_authorized = True
-                try:
-                    result = self.call_gateway(sess, body=dict(sess.frozen_tool_intent))
-                except RuntimeError as exc:
-                    # Duplicate gateway_attempt / fail-closed before HTTPS.
+                # Frozen body only — never regenerate from model args at Send time.
+                frozen_body = dict(
+                    sess.frozen_tool_intent.get("arguments") or sess.frozen_tool_intent
+                )
+                if not execute_gateway:
                     self._persist_session(sess)
                     return {
-                        "ok": False,
-                        "http_status": 409,
-                        "code": "conflict",
-                        "message": str(exc),
+                        "ok": True,
+                        "http_status": 200,
+                        "deferred_gateway": True,
+                        "session_id": sess.session_id,
+                        "state": sess.state.value,
+                        "frozen_body": frozen_body,
+                        "gateway_authorized": True,
+                        "gateway_invocations": sess.gateway_invocations,
+                        "revision": sess.revision,
+                        "actions": [],
+                        "reply_text": "",
+                        "outcome": None,
+                        "draft_id": None,
+                        "continuation_url": None,
                     }
-                if self.executor is None:
-                    # Story 04 call-site only (no HTTP executor).
-                    reply = "Send authorized (gateway call site)."
-                else:
-                    reply = self._apply_gateway_result(sess, result)
-                actions = []
+                return self._complete_send_gateway(sess, frozen_body=frozen_body)
             elif rec.action is TokenActionKind.EDIT:
                 self.tokens.consume(raw_token)
                 self.apply_edit(sess.session_id)
@@ -459,6 +546,87 @@ class ConfirmationGuard:
             "draft_id": sess.draft_id,
             "continuation_url": sess.continuation_url,
         }
+
+    def _complete_send_gateway(
+        self,
+        sess: ConfirmSession,
+        *,
+        frozen_body: dict[str, Any],
+    ) -> dict[str, Any]:
+        """HTTPS + outcome — must run outside turn_lock (G-02)."""
+        try:
+            result = self.call_gateway(sess, body=frozen_body)
+        except RuntimeError as exc:
+            self._persist_session(sess)
+            return {
+                "ok": False,
+                "http_status": 409,
+                "code": "conflict",
+                "message": str(exc),
+            }
+        if self.executor is None:
+            reply = "Send authorized (gateway call site)."
+        else:
+            reply = self._apply_gateway_result(sess, result)
+            if (
+                result.outcome
+                in (GatewayOutcome.STASHED, GatewayOutcome.DRY_RUN_OK)
+                and self.interview_engine is not None
+                and sess.pending_call_id
+            ):
+                try:
+                    follow = self.interview_engine.submit_function_call_output(
+                        session_id=sess.session_id,
+                        call_id=sess.pending_call_id,
+                        output=json.dumps(
+                            {
+                                "outcome": result.outcome.value,
+                                "draft_id": result.draft_id,
+                            },
+                            sort_keys=True,
+                        ),
+                    )
+                    if follow.get("reply_text"):
+                        if result.outcome is GatewayOutcome.STASHED:
+                            reply = result.reply_text or reply
+                        elif follow.get("reply_text") and "published" not in str(
+                            follow["reply_text"]
+                        ).lower():
+                            reply = str(follow["reply_text"])
+                except Exception:
+                    pass
+        self._persist_session(sess)
+        return {
+            "ok": True,
+            "http_status": 200,
+            "session_id": sess.session_id,
+            "state": sess.state.value,
+            "reply_text": reply,
+            "actions": [],
+            "gateway_authorized": sess.gateway_authorized,
+            "gateway_invocations": sess.gateway_invocations,
+            "revision": sess.revision,
+            "outcome": sess.last_outcome,
+            "draft_id": sess.draft_id,
+            "continuation_url": sess.continuation_url,
+        }
+
+    def finish_deferred_gateway(
+        self,
+        session_id: str,
+        *,
+        frozen_body: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Complete Send HTTPS after turn_lock released."""
+        sess = self.get_session(session_id)
+        if sess is None:
+            return {
+                "ok": False,
+                "http_status": 404,
+                "code": "not_found",
+                "message": "Session unavailable",
+            }
+        return self._complete_send_gateway(sess, frozen_body=frozen_body)
 
 
 # Process-local default for ASGI (tests may inject).

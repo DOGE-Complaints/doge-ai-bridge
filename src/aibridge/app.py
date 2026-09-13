@@ -15,14 +15,16 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
 from aibridge.auth import is_channel_authorized
-from aibridge.channel import process_action, process_turn
+from aibridge.channel import process_action, process_turn_async
 from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
 from aibridge.gateway import default_executor_from_settings
+from aibridge.interview import InterviewEngine, default_recording_engine
 from aibridge.metrics import get_metrics
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
+from aibridge.responses_client import ProductionResponsesClient
 from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
 
@@ -190,6 +192,7 @@ def create_app(
     bundle_registry: BundleRegistry | None = None,
     session_store: SessionStore | None = None,
     confirmation_guard: ConfirmationGuard | None = None,
+    interview_engine: InterviewEngine | None = None,
 ) -> FastAPI:
     """Application factory for production and tests."""
     if settings is not None:
@@ -226,10 +229,27 @@ def create_app(
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
+    # Interview engine — production client when key present; else recording default.
+    if interview_engine is not None:
+        engine = interview_engine
+    elif cfg0.openai_api_key:
+        engine = InterviewEngine(
+            client=ProductionResponsesClient(
+                api_key=cfg0.openai_api_key,
+                model=cfg0.openai_model or "gpt-4.1-mini",
+                timeout_ms=int(cfg0.aibridge_openai_timeout_ms or 30_000),
+            ),
+            model=cfg0.openai_model or "gpt-4.1-mini",
+        )
+    else:
+        engine = default_recording_engine()
+
     turn_lock: Any | None = None
     history_store: Any | None = None
     if confirmation_guard is not None:
         guard = confirmation_guard
+        if guard.interview_engine is None:
+            guard.interview_engine = engine
     elif use_pg_runtime:
         from aibridge.pg_runtime import (
             GatewayAttemptStore,
@@ -245,20 +265,28 @@ def create_app(
         apply_migrations(cfg0.database_url)
         turn_lock = PostgresTurnLock(cfg0.database_url)
         history_store = PostgresHistoryStore(cfg0.database_url)
+        engine.history = history_store
         guard = reset_confirmation_guard(
             ConfirmationGuard(
                 executor=default_executor_from_settings(cfg0),
                 tokens=PostgresActionTokenStore(cfg0.database_url),
                 gateway_attempts=GatewayAttemptStore(cfg0.database_url),
                 confirm_sessions=PostgresConfirmSessionStore(cfg0.database_url),
+                interview_engine=engine,
             )
         )
+        # REQ-03 §4 #8 / §5.3 — restart: executing → unknown_outcome, no auto-resend.
+        guard.recover_all_executing_attempts()
     else:
         # G-01 (story 05): default ASGI path wires GatewayExecutor.
         guard = reset_confirmation_guard(
-            ConfirmationGuard(executor=default_executor_from_settings(cfg0))
+            ConfirmationGuard(
+                executor=default_executor_from_settings(cfg0),
+                interview_engine=engine,
+            )
         )
     app.state.confirmation_guard = guard
+    app.state.interview_engine = engine
     app.state.turn_lock = turn_lock
     app.state.history_store = history_store
 
@@ -356,11 +384,12 @@ def create_app(
         parsed = parse_channel_body(raw, ChannelTurnRequest)
         if isinstance(parsed, JSONResponse):
             return parsed
-        response, _created = process_turn(
+        response, _created = await process_turn_async(
             parsed,
             store,
             guard=app.state.confirmation_guard,
             turn_lock=getattr(app.state, "turn_lock", None),
+            interview_engine=getattr(app.state, "interview_engine", None),
         )
         return JSONResponse(status_code=200, content=response)
 
