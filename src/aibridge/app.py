@@ -439,14 +439,23 @@ def create_app(
         parsed = parse_channel_body(raw, ChannelTurnRequest)
         if isinstance(parsed, JSONResponse):
             return parsed
-        response, _created = await process_turn_async(
+        response, created = await process_turn_async(
             parsed,
             store,
             guard=app.state.confirmation_guard,
             turn_lock=getattr(app.state, "turn_lock", None),
             interview_engine=getattr(app.state, "interview_engine", None),
         )
-        return JSONResponse(status_code=200, content=response)
+        status_code = 200
+        if not created:
+            peek = getattr(store, "get", None)
+            if peek is not None:
+                stored = peek(parsed.channel, parsed.event_id)
+                if stored is not None and hasattr(stored, "http_status"):
+                    code = int(stored.http_status)
+                    if code > 0:
+                        status_code = code
+        return JSONResponse(status_code=status_code, content=response)
 
     @app.post("/v1/channel/actions")
     async def channel_actions(request: Request) -> JSONResponse:

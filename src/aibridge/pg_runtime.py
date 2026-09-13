@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 import uuid
 from collections.abc import Callable
 from contextlib import contextmanager
@@ -36,7 +37,13 @@ class StoredChannelResponse:
 
 
 class PostgresEventDedupeStore:
-    """Event dedupe with stored HTTP status + body (transport replay)."""
+    """Event dedupe with stored HTTP status + body (transport replay).
+
+    Inflight claim uses sentinel ``http_status=0`` + ``{"__inflight__": true}``
+    so ASGI ``try_begin`` / ``complete`` / ``abort`` match in-memory store.
+    """
+
+    INFLIGHT_STATUS = 0
 
     def __init__(self, database_url: str, *, conn: Any | None = None) -> None:
         self._url = database_url
@@ -52,6 +59,13 @@ class PostgresEventDedupeStore:
         if self._owned is None:
             conn.close()
 
+    @staticmethod
+    def _body_from_row(row: dict[str, Any]) -> dict[str, Any]:
+        body = row["response_body"]
+        if isinstance(body, str):
+            body = json.loads(body)
+        return dict(body)
+
     def get(self, channel: str, event_id: str) -> StoredChannelResponse | None:
         conn = self._connect()
         try:
@@ -64,14 +78,116 @@ class PostgresEventDedupeStore:
             ).fetchone()
             if row is None:
                 return None
-            body = row["response_body"]
-            if isinstance(body, str):
-                body = json.loads(body)
+            status = int(row["http_status"])
+            if status == self.INFLIGHT_STATUS:
+                return None
             return StoredChannelResponse(
-                http_status=int(row["http_status"]), body=dict(body)
+                http_status=status, body=self._body_from_row(row)
             )
         finally:
             self._close_if_ephemeral(conn)
+
+    def try_begin(
+        self, channel: str, event_id: str
+    ) -> tuple[dict[str, Any] | None, str]:
+        """Claim side-effect before engine (parity with EventDedupeStore)."""
+        conn = self._connect()
+        try:
+            for _ in range(8):
+                row = conn.execute(
+                    """
+                    SELECT http_status, response_body FROM event_dedupe
+                    WHERE channel = %s AND event_id = %s
+                    """,
+                    (channel, event_id),
+                ).fetchone()
+                if row is not None:
+                    status = int(row["http_status"])
+                    if status == self.INFLIGHT_STATUS:
+                        return None, "inflight"
+                    return self._body_from_row(row), "hit"
+                try:
+                    conn.execute(
+                        """
+                        INSERT INTO event_dedupe
+                          (channel, event_id, http_status, response_body)
+                        VALUES (%s, %s, %s, %s::jsonb)
+                        """,
+                        (
+                            channel,
+                            event_id,
+                            self.INFLIGHT_STATUS,
+                            json.dumps({"__inflight__": True}),
+                        ),
+                    )
+                    conn.commit()
+                    return None, "begin"
+                except self._pg_errors.UniqueViolation:
+                    conn.rollback()
+                    time.sleep(0.005)
+            # Fail closed — treat as inflight rather than double engine.
+            return None, "inflight"
+        finally:
+            self._close_if_ephemeral(conn)
+
+    def complete(
+        self,
+        channel: str,
+        event_id: str,
+        body: dict[str, Any],
+        *,
+        http_status: int = 200,
+    ) -> None:
+        self.store_response(
+            channel, event_id, http_status=http_status, body=body
+        )
+
+    def abort(self, channel: str, event_id: str) -> None:
+        conn = self._connect()
+        try:
+            conn.execute(
+                """
+                DELETE FROM event_dedupe
+                WHERE channel = %s AND event_id = %s AND http_status = %s
+                """,
+                (channel, event_id, self.INFLIGHT_STATUS),
+            )
+            conn.commit()
+        finally:
+            self._close_if_ephemeral(conn)
+
+    def wait_for_result(
+        self,
+        channel: str,
+        event_id: str,
+        *,
+        timeout_s: float = 5.0,
+        poll_s: float = 0.02,
+    ) -> dict[str, Any] | None:
+        deadline = time.monotonic() + timeout_s
+        while time.monotonic() < deadline:
+            stored = self.get(channel, event_id)
+            if stored is not None:
+                return dict(stored.body)
+            conn = self._connect()
+            try:
+                row = conn.execute(
+                    """
+                    SELECT http_status FROM event_dedupe
+                    WHERE channel = %s AND event_id = %s
+                    """,
+                    (channel, event_id),
+                ).fetchone()
+            finally:
+                self._close_if_ephemeral(conn)
+            if row is None:
+                return None
+            if int(row["http_status"]) != self.INFLIGHT_STATUS:
+                again = self.get(channel, event_id)
+                return None if again is None else dict(again.body)
+            time.sleep(poll_s)
+        stored = self.get(channel, event_id)
+        return None if stored is None else dict(stored.body)
 
     def get_or_create(
         self,
@@ -101,8 +217,15 @@ class PostgresEventDedupeStore:
             except self._pg_errors.UniqueViolation:
                 conn.rollback()
                 again = self.get(channel, event_id)
-                assert again is not None
-                return dict(again.body), False
+                if again is not None:
+                    return dict(again.body), False
+                # Inflight peer — wait then replay.
+                waited = self.wait_for_result(channel, event_id)
+                if waited is not None:
+                    return dict(waited), False
+                raise RuntimeError(
+                    f"event_dedupe conflict without completed body: {channel}/{event_id}"
+                )
         finally:
             self._close_if_ephemeral(conn)
 
@@ -506,23 +629,29 @@ class GatewayAttemptStore:
         self._conn.commit()
 
     def get(self, *, session_id: str, revision: int) -> dict[str, Any] | None:
-        return self._conn.execute(
-            """
-            SELECT * FROM gateway_attempt
-            WHERE session_id = %s AND revision = %s
-            """,
-            (session_id, revision),
-        ).fetchone()
+        try:
+            return self._conn.execute(
+                """
+                SELECT * FROM gateway_attempt
+                WHERE session_id = %s AND revision = %s
+                """,
+                (session_id, revision),
+            ).fetchone()
+        finally:
+            self._conn.commit()
 
     def list_executing(self) -> list[dict[str, Any]]:
-        rows = self._conn.execute(
-            """
-            SELECT * FROM gateway_attempt
-            WHERE status = 'executing'
-            ORDER BY created_at ASC
-            """
-        ).fetchall()
-        return list(rows or [])
+        try:
+            rows = self._conn.execute(
+                """
+                SELECT * FROM gateway_attempt
+                WHERE status = 'executing'
+                ORDER BY created_at ASC
+                """
+            ).fetchall()
+            return list(rows or [])
+        finally:
+            self._conn.commit()
 
     def close(self) -> None:
         self._conn.close()
