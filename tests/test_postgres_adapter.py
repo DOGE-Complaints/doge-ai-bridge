@@ -145,7 +145,9 @@ def test_open_bundle_registry_postgres_url_uses_adapter(monkeypatch: pytest.Monk
         "psycopg.connect",
         lambda *_a, **_k: fake,
     )
-    reg = open_bundle_registry("postgresql://u:p@localhost:5432/aibridge")
+    reg = open_bundle_registry(
+        "postgresql://u:p@localhost:5432/aibridge", ensure_schema=True
+    )
     assert isinstance(reg, PostgresBundleRegistry)
     loaded = _loaded()
     first = reg.register_once(loaded)
@@ -160,8 +162,8 @@ def test_open_bundle_registry_postgres_url_uses_adapter(monkeypatch: pytest.Monk
 def test_open_session_store_postgres_pin_resume(monkeypatch: pytest.MonkeyPatch) -> None:
     fake = _FakePgConn()
     monkeypatch.setattr("psycopg.connect", lambda *_a, **_k: fake)
-    reg = PostgresBundleRegistry("postgresql://u:p@localhost/db", conn=fake)
-    sessions = PostgresSessionStore("postgresql://u:p@localhost/db", conn=fake)
+    reg = PostgresBundleRegistry("postgresql://u:p@localhost/db", conn=fake, ensure_schema=True)
+    sessions = PostgresSessionStore("postgresql://u:p@localhost/db", conn=fake, ensure_schema=True)
     loaded = _loaded()
     row = reg.register_once(loaded)
     sessions.create(
@@ -178,10 +180,12 @@ def test_open_helpers_route_postgres_scheme(monkeypatch: pytest.MonkeyPatch) -> 
     fake = _FakePgConn()
     monkeypatch.setattr("psycopg.connect", lambda *_a, **_k: fake)
     assert isinstance(
-        open_bundle_registry("postgres://u:p@h/db"), PostgresBundleRegistry
+        open_bundle_registry("postgres://u:p@h/db", ensure_schema=True),
+        PostgresBundleRegistry,
     )
     assert isinstance(
-        open_session_store("postgres://u:p@h/db"), PostgresSessionStore
+        open_session_store("postgres://u:p@h/db", ensure_schema=True),
+        PostgresSessionStore,
     )
 
 
