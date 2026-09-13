@@ -23,13 +23,22 @@ def _client() -> TestClient:
     reset_confirmation_guard()
     reset_metrics()
     reset_audit_buffer()
+    from aibridge.interview import default_recording_engine
+
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_GATEWAY_ORIGIN="https://gateway.example.invalid",
+        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
     )
-    app = create_app(settings=settings, dedupe_store=EventDedupeStore())
+    app = create_app(
+        settings=settings,
+        dedupe_store=EventDedupeStore(),
+        interview_engine=default_recording_engine(),
+    )
     return TestClient(app)
 
 
@@ -136,7 +145,15 @@ def test_env_example_lists_required_knobs_without_secrets() -> None:
         "AIBRIDGE_MAX_REQUEST_BYTES",
         "AIBRIDGE_MAX_INPUT_TOKENS",
         "AIBRIDGE_DRY_RUN",
+        "DOGESTONIA_API_BASE_URL",
         "DOGESTONIA_GATEWAY_ORIGIN",
+        "AIBRIDGE_SESSION_TTL_SECONDS",
+        "AIBRIDGE_ACTION_TOKEN_TTL_SECONDS",
+        "AIBRIDGE_MAX_RESPONSE_BYTES",
+        "AIBRIDGE_LOG_LEVEL",
+        "AIBRIDGE_PRINCIPAL_RATE_LIMIT",
+        "AIBRIDGE_GLOBAL_RATE_LIMIT",
+        "AIBRIDGE_SCHEMA_VALIDATION_COMPLETE",
     ]
     for name in required:
         assert name in text, name
