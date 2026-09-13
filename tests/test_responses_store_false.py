@@ -14,11 +14,13 @@ def test_assemble_responses_request_always_store_false() -> None:
     req = assemble_responses_request(
         model="gpt-test",
         input_items=[{"type": "message", "role": "user", "content": "hi"}],
-        tools=[{"type": "function", "function": {"name": "x", "strict": True}}],
+        tools=[{"type": "function", "name": "x", "strict": True, "parameters": {}}],
+        max_output_tokens=256,
     )
     assert req.store is False
     assert req.payload["store"] is False
     assert req.payload["parallel_tool_calls"] is False
+    assert req.payload["max_output_tokens"] == 256
 
 
 def test_recording_client_rejects_store_true_path() -> None:

@@ -11,6 +11,7 @@ from aibridge.tool_gen import (
     ToolGenError,
     generate_strict_tool,
     strip_server_owned_fields,
+    to_responses_flat_tool,
     tool_schema_canonical_bytes,
 )
 
@@ -27,9 +28,10 @@ def test_generate_strict_tool_from_wire_oas() -> None:
         schema_version="v1",
     )
     assert tool["type"] == "function"
-    assert tool["function"]["name"] == "postStoryDraftStash"
-    assert tool["function"]["strict"] is True
-    params = tool["function"]["parameters"]
+    assert "function" not in tool  # Responses-flat (R3-P0-04)
+    assert tool["name"] == "postStoryDraftStash"
+    assert tool["strict"] is True
+    params = tool["parameters"]
     assert params["additionalProperties"] is False
     binding = params["properties"]["schema_binding"]["properties"]
     assert "title" in binding["structured_payload"]["properties"]
