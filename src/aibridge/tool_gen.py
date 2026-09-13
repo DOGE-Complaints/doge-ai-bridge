@@ -237,12 +237,10 @@ def generate_strict_tool(
 
     tool = {
         "type": "function",
-        "function": {
-            "name": CANONICAL_OPERATION_ID,
-            "description": "Stash a story draft for browser submit",
-            "strict": True,
-            "parameters": model_schema,
-        },
+        "name": CANONICAL_OPERATION_ID,
+        "description": "Stash a story draft for browser submit",
+        "strict": True,
+        "parameters": model_schema,
         "x_aibridge": {
             "schema_id": schema_id,
             "schema_version": schema_version,
@@ -252,6 +250,29 @@ def generate_strict_tool(
     }
     # Deterministic serialization order via sorted keys when hashed.
     return tool
+
+
+def to_responses_flat_tool(tool: dict[str, Any]) -> dict[str, Any]:
+    """Normalize nested Chat Completions function wrap → Responses-flat."""
+    if "function" in tool and isinstance(tool.get("function"), dict):
+        nested = tool["function"]
+        flat: dict[str, Any] = {
+            "type": "function",
+            "name": nested.get("name"),
+            "strict": nested.get("strict", True),
+            "parameters": nested.get("parameters"),
+        }
+        if nested.get("description") is not None:
+            flat["description"] = nested["description"]
+        for key, value in tool.items():
+            if key in {"type", "function"}:
+                continue
+            flat[key] = value
+        return flat
+    # Already flat — require name/parameters/strict at top level.
+    if tool.get("type") == "function" and "name" in tool and "parameters" in tool:
+        return tool
+    raise ToolGenError("tool must be Responses-flat or nested function wrap")
 
 
 def strip_server_owned_fields(args: dict[str, Any]) -> dict[str, Any]:
