@@ -531,6 +531,21 @@ class PostgresActionTokenStore:
     def close(self) -> None:
         self._conn.close()
 
+    def purge_expired_pending(self, *, now: float | None = None) -> int:
+        """Delete pending tokens past expires_at; keep consumed/invalidated rows."""
+        import time
+
+        ts = time.time() if now is None else now
+        cur = self._conn.execute(
+            """
+            DELETE FROM action_token
+            WHERE state = %s AND expires_at < %s
+            """,
+            (TokenRecordState.PENDING.value, ts),
+        )
+        self._conn.commit()
+        return int(cur.rowcount or 0)
+
 
 class PostgresHistoryStore:
     """Postgres conversation history keyed by session_id + seq."""
@@ -692,6 +707,7 @@ class PostgresConfirmSessionStore:
             "user_id": row["user_id"],
             "chat_id": row["chat_id"],
             "state": dict(state),
+            "updated_at": row["updated_at"],
         }
 
     def get_by_principal(self, *, user_id: str, chat_id: str) -> dict[str, Any] | None:
@@ -714,7 +730,14 @@ class PostgresConfirmSessionStore:
             "user_id": row["user_id"],
             "chat_id": row["chat_id"],
             "state": dict(state),
+            "updated_at": row["updated_at"],
         }
+
+    def delete(self, session_id: str) -> None:
+        self._conn.execute(
+            "DELETE FROM confirm_session WHERE session_id = %s", (session_id,)
+        )
+        self._conn.commit()
 
     def close(self) -> None:
         self._conn.close()

@@ -352,6 +352,28 @@ def create_app(
     app.state.history_store = history_store
     app.state.budget_guard = budget_guard
 
+    # Attach history for idle expiry minimize (G-01).
+    if history_store is not None:
+        guard.history = history_store
+    elif getattr(engine, "history", None) is not None:
+        guard.history = engine.history
+
+    # R3-P1-10 — sliding session TTL clock (touch only on legitimate get_or_create).
+    from aibridge.privacy_retention import (
+        PILOT_SESSION_TTL_SECONDS,
+        SessionActivityClock,
+    )
+
+    session_ttl = (
+        int(cfg0.aibridge_session_ttl_seconds)
+        if cfg0.aibridge_session_ttl_seconds is not None
+        else PILOT_SESSION_TTL_SECONDS
+    )
+    activity_clock = SessionActivityClock(ttl_seconds=session_ttl)
+    if getattr(guard, "activity_clock", None) is None:
+        guard.activity_clock = activity_clock
+    app.state.activity_clock = guard.activity_clock
+
     rate_limiter = RateLimiter(
         principal_limit=cfg0.aibridge_principal_rate_limit,
         global_limit=cfg0.aibridge_global_rate_limit,
@@ -361,9 +383,8 @@ def create_app(
     registry, sessions, deployment = _init_stores(
         cfg0, registry=bundle_registry, sessions=session_store
     )
-    if (
-        isinstance(sessions, MemorySessionStore)
-        and cfg0.aibridge_session_ttl_seconds is not None
+    if cfg0.aibridge_session_ttl_seconds is not None and hasattr(
+        sessions, "ttl_seconds"
     ):
         sessions.ttl_seconds = int(cfg0.aibridge_session_ttl_seconds)
     app.state.bundle_registry = registry

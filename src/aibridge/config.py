@@ -11,7 +11,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # R3-P1-02 / R3-P1-06 — finite pilot defaults (override via env; documented in .env.example).
 DEFAULT_MAX_RESPONSE_BYTES = 1_048_576
-DEFAULT_SESSION_TTL_SECONDS = 86_400
+# REQ-03 §6.2 R3-P1-10 — pilot default 7 days (604800); override via env.
+DEFAULT_SESSION_TTL_SECONDS = 604_800
 DEFAULT_ACTION_TOKEN_TTL_SECONDS = 900
 DEFAULT_HTTP_CONNECT_TIMEOUT_MS = 5_000
 DEFAULT_HTTP_TOTAL_TIMEOUT_MS = 30_000
@@ -58,6 +59,12 @@ class Settings(BaseSettings):
     aibridge_action_token_ttl_seconds: int | None = Field(
         default=DEFAULT_ACTION_TOKEN_TTL_SECONDS,
         validation_alias="AIBRIDGE_ACTION_TOKEN_TTL_SECONDS",
+    )
+    # Ops-only session-delete authz (privacy retention). Not a channel Bearer.
+    # Empty → ops delete fail-closed. HTTP channel delete path remains Unknown.
+    aibridge_ops_bearer_token: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_OPS_BEARER_TOKEN",
     )
     aibridge_http_connect_timeout_ms: int | None = Field(
         default=DEFAULT_HTTP_CONNECT_TIMEOUT_MS,

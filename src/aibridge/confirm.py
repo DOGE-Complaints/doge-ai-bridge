@@ -55,6 +55,8 @@ class ConfirmationGuard:
     confirm_sessions: Any | None = None  # PostgresConfirmSessionStore when PG-wired
     interview_engine: Any | None = None  # InterviewEngine for function_call_output
     validation_context: Any | None = None  # coordinator.ValidationContext
+    activity_clock: Any | None = None  # SessionActivityClock — sliding TTL
+    history: Any | None = None  # HistoryStore / PostgresHistoryStore for expire_idle
     _sessions: dict[str, ConfirmSession] = field(default_factory=dict)
     _by_principal: dict[tuple[str, str], str] = field(default_factory=dict)
 
@@ -217,6 +219,58 @@ class ConfirmationGuard:
         self._by_principal[(sess.user_id, sess.chat_id)] = sess.session_id
         return sess
 
+    def _expire_idle_session(self, sess: ConfirmSession, key: tuple[str, str]) -> None:
+        """Minimize narrative + purge/invalidate tokens, then drop confirm binding."""
+        from aibridge.privacy_retention import (
+            SessionActivityClock,
+            expire_idle_session_narrative,
+        )
+
+        clock = self.activity_clock or SessionActivityClock(ttl_seconds=0)
+        # Force expiry path: seed past TTL if clock has no entry.
+        if clock.last_activity(sess.session_id) is None:
+            clock.seed(sess.session_id, 0.0)
+        expire_idle_session_narrative(
+            session_id=sess.session_id,
+            activity_clock=clock,
+            history=self.history,
+            tokens=self.tokens,
+        )
+        self._sessions.pop(sess.session_id, None)
+        self._by_principal.pop(key, None)
+        if self.confirm_sessions is not None and hasattr(self.confirm_sessions, "delete"):
+            self.confirm_sessions.delete(sess.session_id)
+
+    @staticmethod
+    def _updated_at_ts(row: dict[str, Any]) -> float | None:
+        from datetime import datetime, timezone
+
+        updated = row.get("updated_at")
+        if updated is None:
+            return None
+        if isinstance(updated, datetime):
+            if updated.tzinfo is None:
+                updated = updated.replace(tzinfo=timezone.utc)
+            return updated.timestamp()
+        try:
+            dt = datetime.fromisoformat(str(updated).replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.timestamp()
+        except ValueError:
+            return None
+
+    def _row_is_expired(self, row: dict[str, Any], *, now: float | None = None) -> bool:
+        import time
+
+        if self.activity_clock is None:
+            return False
+        last = self._updated_at_ts(row)
+        if last is None:
+            return False
+        ts = now if now is not None else time.time()
+        return (ts - last) > float(self.activity_clock.ttl_seconds)
+
     def get_or_create_session(
         self,
         *,
@@ -228,11 +282,29 @@ class ConfirmationGuard:
         key = (user_id, chat_id)
         existing = self._by_principal.get(key)
         if existing and existing in self._sessions:
-            return self._sessions[existing]
+            sess = self._sessions[existing]
+            if self.activity_clock is not None:
+                if self.activity_clock.is_expired(sess.session_id):
+                    self._expire_idle_session(sess, key)
+                else:
+                    self.activity_clock.touch(sess.session_id)
+                    return sess
+            else:
+                return sess
         if self.confirm_sessions is not None:
             row = self.confirm_sessions.get_by_principal(user_id=user_id, chat_id=chat_id)
             if row is not None:
-                return self._hydrate_from_row(row)
+                if self._row_is_expired(row):
+                    sess = self._hydrate_from_row(row)
+                    self._expire_idle_session(sess, key)
+                else:
+                    sess = self._hydrate_from_row(row)
+                    if self.activity_clock is not None:
+                        last = self._updated_at_ts(row)
+                        if last is not None:
+                            self.activity_clock.seed(sess.session_id, last)
+                        self.activity_clock.touch(sess.session_id)
+                    return sess
         sid = session_id or f"sess_{uuid.uuid4().hex[:16]}"
         sess = ConfirmSession(
             session_id=sid,
@@ -243,6 +315,8 @@ class ConfirmationGuard:
         self._sessions[sid] = sess
         self._by_principal[key] = sid
         self._persist_session(sess)
+        if self.activity_clock is not None:
+            self.activity_clock.touch(sess.session_id)
         return sess
 
     def get_session(self, session_id: str) -> ConfirmSession | None:

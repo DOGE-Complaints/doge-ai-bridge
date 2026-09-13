@@ -45,6 +45,8 @@ class SessionStore(Protocol):
 
     def deactivate(self, session_id: str) -> None: ...
 
+    def touch(self, session_id: str) -> None: ...
+
     def close(self) -> None: ...
 
 
@@ -82,6 +84,20 @@ class MemorySessionStore:
                 self.deactivate(session_id)
                 return self._rows.get(session_id)
         return row
+
+    def touch(self, session_id: str) -> None:
+        """Slide TTL — legitimate activity only (REQ-03 §6.2)."""
+        existing = self._rows.get(session_id)
+        if existing is None or not existing.active:
+            return
+        self._rows[session_id] = SessionRow(
+            session_id=existing.session_id,
+            content_bundle_hash=existing.content_bundle_hash,
+            deployment_id=existing.deployment_id,
+            active=True,
+            created_at=existing.created_at,
+            updated_at=_utc_now(),
+        )
 
     def resume_bundle(
         self, session_id: str, registry: BundleRegistry
@@ -204,6 +220,13 @@ class SqliteSessionStore:
         )
         return {str(r[0]) for r in cur.fetchall()}
 
+    def touch(self, session_id: str) -> None:
+        self._conn.execute(
+            "UPDATE session SET updated_at = ? WHERE session_id = ? AND active = 1",
+            (_utc_now().isoformat(), session_id),
+        )
+        self._conn.commit()
+
     def deactivate(self, session_id: str) -> None:
         self._conn.execute(
             "UPDATE session SET active = 0, updated_at = ? WHERE session_id = ?",
@@ -228,9 +251,11 @@ class PostgresSessionStore:
         *,
         conn: Any | None = None,
         ensure_schema: bool = False,
+        ttl_seconds: int | None = None,
     ) -> None:
         self._url = database_url
         self._conn = connect_postgres(database_url, conn=conn)
+        self.ttl_seconds = ttl_seconds
         if ensure_schema:
             self._conn.execute(_PG_SESSION_SCHEMA)
             self._conn.commit()
@@ -264,7 +289,7 @@ class PostgresSessionStore:
             return None
         created = row["created_at"]
         updated = row["updated_at"]
-        return SessionRow(
+        sess = SessionRow(
             session_id=str(row["session_id"]),
             content_bundle_hash=str(row["content_bundle_hash"]),
             deployment_id=str(row["deployment_id"]),
@@ -276,6 +301,19 @@ class PostgresSessionStore:
             if isinstance(updated, datetime)
             else datetime.fromisoformat(str(updated)),
         )
+        if self.ttl_seconds is not None and sess.active:
+            age = (_utc_now() - sess.updated_at).total_seconds()
+            if age > self.ttl_seconds:
+                self.deactivate(session_id)
+                return self.get(session_id)
+        return sess
+
+    def touch(self, session_id: str) -> None:
+        self._conn.execute(
+            "UPDATE session SET updated_at = %s WHERE session_id = %s AND active = TRUE",
+            (_utc_now(), session_id),
+        )
+        self._conn.commit()
 
     def resume_bundle(
         self, session_id: str, registry: BundleRegistry
