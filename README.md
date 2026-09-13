@@ -34,6 +34,8 @@ pytest -q
 PORT=8080 python -m aibridge
 ```
 
+**Railway (Railpack):** start command is pinned in [`railpack.json`](railpack.json) (`python -m uvicorn --app-dir src aibridge.app:app …`). Root `requirements.txt` mirrors runtime deps from `pyproject.toml`. See local analysis note `docs/analysis/railway-railpack-start-command-failure-2026-09-13.md` if present.
+
 ## Stories 01–02 scope
 
 - **01:** Channel façade + Bearer + event dedupe + `/healthz`/`/readyz`.
