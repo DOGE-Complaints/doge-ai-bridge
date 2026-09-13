@@ -1,5 +1,7 @@
 .env
 .venv/
+.pgdata-test/
+*.pgdata/
 __pycache__/
 *.py[cod]
 .pytest_cache/

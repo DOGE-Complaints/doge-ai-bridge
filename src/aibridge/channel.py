@@ -57,6 +57,7 @@ def process_turn(
     store: EventDedupeStore,
     *,
     guard: ConfirmationGuard | None = None,
+    turn_lock: Any | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Process turn with dedupe. Returns (response_dict, is_new_side_effect)."""
     g = guard or get_confirmation_guard()
@@ -66,17 +67,24 @@ def process_turn(
             user_id=body.principal.user_id,
             chat_id=body.principal.chat_id,
         )
-        # Audit: lengths/ids only — never log message.text (privacy-pilot).
-        audit_event(
-            "channel_turn",
-            detail=f"channel={body.channel} text_len={len(body.message.text)}",
-        )
-        get_metrics().inc_turns()
-        return build_success(
-            session_id=sess.session_id,
-            state=sess.state.value,
-            reply_text=f"Received: {body.message.text[:200]}",
-        ).model_dump()
+
+        def _work() -> dict[str, Any]:
+            # Audit: lengths/ids only — never log message.text (privacy-pilot).
+            audit_event(
+                "channel_turn",
+                detail=f"channel={body.channel} text_len={len(body.message.text)}",
+            )
+            get_metrics().inc_turns()
+            return build_success(
+                session_id=sess.session_id,
+                state=sess.state.value,
+                reply_text=f"Received: {body.message.text[:200]}",
+            ).model_dump()
+
+        if turn_lock is not None:
+            with turn_lock.hold(sess.session_id):
+                return _work()
+        return _work()
 
     return store.get_or_create(body.channel, body.event_id, _side_effect)
 
@@ -86,6 +94,7 @@ def process_action(
     store: EventDedupeStore,
     *,
     guard: ConfirmationGuard | None = None,
+    turn_lock: Any | None = None,
 ) -> tuple[dict[str, Any] | None, bool, dict[str, Any] | None]:
     """Process action with dedupe + confirmation guard.
 
@@ -95,28 +104,38 @@ def process_action(
     g = guard or get_confirmation_guard()
 
     def _side_effect() -> dict[str, Any]:
-        result = g.consume_action_token(
-            body.action_token,
-            user_id=body.principal.user_id,
-            chat_id=body.principal.chat_id,
-        )
-        get_metrics().inc_actions()
-        audit_event(
-            "channel_action",
-            detail=f"channel={body.channel} ok={bool(result.get('ok'))}",
-        )
-        if not result.get("ok"):
-            # Signal failure via special marker — process_action unwraps.
-            return {"__error__": result}
-        return build_success(
-            session_id=str(result["session_id"]),
-            state=str(result["state"]),
-            reply_text=str(result["reply_text"]),
-            actions=list(result.get("actions") or []),
-            outcome=result.get("outcome"),
-            draft_id=result.get("draft_id"),
-            continuation_url=result.get("continuation_url"),
-        ).model_dump()
+        def _work() -> dict[str, Any]:
+            result = g.consume_action_token(
+                body.action_token,
+                user_id=body.principal.user_id,
+                chat_id=body.principal.chat_id,
+            )
+            get_metrics().inc_actions()
+            audit_event(
+                "channel_action",
+                detail=f"channel={body.channel} ok={bool(result.get('ok'))}",
+            )
+            if not result.get("ok"):
+                # Signal failure via special marker — process_action unwraps.
+                return {"__error__": result}
+            return build_success(
+                session_id=str(result["session_id"]),
+                state=str(result["state"]),
+                reply_text=str(result["reply_text"]),
+                actions=list(result.get("actions") or []),
+                outcome=result.get("outcome"),
+                draft_id=result.get("draft_id"),
+                continuation_url=result.get("continuation_url"),
+            ).model_dump()
+
+        if turn_lock is not None:
+            sess = g.get_or_create_session(
+                user_id=body.principal.user_id,
+                chat_id=body.principal.chat_id,
+            )
+            with turn_lock.hold(sess.session_id):
+                return _work()
+        return _work()
 
     body_out, created = store.get_or_create(body.channel, body.event_id, _side_effect)
     if isinstance(body_out, dict) and "__error__" in body_out:

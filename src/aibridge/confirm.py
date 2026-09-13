@@ -47,6 +47,8 @@ class ConfirmationGuard:
 
     tokens: ActionTokenStore = field(default_factory=ActionTokenStore)
     executor: GatewayExecutor | None = None
+    gateway_attempts: Any | None = None  # GatewayAttemptStore when PG-wired
+    confirm_sessions: Any | None = None  # PostgresConfirmSessionStore when PG-wired
     _sessions: dict[str, ConfirmSession] = field(default_factory=dict)
     _by_principal: dict[tuple[str, str], str] = field(default_factory=dict)
 
@@ -56,7 +58,12 @@ class ConfirmationGuard:
         *,
         body: dict[str, Any] | None = None,
     ) -> GatewayResult:
-        """Gateway call site — only when gateway_authorized (Send consumed)."""
+        """Gateway call site — only when gateway_authorized (Send consumed).
+
+        REQ-03 §5.3: when gateway_attempts is wired, create+commit ``executing``
+        **before** HTTPS; store outcome after. Duplicate revision fails closed
+        (no second HTTPS).
+        """
         if not session.gateway_authorized:
             raise RuntimeError("gateway not authorized — Send token required")
         if self.executor is None:
@@ -67,11 +74,34 @@ class ConfirmationGuard:
                 reply_text="Send authorized (gateway call site).",
                 http_posted=False,
             )
+        if self.gateway_attempts is not None:
+            # Commit-before-HTTPS — UniqueViolation → RuntimeError (fail-closed).
+            self.gateway_attempts.create_executing(
+                session_id=session.session_id, revision=session.revision
+            )
         stash_body = body if body is not None else dict(session.frozen_tool_intent or {})
-        result = self.executor.execute_stash(
-            stash_body,
-            gateway_authorized=session.gateway_authorized,
-        )
+        try:
+            result = self.executor.execute_stash(
+                stash_body,
+                gateway_authorized=session.gateway_authorized,
+            )
+        except Exception:
+            if self.gateway_attempts is not None:
+                try:
+                    self.gateway_attempts.set_outcome(
+                        session_id=session.session_id,
+                        revision=session.revision,
+                        outcome=GatewayOutcome.INTERNAL_BRIDGE_ERROR.value,
+                    )
+                except Exception:
+                    pass
+            raise
+        if self.gateway_attempts is not None:
+            self.gateway_attempts.set_outcome(
+                session_id=session.session_id,
+                revision=session.revision,
+                outcome=result.outcome.value,
+            )
         if result.http_posted:
             session.gateway_invocations += 1
         return result
@@ -87,6 +117,50 @@ class ConfirmationGuard:
             or session.unknown_outcome_revision == session.revision
         )
 
+    def _persist_session(self, sess: ConfirmSession) -> None:
+        if self.confirm_sessions is None:
+            return
+        self.confirm_sessions.upsert(
+            session_id=sess.session_id,
+            user_id=sess.user_id,
+            chat_id=sess.chat_id,
+            state={
+                "state": sess.state.value,
+                "revision": sess.revision,
+                "deployment_id": sess.deployment_id,
+                "frozen_tool_intent": sess.frozen_tool_intent,
+                "draft_hash": sess.draft_hash,
+                "gateway_authorized": sess.gateway_authorized,
+                "gateway_invocations": sess.gateway_invocations,
+                "last_outcome": sess.last_outcome,
+                "draft_id": sess.draft_id,
+                "continuation_url": sess.continuation_url,
+                "unknown_outcome_revision": sess.unknown_outcome_revision,
+            },
+        )
+
+    def _hydrate_from_row(self, row: dict[str, Any]) -> ConfirmSession:
+        st = dict(row.get("state") or {})
+        sess = ConfirmSession(
+            session_id=str(row["session_id"]),
+            user_id=str(row["user_id"]),
+            chat_id=str(row["chat_id"]),
+            deployment_id=str(st.get("deployment_id") or "local"),
+            state=SessionState(str(st.get("state") or SessionState.INTERVIEWING.value)),
+            revision=int(st.get("revision") or 1),
+            frozen_tool_intent=st.get("frozen_tool_intent"),
+            draft_hash=st.get("draft_hash"),
+            gateway_authorized=bool(st.get("gateway_authorized") or False),
+            gateway_invocations=int(st.get("gateway_invocations") or 0),
+            last_outcome=st.get("last_outcome"),
+            draft_id=st.get("draft_id"),
+            continuation_url=st.get("continuation_url"),
+            unknown_outcome_revision=st.get("unknown_outcome_revision"),
+        )
+        self._sessions[sess.session_id] = sess
+        self._by_principal[(sess.user_id, sess.chat_id)] = sess.session_id
+        return sess
+
     def get_or_create_session(
         self,
         *,
@@ -99,6 +173,10 @@ class ConfirmationGuard:
         existing = self._by_principal.get(key)
         if existing and existing in self._sessions:
             return self._sessions[existing]
+        if self.confirm_sessions is not None:
+            row = self.confirm_sessions.get_by_principal(user_id=user_id, chat_id=chat_id)
+            if row is not None:
+                return self._hydrate_from_row(row)
         sid = session_id or f"sess_{uuid.uuid4().hex[:16]}"
         sess = ConfirmSession(
             session_id=sid,
@@ -108,10 +186,17 @@ class ConfirmationGuard:
         )
         self._sessions[sid] = sess
         self._by_principal[key] = sid
+        self._persist_session(sess)
         return sess
 
     def get_session(self, session_id: str) -> ConfirmSession | None:
-        return self._sessions.get(session_id)
+        if session_id in self._sessions:
+            return self._sessions[session_id]
+        if self.confirm_sessions is not None:
+            row = self.confirm_sessions.get(session_id)
+            if row is not None:
+                return self._hydrate_from_row(row)
+        return None
 
     def set_frozen_tool_intent(
         self,
@@ -203,6 +288,7 @@ class ConfirmationGuard:
         # Edit increments revision — clears unknown block for *old* revision only.
         if sess.unknown_outcome_revision == old_rev:
             sess.unknown_outcome_revision = None
+        self._persist_session(sess)
         return sess
 
     def apply_cancel(self, session_id: str) -> ConfirmSession:
@@ -214,6 +300,7 @@ class ConfirmationGuard:
         sess.last_outcome = GatewayOutcome.CANCELLED.value
         sess.draft_id = None
         sess.continuation_url = None
+        self._persist_session(sess)
         return sess
 
     def _apply_gateway_result(self, sess: ConfirmSession, result: GatewayResult) -> str:
@@ -262,7 +349,7 @@ class ConfirmationGuard:
         except TokenError as exc:
             return {"ok": False, "http_status": 409, "code": exc.code, "message": exc.message}
 
-        sess = self._sessions.get(rec.session_id)
+        sess = self.get_session(rec.session_id)
         if sess is None:
             return {
                 "ok": False,
@@ -315,7 +402,17 @@ class ConfirmationGuard:
                 self.tokens.consume(raw_token)
                 self.tokens.invalidate_session_revision(sess.session_id, revision=sess.revision)
                 sess.gateway_authorized = True
-                result = self.call_gateway(sess, body=dict(sess.frozen_tool_intent))
+                try:
+                    result = self.call_gateway(sess, body=dict(sess.frozen_tool_intent))
+                except RuntimeError as exc:
+                    # Duplicate gateway_attempt / fail-closed before HTTPS.
+                    self._persist_session(sess)
+                    return {
+                        "ok": False,
+                        "http_status": 409,
+                        "code": "conflict",
+                        "message": str(exc),
+                    }
                 if self.executor is None:
                     # Story 04 call-site only (no HTTP executor).
                     reply = "Send authorized (gateway call site)."
@@ -347,6 +444,7 @@ class ConfirmationGuard:
                 "message": "Invalid state transition",
             }
 
+        self._persist_session(sess)
         return {
             "ok": True,
             "http_status": 200,

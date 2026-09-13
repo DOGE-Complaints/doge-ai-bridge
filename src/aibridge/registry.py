@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from aibridge.content import LoadedContentBundle
+from aibridge.db import assert_no_silent_memory_fallback, connect_postgres, is_postgres_url
 
 
 def _utc_now() -> datetime:
@@ -212,15 +213,25 @@ def _require_psycopg() -> Any:
 
 
 class PostgresBundleRegistry:
-    """PostgreSQL register-once store (production / multi-instance)."""
+    """PostgreSQL register-once store (production / multi-instance).
 
-    def __init__(self, database_url: str, *, conn: Any | None = None) -> None:
-        psycopg, _pg_errors = _require_psycopg()
-        self._pg_errors = _pg_errors
+    Production: run versioned migrations; ``ensure_schema=False`` (default).
+    """
+
+    def __init__(
+        self,
+        database_url: str,
+        *,
+        conn: Any | None = None,
+        ensure_schema: bool = False,
+    ) -> None:
+        _psycopg, pg_errors = _require_psycopg()
+        self._pg_errors = pg_errors
         self._url = database_url
-        self._conn = conn if conn is not None else psycopg.connect(database_url)
-        self._conn.execute(_PG_SCHEMA)
-        self._conn.commit()
+        self._conn = connect_postgres(database_url, conn=conn)
+        if ensure_schema:
+            self._conn.execute(_PG_SCHEMA)
+            self._conn.commit()
 
     def get(self, bundle_hash: str) -> ContentBundleRow | None:
         row = self._conn.execute(
@@ -305,13 +316,21 @@ class PostgresBundleRegistry:
         )
 
 
-def open_bundle_registry(database_url: str) -> BundleRegistry:
+def open_bundle_registry(
+    database_url: str,
+    *,
+    allow_memory: bool = True,
+    ensure_schema: bool = False,
+) -> BundleRegistry:
     """Open registry from DATABASE_URL.
 
-    - empty / ``memory`` / ``:memory:`` → MemoryBundleRegistry
+    - empty / ``memory`` / ``:memory:`` → MemoryBundleRegistry (only if allow_memory)
     - ``sqlite:`` / ``sqlite://`` → SqliteBundleRegistry
     - ``postgresql://`` / ``postgres://`` → PostgresBundleRegistry (psycopg)
     """
+    assert_no_silent_memory_fallback(
+        database_url=database_url, allow_memory=allow_memory
+    )
     url = (database_url or "").strip()
     if not url or url in {":memory:", "memory"}:
         return MemoryBundleRegistry()
@@ -323,6 +342,6 @@ def open_bundle_registry(database_url: str) -> BundleRegistry:
         if path in {"", ":memory:"}:
             return SqliteBundleRegistry(":memory:")
         return SqliteBundleRegistry(path)
-    if url.startswith("postgresql://") or url.startswith("postgres://"):
-        return PostgresBundleRegistry(url)
+    if is_postgres_url(url):
+        return PostgresBundleRegistry(url, ensure_schema=ensure_schema)
     return SqliteBundleRegistry(url)

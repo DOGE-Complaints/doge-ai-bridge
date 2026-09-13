@@ -126,6 +126,11 @@ class Settings(BaseSettings):
         default=30.0,
         validation_alias="AIBRIDGE_GATEWAY_TIMEOUT_SECONDS",
     )
+    # Story 09 — production forbids silent memory stores when false
+    aibridge_allow_memory_stores: bool = Field(
+        default=True,
+        validation_alias="AIBRIDGE_ALLOW_MEMORY_STORES",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",

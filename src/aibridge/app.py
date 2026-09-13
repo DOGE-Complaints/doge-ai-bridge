@@ -125,10 +125,24 @@ def _init_stores(
     registry: BundleRegistry | None,
     sessions: SessionStore | None,
 ) -> tuple[BundleRegistry, SessionStore, DeploymentBundleState | None]:
+    allow_memory = bool(settings.aibridge_allow_memory_stores)
     if registry is None:
         try:
-            registry = open_bundle_registry(settings.database_url)
-        except (NotImplementedError, ImportError, OSError) as exc:
+            from aibridge.db import is_postgres_url
+            from aibridge.migrate import apply_migrations
+
+            if is_postgres_url(settings.database_url):
+                apply_migrations(settings.database_url)
+            registry = open_bundle_registry(
+                settings.database_url,
+                allow_memory=allow_memory,
+                ensure_schema=False,
+            )
+        except RuntimeError:
+            raise
+        except (NotImplementedError, ImportError, OSError, ValueError) as exc:
+            if not allow_memory:
+                raise
             registry = MemoryBundleRegistry()
             return (
                 registry,
@@ -141,8 +155,16 @@ def _init_stores(
             )
     if sessions is None:
         try:
-            sessions = open_session_store(settings.database_url)
-        except (NotImplementedError, ImportError, OSError):
+            sessions = open_session_store(
+                settings.database_url,
+                allow_memory=allow_memory,
+                ensure_schema=False,
+            )
+        except RuntimeError:
+            raise
+        except (NotImplementedError, ImportError, OSError, ValueError):
+            if not allow_memory:
+                raise
             sessions = MemorySessionStore()
 
     deployment: DeploymentBundleState | None = None
@@ -180,22 +202,65 @@ def create_app(
         redoc_url=None,
         openapi_url=None,
     )
-    store = dedupe_store or EventDedupeStore()
+    cfg0 = settings if settings is not None else get_settings()
+
+    from aibridge.db import is_postgres_url
+
+    use_pg_runtime = is_postgres_url(cfg0.database_url) and not bool(
+        cfg0.aibridge_allow_memory_stores
+    )
+
+    if dedupe_store is not None:
+        store: Any = dedupe_store
+    elif use_pg_runtime:
+        from aibridge.migrate import apply_migrations
+        from aibridge.pg_runtime import PostgresEventDedupeStore
+
+        apply_migrations(cfg0.database_url)
+        store = PostgresEventDedupeStore(cfg0.database_url)
+    else:
+        store = EventDedupeStore()
     app.state.dedupe_store = store
     app.state.settings_override = settings
 
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
-    cfg0 = resolve_settings()
+    turn_lock: Any | None = None
+    history_store: Any | None = None
     if confirmation_guard is not None:
         guard = confirmation_guard
+    elif use_pg_runtime:
+        from aibridge.pg_runtime import (
+            GatewayAttemptStore,
+            PostgresActionTokenStore,
+            PostgresConfirmSessionStore,
+            PostgresHistoryStore,
+            PostgresTurnLock,
+        )
+
+        # Migrations already applied above when dedupe defaulted; re-apply is no-op.
+        from aibridge.migrate import apply_migrations
+
+        apply_migrations(cfg0.database_url)
+        turn_lock = PostgresTurnLock(cfg0.database_url)
+        history_store = PostgresHistoryStore(cfg0.database_url)
+        guard = reset_confirmation_guard(
+            ConfirmationGuard(
+                executor=default_executor_from_settings(cfg0),
+                tokens=PostgresActionTokenStore(cfg0.database_url),
+                gateway_attempts=GatewayAttemptStore(cfg0.database_url),
+                confirm_sessions=PostgresConfirmSessionStore(cfg0.database_url),
+            )
+        )
     else:
-        # G-01: default ASGI path wires GatewayExecutor (not story-04 counter-only).
+        # G-01 (story 05): default ASGI path wires GatewayExecutor.
         guard = reset_confirmation_guard(
             ConfirmationGuard(executor=default_executor_from_settings(cfg0))
         )
     app.state.confirmation_guard = guard
+    app.state.turn_lock = turn_lock
+    app.state.history_store = history_store
 
     registry, sessions, deployment = _init_stores(
         cfg0, registry=bundle_registry, sessions=session_store
@@ -291,7 +356,12 @@ def create_app(
         parsed = parse_channel_body(raw, ChannelTurnRequest)
         if isinstance(parsed, JSONResponse):
             return parsed
-        response, _created = process_turn(parsed, store, guard=app.state.confirmation_guard)
+        response, _created = process_turn(
+            parsed,
+            store,
+            guard=app.state.confirmation_guard,
+            turn_lock=getattr(app.state, "turn_lock", None),
+        )
         return JSONResponse(status_code=200, content=response)
 
     @app.post("/v1/channel/actions")
@@ -307,7 +377,10 @@ def create_app(
         if isinstance(parsed, JSONResponse):
             return parsed
         success, _created, err = process_action(
-            parsed, store, guard=app.state.confirmation_guard
+            parsed,
+            store,
+            guard=app.state.confirmation_guard,
+            turn_lock=getattr(app.state, "turn_lock", None),
         )
         if err is not None:
             status = int(err["http_status"])

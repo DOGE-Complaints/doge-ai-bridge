@@ -8,7 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
-from aibridge.registry import BundleRegistry, ContentBundleRow, _require_psycopg
+from aibridge.db import connect_postgres, is_postgres_url, assert_no_silent_memory_fallback
+from aibridge.registry import BundleRegistry, ContentBundleRow
 
 
 def _utc_now() -> datetime:
@@ -206,14 +207,24 @@ class SqliteSessionStore:
 
 
 class PostgresSessionStore:
-    """PostgreSQL session store with content_bundle_hash pin."""
+    """PostgreSQL session store with content_bundle_hash pin.
 
-    def __init__(self, database_url: str, *, conn: Any | None = None) -> None:
-        psycopg, _pg_errors = _require_psycopg()
+    Production: apply versioned migrations first; pass ``ensure_schema=False``
+    (default) so boot does not ``CREATE TABLE IF NOT EXISTS``.
+    """
+
+    def __init__(
+        self,
+        database_url: str,
+        *,
+        conn: Any | None = None,
+        ensure_schema: bool = False,
+    ) -> None:
         self._url = database_url
-        self._conn = conn if conn is not None else psycopg.connect(database_url)
-        self._conn.execute(_PG_SESSION_SCHEMA)
-        self._conn.commit()
+        self._conn = connect_postgres(database_url, conn=conn)
+        if ensure_schema:
+            self._conn.execute(_PG_SESSION_SCHEMA)
+            self._conn.commit()
 
     def create(
         self,
@@ -287,7 +298,15 @@ class PostgresSessionStore:
         self._conn.close()
 
 
-def open_session_store(database_url: str) -> SessionStore:
+def open_session_store(
+    database_url: str,
+    *,
+    allow_memory: bool = True,
+    ensure_schema: bool = False,
+) -> SessionStore:
+    assert_no_silent_memory_fallback(
+        database_url=database_url, allow_memory=allow_memory
+    )
     url = (database_url or "").strip()
     if not url or url in {":memory:", "memory"}:
         return MemorySessionStore()
@@ -296,6 +315,6 @@ def open_session_store(database_url: str) -> SessionStore:
     if url.startswith("sqlite://"):
         path = url.removeprefix("sqlite://")
         return SqliteSessionStore(path or ":memory:")
-    if url.startswith("postgresql://") or url.startswith("postgres://"):
-        return PostgresSessionStore(url)
+    if is_postgres_url(url):
+        return PostgresSessionStore(url, ensure_schema=ensure_schema)
     return SqliteSessionStore(url)
