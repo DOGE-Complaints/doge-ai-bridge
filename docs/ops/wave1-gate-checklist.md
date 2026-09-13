@@ -4,6 +4,8 @@
 
 Live n8n call is **manual ops proof** (not required in CI). Automated parts: `/readyz`, 401 smoke, `/metrics` privacy tests.
 
+**Full R3-P1-09 / §6.1 live gate (STORY-AIBRIDGE-15):** [n8n-channel-workflow/r3-p1-09-live-gate-checklist.md](./n8n-channel-workflow/r3-p1-09-live-gate-checklist.md) — this wave-1 file stays the shorter façade smoke.
+
 ## Checklist
 
 1. [ ] Image / process up; migrations + current content bundle registered (when content configured).

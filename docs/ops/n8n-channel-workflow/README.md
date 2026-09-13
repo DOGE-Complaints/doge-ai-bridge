@@ -1,10 +1,13 @@
 # n8n channel workflow — ops artifact
 
 **Purpose:** Versioned, reproducible Telegram↔aibridge wiring **without** embedding business logic in n8n or secrets in Git.  
-**Related:** [aibridge-channel-v1.openapi.yaml](../../openapi/aibridge-channel-v1.openapi.yaml) · [01-channel-facade.md](../../architecture/runtime/01-channel-facade.md) · [REQ-01 §6](../../requirements/REQ-01-doge-ai-bridge-runtime.md)  
-**As-of:** 2026-09-12
+**Related:** [aibridge-channel-v1.openapi.yaml](../../openapi/aibridge-channel-v1.openapi.yaml) · [01-channel-facade.md](../../architecture/runtime/01-channel-facade.md) · [REQ-01 §6](../../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-03 §6.1 R3-P1-09 checklist](./r3-p1-09-live-gate-checklist.md)  
+**As-of:** 2026-09-13
 
 This directory holds the **ops contract** for the workflow. A full exported workflow JSON (without credentials) is added when an operator exports a verified workflow — **do not** invent a fake JSON body here.
+
+**Live §6.1 gate checklist (STORY-AIBRIDGE-15):** [r3-p1-09-live-gate-checklist.md](./r3-p1-09-live-gate-checklist.md)  
+**Live evidence status:** [live-evidence-BLOCKED-20260913.md](./live-evidence-BLOCKED-20260913.md)
 
 ---
 
@@ -60,7 +63,7 @@ Hard rules:
 | Façade field | Telegram source |
 |--------------|-----------------|
 | `channel` | constant `telegram` |
-| `event_id` | update id |
+| `event_id` | **update id** as decimal string — `String(update.update_id)` |
 | `principal.user_id` | from.id (decimal string) |
 | `principal.chat_id` | chat.id (decimal string) |
 | `message.message_id` | message.message_id |
@@ -71,10 +74,14 @@ Hard rules:
 
 | Façade field | Telegram source |
 |--------------|-----------------|
-| `event_id` | update id |
+| `event_id` | **same** update id as the enclosing Telegram update (not a new UUID; not `callback_query.id`) |
 | `callback_query_id` | callback_query.id |
 | `principal.*` | from / message.chat |
 | `action_token` | callback_query.data (opaque) |
+
+### `event_id` retry invariance (REQ-03 §6.1)
+
+n8n **MUST NOT** mint a new `event_id` when an HTTP Request node retries the same Telegram update. Reuse `String(update.update_id)` so aibridge dedupe returns the stored envelope instead of re-running the interview.
 
 ### response → Telegram
 

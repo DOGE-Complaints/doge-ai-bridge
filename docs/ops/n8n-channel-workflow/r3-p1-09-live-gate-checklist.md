@@ -1,0 +1,72 @@
+# R3-P1-09 — Live n8n / Telegram integration gate checklist
+
+**Story:** STORY-AIBRIDGE-15-n8n-telegram-gate  
+**REQ:** [REQ-03 §6.1](../../requirements/REQ-03-RUNTIME-REMEDIATION-AGREED.md)  
+**Ops contract:** [README.md](./README.md)  
+**Channel OpenAPI SSOT:** [aibridge-channel-v1.openapi.yaml](../../openapi/aibridge-channel-v1.openapi.yaml)  
+**As-of:** 2026-09-13T17:31:50Z  
+
+Executable checklist. Checkboxes are for **live** operator proof. Simulated/contract coverage lives in `tests/test_story_15_n8n_gate_contract.py` (no Bot tokens).
+
+**Do not invent** channel OpenAPI fields. **Do not** commit Bot / channel / gateway / OpenAI secrets.
+
+---
+
+## A. Routing shape (Scope #1–#3)
+
+| # | Check | Live | Contract/docs |
+|---|-------|------|---------------|
+| A1 | Telegram ordinary message → n8n → `POST /v1/channel/turns` | [ ] | README §2 flow |
+| A2 | Every returned `actions[]` rendered as inline buttons | [ ] | README §3 response→Telegram |
+| A3 | `callback_data` = `actions[].token` only (≤64 bytes) | [ ] | README §1 / §3 |
+| A4 | On `callback_query`: immediate Telegram `answerCallbackQuery` (neutral/empty) **before** aibridge | [ ] | README §2 |
+| A5 | Then `POST /v1/channel/actions` with opaque token + principal | [ ] | README §2–§3 |
+| A6 | Then Send Message / Edit Message from aibridge `reply_text` / `actions` | [ ] | README §2 |
+
+## B. Secrets & anti-patterns (Scope #4)
+
+| # | Check | Live | Contract/docs |
+|---|-------|------|---------------|
+| B1 | n8n secrets = Telegram Bot token + channel Bearer only | [ ] | README §4 |
+| B2 | OpenAI API key **absent** from n8n credentials/nodes | [ ] | README §4 |
+| B3 | Gateway Bearer / gateway base URL **absent** from n8n | [ ] | README §2 hard rules |
+| B4 | No n8n node calls `/story-drafts` | [ ] | README §2 / smoke §5 |
+
+## C. Field mapping & binding (Scope #5–#9)
+
+| # | Check | Live | Contract/docs |
+|---|-------|------|---------------|
+| C1 | `channel` always constant `telegram` | [ ] | README §3 · OAS · `test_story_15_*` |
+| C2 | `event_id` = Telegram **update id** (decimal string) for messages | [ ] | README §3 · derivation § below |
+| C3 | `event_id` for callbacks = same Telegram **update id** (not a random UUID) | [ ] | README §3 |
+| C4 | HTTP Request **retry** of the same update reuses the **same** `event_id` (no mint) | [ ] | § D · Target AC #2 · tests |
+| C5 | `principal.user_id` ← `from.id` (decimal string) | [ ] | README §3 · tests |
+| C6 | `principal.chat_id` ← `chat.id` / `message.chat.id` (decimal string) | [ ] | README §3 · tests |
+| C7 | `session_id` stable across turns for the active interview (same principal) | [ ] | façade behavior · tests |
+| C8 | `/actions` callback principal matches token binding (wrong owner → 403) | [ ] | story 13/15 contract tests |
+
+## D. `event_id` derivation (retry-safe)
+
+Documented formula (n8n expression must implement this — not invent UUIDs):
+
+```text
+event_id = String(telegram_update.update_id)
+```
+
+For `callback_query` paths, still use the enclosing update's `update_id` as `event_id`.  
+`callback_query_id` is a **separate** field (`callback_query.id`) — never substitute it for `event_id`.
+
+**Retry rule (REQ-03 §6.1):** if n8n HTTP Request node retries the same Telegram update, the body must keep the **identical** `event_id`. Aibridge dedupe then returns the stored response; a new id would falsely re-run the interview.
+
+## E. Live evidence pack (Target #1)
+
+| Artifact | Status |
+|----------|--------|
+| Screenshots / n8n execution logs (redacted) | see [live-evidence-BLOCKED-20260913.md](./live-evidence-BLOCKED-20260913.md) |
+| Recorded integration test (no live Bot) | `tests/test_story_15_n8n_gate_contract.py` |
+| Credential-stripped workflow JSON | **Out of story scope** (P2-04); do not invent |
+
+## F. Cross-links
+
+- Wave-1 façade smoke (partial): [wave1-gate-checklist.md](../wave1-gate-checklist.md)  
+- This file is the **§6.1 / R3-P1-09** SSOT for STORY-AIBRIDGE-15.
