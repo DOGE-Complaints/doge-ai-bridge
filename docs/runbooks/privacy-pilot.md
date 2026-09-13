@@ -2,7 +2,7 @@
 
 **Service:** `doge-ai-bridge` + n8n Telegram UI  
 **Related:** [REQ-01 §14, §19](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [04-ops-security.md](../architecture/runtime/04-ops-security.md)  
-**As-of:** 2026-09-12
+**As-of:** 2026-09-13
 
 Complete this before inviting real residents (wave 2). Organizational processors/controllers are recorded outside this file; do not invent legal entity names here.
 
@@ -23,18 +23,39 @@ Channel `user_id`/`chat_id` is a **Telegram principal**, not DOGEstonia Identity
 
 ---
 
+### Ops residual before residents (G-03 / STORY-16 audit)
+
+The unchecked items below (n8n retention evidence, early delete after stash/Cancel,
+backup vs delete agreement) are **ops-before-residents** residuals — not inventing
+PASS in CI. Code Target AC for R3-P1-10 (TTL, minimize, ops-delete authz, consumed
+invariant, no channel OAS invent) is covered by automated tests; close these
+checkboxes with operator evidence before inviting real residents.
+
 ## 2. aibridge checklist
 
-- [ ] Session narrative TTL = 7 days from last activity (slides on activity)
-- [ ] Early narrative delete after `stashed` or `cancelled` when continuation unused
-- [ ] Audit metadata retained without full text
-- [ ] Operator session-delete mechanism exists and is tested
-- [ ] Backup retention documented; delete vs backup restore behavior agreed
-- [ ] stdout and `/metrics` free of narrative/PII/secrets (test with unique phrase)
+- [x] Session narrative TTL = 7 days from last activity (slides on activity) — default `AIBRIDGE_SESSION_TTL_SECONDS=604800` (code)
+- [ ] Early narrative delete after `stashed` or `cancelled` when continuation unused *(ops-before-residents residual)*
+- [x] Audit metadata retained without full text (code: `audit_event` redaction)
+- [x] Operator session-delete mechanism exists and is tested (ops CLI + library)
+- [ ] Backup retention documented; delete vs backup restore behavior agreed *(ops-before-residents residual)*
+- [x] stdout and `/metrics` free of narrative/PII/secrets (test with unique phrase) — covered in ops wave tests
+
+### Operator session-delete (ops-only — HTTP path Unknown)
+
+**Do not** invent a channel OpenAPI delete route. Until an explicit operator decision sets an HTTP path:
+
+1. Authz: present `AIBRIDGE_OPS_BEARER_TOKEN` (distinct from channel Bearer). Empty/mismatch → **fail-closed**.
+2. CLI surface: `DATABASE_URL=postgres://… AIBRIDGE_OPS_BEARER_TOKEN=… python -m aibridge.ops_session_delete --session-id <id> --ops-bearer <token>`
+3. Library: `aibridge.privacy_retention.ops_delete_session(...)` — minimizes narrative to tombstone, invalidates pending tokens, drops confirm binding; **consumed tokens stay non-usable**.
+4. Audit: redacted `ops_session_delete` event (no narrative body).
+
+n8n execution retention (section 3) is verified **separately** before residents.
 
 ---
 
 ## 3. n8n checklist
+
+> **G-03 residual:** verify before residents (ops evidence). Unchecked ≠ code regression.
 
 - [ ] Success executions: save minimized or disabled for production workflow
 - [ ] Error executions: short retention; purge schedule configured
