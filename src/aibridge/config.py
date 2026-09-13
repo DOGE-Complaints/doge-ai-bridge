@@ -1,9 +1,10 @@
-"""Runtime configuration for channel façade + content bundle (stories 01–02)."""
+"""Runtime configuration for channel façade + content bundle (stories 01–02 / 12)."""
 
 from __future__ import annotations
 
 import hmac
 from functools import lru_cache
+from urllib.parse import urlparse
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -30,6 +31,38 @@ class Settings(BaseSettings):
     aibridge_max_request_bytes: int = Field(
         default=65536,
         validation_alias="AIBRIDGE_MAX_REQUEST_BYTES",
+    )
+    aibridge_max_response_bytes: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_MAX_RESPONSE_BYTES",
+    )
+    aibridge_session_ttl_seconds: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_SESSION_TTL_SECONDS",
+    )
+    aibridge_action_token_ttl_seconds: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_ACTION_TOKEN_TTL_SECONDS",
+    )
+    aibridge_http_connect_timeout_ms: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_HTTP_CONNECT_TIMEOUT_MS",
+    )
+    aibridge_http_total_timeout_ms: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_HTTP_TOTAL_TIMEOUT_MS",
+    )
+    aibridge_log_level: str = Field(
+        default="INFO",
+        validation_alias="AIBRIDGE_LOG_LEVEL",
+    )
+    aibridge_principal_rate_limit: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_PRINCIPAL_RATE_LIMIT",
+    )
+    aibridge_global_rate_limit: int | None = Field(
+        default=None,
+        validation_alias="AIBRIDGE_GLOBAL_RATE_LIMIT",
     )
 
     database_url: str = Field(default="", validation_alias="DATABASE_URL")
@@ -109,7 +142,12 @@ class Settings(BaseSettings):
         default=None,
         validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
     )
-    # Story 05 — gateway executor
+    # Story 12 — canonical gateway base URL (REQ-03 §5.6)
+    dogestonia_api_base_url: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_API_BASE_URL",
+    )
+    # Temporary compatibility alias for DOGESTONIA_API_BASE_URL (documented in .env.example).
     dogestonia_gateway_origin: str = Field(
         default="",
         validation_alias="DOGESTONIA_GATEWAY_ORIGIN",
@@ -121,6 +159,11 @@ class Settings(BaseSettings):
     aibridge_dry_run: bool = Field(
         default=False,
         validation_alias="AIBRIDGE_DRY_RUN",
+    )
+    # Lift dry-run readiness gate after story 14 (R3-P1-03) sets this true.
+    aibridge_schema_validation_complete: bool = Field(
+        default=False,
+        validation_alias="AIBRIDGE_SCHEMA_VALIDATION_COMPLETE",
     )
     aibridge_gateway_timeout_seconds: float = Field(
         default=30.0,
@@ -151,8 +194,10 @@ class Settings(BaseSettings):
         "dogestonia_schema_id",
         "dogestonia_schema_version",
         "dogestonia_origin_source",
+        "dogestonia_api_base_url",
         "dogestonia_gateway_origin",
         "dogestonia_draft_redirect_base_url",
+        "aibridge_log_level",
         mode="before",
     )
     @classmethod
@@ -171,6 +216,39 @@ class Settings(BaseSettings):
                 "OPENAI_STORE_RESPONSES must be false (aibridge forces store:false)"
             )
         return normalized or "false"
+
+    def resolved_gateway_base_url(self) -> str:
+        """Canonical gateway HTTPS origin used by the executor."""
+        canonical = (self.dogestonia_api_base_url or "").strip().rstrip("/")
+        alias = (self.dogestonia_gateway_origin or "").strip().rstrip("/")
+        if canonical:
+            return canonical
+        return alias
+
+    def gateway_base_url_conflict(self) -> bool:
+        """True when both env names are set to different values (readyz fail)."""
+        canonical = (self.dogestonia_api_base_url or "").strip().rstrip("/")
+        alias = (self.dogestonia_gateway_origin or "").strip().rstrip("/")
+        if not canonical or not alias:
+            return False
+        return canonical != alias
+
+    def gateway_base_url_https_ok(self) -> bool:
+        url = self.resolved_gateway_base_url()
+        if not url:
+            return False
+        parsed = urlparse(url)
+        return parsed.scheme == "https" and bool(parsed.netloc)
+
+    def draft_redirect_base_ok(self) -> bool:
+        url = (self.dogestonia_draft_redirect_base_url or "").strip()
+        if not url:
+            return False
+        parsed = urlparse(url)
+        return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+    def openai_presence_ok(self) -> bool:
+        return bool(self.openai_api_key) and bool(self.openai_model)
 
     def channel_auth_configured(self) -> bool:
         return bool(self.aibridge_channel_bearer_token)

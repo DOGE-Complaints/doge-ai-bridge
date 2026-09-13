@@ -15,6 +15,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
 from aibridge.auth import is_channel_authorized
+from aibridge.budgets import (
+    BudgetGuard,
+    any_budget_limit_set,
+    budget_limits_from_settings,
+)
 from aibridge.channel import process_action, process_turn_async
 from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
@@ -23,10 +28,13 @@ from aibridge.deployment import DeploymentBundleState, verify_and_register_deplo
 from aibridge.gateway import default_executor_from_settings
 from aibridge.interview import InterviewEngine, default_recording_engine
 from aibridge.metrics import get_metrics
+from aibridge.rate_limit import RateLimiter
+from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.responses_client import ProductionResponsesClient
 from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
+from aibridge.action_tokens import ActionTokenStore
 
 CHANNEL_PATH_PREFIX = "/v1/channel/"
 
@@ -229,6 +237,36 @@ def create_app(
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
+    # Log level when set (REQ-03 §5.6).
+    import logging
+
+    logging.getLogger("aibridge").setLevel(
+        getattr(logging, str(cfg0.aibridge_log_level or "INFO").upper(), logging.INFO)
+    )
+
+    token_ttl = (
+        int(cfg0.aibridge_action_token_ttl_seconds)
+        if cfg0.aibridge_action_token_ttl_seconds is not None
+        else 15 * 60
+    )
+    budget_limits = budget_limits_from_settings(cfg0)
+    budget_guard = BudgetGuard(budget_limits) if any_budget_limit_set(budget_limits) else None
+
+    connect_ms = (
+        int(cfg0.aibridge_http_connect_timeout_ms)
+        if cfg0.aibridge_http_connect_timeout_ms is not None
+        else 5_000
+    )
+    openai_timeout_ms = (
+        int(cfg0.aibridge_openai_timeout_ms)
+        if cfg0.aibridge_openai_timeout_ms is not None
+        else (
+            int(cfg0.aibridge_http_total_timeout_ms)
+            if cfg0.aibridge_http_total_timeout_ms is not None
+            else 30_000
+        )
+    )
+
     # Interview engine — production client when key present; else recording default.
     if interview_engine is not None:
         engine = interview_engine
@@ -237,12 +275,16 @@ def create_app(
             client=ProductionResponsesClient(
                 api_key=cfg0.openai_api_key,
                 model=cfg0.openai_model or "gpt-4.1-mini",
-                timeout_ms=int(cfg0.aibridge_openai_timeout_ms or 30_000),
+                timeout_ms=openai_timeout_ms,
+                connect_timeout_ms=connect_ms,
             ),
             model=cfg0.openai_model or "gpt-4.1-mini",
         )
     else:
         engine = default_recording_engine()
+
+    if budget_guard is not None and engine.budgets is None:
+        engine.budgets = budget_guard
 
     turn_lock: Any | None = None
     history_store: Any | None = None
@@ -269,7 +311,9 @@ def create_app(
         guard = reset_confirmation_guard(
             ConfirmationGuard(
                 executor=default_executor_from_settings(cfg0),
-                tokens=PostgresActionTokenStore(cfg0.database_url),
+                tokens=PostgresActionTokenStore(
+                    cfg0.database_url, ttl_seconds=token_ttl
+                ),
                 gateway_attempts=GatewayAttemptStore(cfg0.database_url),
                 confirm_sessions=PostgresConfirmSessionStore(cfg0.database_url),
                 interview_engine=engine,
@@ -282,6 +326,7 @@ def create_app(
         guard = reset_confirmation_guard(
             ConfirmationGuard(
                 executor=default_executor_from_settings(cfg0),
+                tokens=ActionTokenStore(ttl_seconds=token_ttl),
                 interview_engine=engine,
             )
         )
@@ -289,10 +334,22 @@ def create_app(
     app.state.interview_engine = engine
     app.state.turn_lock = turn_lock
     app.state.history_store = history_store
+    app.state.budget_guard = budget_guard
+
+    rate_limiter = RateLimiter(
+        principal_limit=cfg0.aibridge_principal_rate_limit,
+        global_limit=cfg0.aibridge_global_rate_limit,
+    )
+    app.state.rate_limiter = rate_limiter
 
     registry, sessions, deployment = _init_stores(
         cfg0, registry=bundle_registry, sessions=session_store
     )
+    if (
+        isinstance(sessions, MemorySessionStore)
+        and cfg0.aibridge_session_ttl_seconds is not None
+    ):
+        sessions.ttl_seconds = int(cfg0.aibridge_session_ttl_seconds)
     app.state.bundle_registry = registry
     app.state.session_store = sessions
     app.state.deployment_bundle = deployment
@@ -317,6 +374,26 @@ def create_app(
         return await call_next(request)
 
     @app.middleware("http")
+    async def channel_rate_limit_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        if request.url.path.startswith(CHANNEL_PATH_PREFIX) and rate_limiter.enabled():
+            # Principal key from Authorization prefix only (no token body in metrics).
+            auth = request.headers.get("authorization") or ""
+            principal_key = auth[:24] if auth else "anonymous"
+            denied = rate_limiter.allow(principal_key)
+            if denied is not None:
+                return JSONResponse(
+                    status_code=429,
+                    content=error_body(
+                        code="rate_limited",
+                        message="Rate limit exceeded",
+                        retryable=True,
+                    ),
+                )
+        return await call_next(request)
+
+    @app.middleware("http")
     async def channel_http_error_metrics(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
@@ -336,32 +413,10 @@ def create_app(
     @app.get("/readyz")
     async def readyz() -> JSONResponse:
         cfg = resolve_settings()
-        if not cfg.channel_auth_configured():
-            return JSONResponse(
-                status_code=503,
-                content={"status": "not_ready", "reason": "channel_auth_missing"},
-            )
-        if cfg.channel_gateway_bearers_equal():
-            return JSONResponse(
-                status_code=503,
-                content={"status": "not_ready", "reason": "channel_gateway_bearer_equal"},
-            )
         dep: DeploymentBundleState | None = app.state.deployment_bundle
-        if cfg.content_configured():
-            if dep is None or not dep.ready:
-                reason = "content_bundle_not_ready"
-                if dep is not None and dep.error:
-                    reason = dep.error
-                return JSONResponse(
-                    status_code=503,
-                    content={"status": "not_ready", "reason": reason},
-                )
-        elif dep is not None and dep.error:
-            return JSONResponse(
-                status_code=503,
-                content={"status": "not_ready", "reason": dep.error},
-            )
-        return JSONResponse(status_code=200, content={"status": "ready"})
+        result = evaluate_readiness(cfg, dep)
+        status = 200 if result.ready else 503
+        return JSONResponse(status_code=status, content=readiness_payload(result))
 
     @app.get("/metrics")
     async def metrics() -> PlainTextResponse:
@@ -450,6 +505,25 @@ def create_app(
         return JSONResponse(
             status_code=status,
             content=error_body(code=code, message=message),
+        )
+
+    @app.exception_handler(Exception)
+    async def unhandled_channel_exception(
+        request: Request, _exc: Exception
+    ) -> JSONResponse:
+        """Bounded OpenAPI channel 500 — no stack traces / secrets in body (P0-11)."""
+        if request.url.path.startswith(CHANNEL_PATH_PREFIX):
+            return JSONResponse(
+                status_code=500,
+                content=error_body(
+                    code="internal_error",
+                    message="Internal bridge error",
+                    retryable=True,
+                ),
+            )
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "reason": "internal_error"},
         )
 
     return app

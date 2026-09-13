@@ -49,8 +49,9 @@ class SessionStore(Protocol):
 
 
 class MemorySessionStore:
-    def __init__(self) -> None:
+    def __init__(self, *, ttl_seconds: int | None = None) -> None:
         self._rows: dict[str, SessionRow] = {}
+        self.ttl_seconds = ttl_seconds
 
     def create(
         self,
@@ -72,7 +73,15 @@ class MemorySessionStore:
         return row
 
     def get(self, session_id: str) -> SessionRow | None:
-        return self._rows.get(session_id)
+        row = self._rows.get(session_id)
+        if row is None:
+            return None
+        if self.ttl_seconds is not None and row.active:
+            age = (_utc_now() - row.updated_at).total_seconds()
+            if age > self.ttl_seconds:
+                self.deactivate(session_id)
+                return self._rows.get(session_id)
+        return row
 
     def resume_bundle(
         self, session_id: str, registry: BundleRegistry

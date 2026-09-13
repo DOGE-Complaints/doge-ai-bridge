@@ -183,6 +183,7 @@ class GatewayExecutor:
     redirect_base: str = ""
     transport: GatewayTransport = field(default_factory=RecordingGatewayTransport)
     timeout_seconds: float = 30.0
+    max_response_bytes: int | None = None
 
     def __post_init__(self) -> None:
         self.origin = self.origin.rstrip("/")
@@ -299,6 +300,17 @@ class GatewayExecutor:
                 http_posted=True,
             )
 
+        if (
+            self.max_response_bytes is not None
+            and len(resp.body) > self.max_response_bytes
+        ):
+            return GatewayResult(
+                outcome=GatewayOutcome.CONTRACT_MISMATCH,
+                http_status=resp.status_code,
+                reply_text="Gateway response exceeded AIBRIDGE_MAX_RESPONSE_BYTES.",
+                http_posted=True,
+            )
+
         outcome = map_http_outcome(resp.status_code, resp.body)
         draft_id: str | None = None
         trace_id: str | None = None
@@ -338,8 +350,8 @@ def _looks_ambiguous(exc: BaseException) -> bool:
 class HttpxGatewayTransport:
     """Production HTTPS transport — TLS verify on; redirects off.
 
-    Live gateway host comes only from ``DOGESTONIA_GATEWAY_ORIGIN`` (Unknown until
-    ops configures it). Do not invent Railway or other URLs in code/tests.
+    Live gateway host comes from ``DOGESTONIA_API_BASE_URL`` (canonical) or
+    temporary alias ``DOGESTONIA_GATEWAY_ORIGIN``. Do not invent host URLs in code.
     """
 
     verify_tls: bool = True
@@ -373,12 +385,26 @@ class HttpxGatewayTransport:
 
 
 def default_executor_from_settings(settings: Any, transport: GatewayTransport | None = None) -> GatewayExecutor:
+    if hasattr(settings, "resolved_gateway_base_url"):
+        origin = settings.resolved_gateway_base_url()
+    else:
+        origin = (
+            getattr(settings, "dogestonia_api_base_url", "")
+            or getattr(settings, "dogestonia_gateway_origin", "")
+            or ""
+        )
+    timeout_seconds = float(getattr(settings, "aibridge_gateway_timeout_seconds", 30.0) or 30.0)
+    total_ms = getattr(settings, "aibridge_http_total_timeout_ms", None)
+    if total_ms is not None:
+        timeout_seconds = float(total_ms) / 1000.0
+    max_resp = getattr(settings, "aibridge_max_response_bytes", None)
     return GatewayExecutor(
-        origin=getattr(settings, "dogestonia_gateway_origin", "") or "",
+        origin=origin,
         gateway_bearer=getattr(settings, "dogestonia_api_bearer_token", "") or "",
         channel_bearer=getattr(settings, "aibridge_channel_bearer_token", "") or "",
         dry_run=bool(getattr(settings, "aibridge_dry_run", False)),
         redirect_base=getattr(settings, "dogestonia_draft_redirect_base_url", "") or "",
         transport=transport if transport is not None else HttpxGatewayTransport(verify_tls=True),
-        timeout_seconds=float(getattr(settings, "aibridge_gateway_timeout_seconds", 30.0) or 30.0),
+        timeout_seconds=timeout_seconds,
+        max_response_bytes=int(max_resp) if max_resp is not None else None,
     )

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Protocol
 
 
 class BudgetBreachError(Exception):
@@ -25,6 +25,41 @@ class BudgetLimits:
     max_tool_calls_per_turn: int | None = None
     openai_timeout_ms: int | None = None
     max_session_turns: int | None = None
+
+
+class SettingsLike(Protocol):
+    aibridge_max_input_tokens: int | None
+    aibridge_max_output_tokens: int | None
+    aibridge_max_responses_calls_per_turn: int | None
+    aibridge_max_tool_calls_per_turn: int | None
+    aibridge_openai_timeout_ms: int | None
+    aibridge_max_session_turns: int | None
+
+
+def budget_limits_from_settings(settings: SettingsLike) -> BudgetLimits:
+    """Map Settings budget knobs → BudgetLimits (None = unset / no enforce)."""
+    return BudgetLimits(
+        max_input_tokens=settings.aibridge_max_input_tokens,
+        max_output_tokens=settings.aibridge_max_output_tokens,
+        max_responses_calls_per_turn=settings.aibridge_max_responses_calls_per_turn,
+        max_tool_calls_per_turn=settings.aibridge_max_tool_calls_per_turn,
+        openai_timeout_ms=settings.aibridge_openai_timeout_ms,
+        max_session_turns=settings.aibridge_max_session_turns,
+    )
+
+
+def any_budget_limit_set(limits: BudgetLimits) -> bool:
+    return any(
+        v is not None
+        for v in (
+            limits.max_input_tokens,
+            limits.max_output_tokens,
+            limits.max_responses_calls_per_turn,
+            limits.max_tool_calls_per_turn,
+            limits.openai_timeout_ms,
+            limits.max_session_turns,
+        )
+    )
 
 
 @dataclass
