@@ -72,6 +72,7 @@ class GatewayTransport(Protocol):
         json_body: dict[str, Any],
         timeout: float,
         allow_redirects: bool,
+        connect_timeout: float | None = None,
     ) -> RawHttpResponse: ...
 
 
@@ -92,6 +93,7 @@ class RecordingGatewayTransport:
         json_body: dict[str, Any],
         timeout: float,
         allow_redirects: bool,
+        connect_timeout: float | None = None,
     ) -> RawHttpResponse:
         if allow_redirects:
             raise AssertionError("redirects must be disabled")
@@ -102,6 +104,7 @@ class RecordingGatewayTransport:
                 "headers": dict(headers),
                 "json_body": dict(json_body),
                 "timeout": timeout,
+                "connect_timeout": connect_timeout,
                 "allow_redirects": allow_redirects,
             }
         )
@@ -183,6 +186,7 @@ class GatewayExecutor:
     redirect_base: str = ""
     transport: GatewayTransport = field(default_factory=RecordingGatewayTransport)
     timeout_seconds: float = 30.0
+    connect_timeout_seconds: float | None = None
     max_response_bytes: int | None = None
 
     def __post_init__(self) -> None:
@@ -271,6 +275,7 @@ class GatewayExecutor:
                 headers=headers,
                 json_body=body,
                 timeout=self.timeout_seconds,
+                connect_timeout=self.connect_timeout_seconds,
                 allow_redirects=False,
             )
         except TimeoutError:
@@ -365,16 +370,24 @@ class HttpxGatewayTransport:
         json_body: dict[str, Any],
         timeout: float,
         allow_redirects: bool,
+        connect_timeout: float | None = None,
     ) -> RawHttpResponse:
         import httpx
 
         if allow_redirects:
             raise AssertionError("redirects must be disabled for gateway stash")
+        # R3-P1-06 / REQ-01 §17 — total + optional connect timeout.
+        if connect_timeout is not None:
+            client_timeout: float | httpx.Timeout = httpx.Timeout(
+                timeout, connect=connect_timeout
+            )
+        else:
+            client_timeout = timeout
         # Explicit TLS verify — never disable for production path.
         with httpx.Client(
             verify=self.verify_tls,
             follow_redirects=False,
-            timeout=timeout,
+            timeout=client_timeout,
         ) as client:
             resp = client.request(method, url, headers=headers, json=json_body)
             return RawHttpResponse(
@@ -397,6 +410,10 @@ def default_executor_from_settings(settings: Any, transport: GatewayTransport | 
     total_ms = getattr(settings, "aibridge_http_total_timeout_ms", None)
     if total_ms is not None:
         timeout_seconds = float(total_ms) / 1000.0
+    connect_ms = getattr(settings, "aibridge_http_connect_timeout_ms", None)
+    connect_timeout_seconds = (
+        float(connect_ms) / 1000.0 if connect_ms is not None else None
+    )
     max_resp = getattr(settings, "aibridge_max_response_bytes", None)
     return GatewayExecutor(
         origin=origin,
@@ -406,5 +423,6 @@ def default_executor_from_settings(settings: Any, transport: GatewayTransport | 
         redirect_base=getattr(settings, "dogestonia_draft_redirect_base_url", "") or "",
         transport=transport if transport is not None else HttpxGatewayTransport(verify_tls=True),
         timeout_seconds=timeout_seconds,
+        connect_timeout_seconds=connect_timeout_seconds,
         max_response_bytes=int(max_resp) if max_resp is not None else None,
     )

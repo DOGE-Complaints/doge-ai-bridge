@@ -17,7 +17,7 @@ class BudgetBreachError(Exception):
 
 @dataclass
 class BudgetLimits:
-    """Env placeholders — numeric defaults Unknown until measured (REQ-01 §17)."""
+    """LLM budgets — finite pilot defaults via Settings (R3-P1-02 / REQ-01 §17)."""
 
     max_input_tokens: int | None = None
     max_output_tokens: int | None = None

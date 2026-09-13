@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 import uuid
-from collections.abc import Awaitable, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, Request, Response
@@ -17,7 +18,6 @@ from starlette.types import ASGIApp
 from aibridge.auth import is_channel_authorized
 from aibridge.budgets import (
     BudgetGuard,
-    any_budget_limit_set,
     budget_limits_from_settings,
 )
 from aibridge.channel import process_action, process_turn_async
@@ -206,14 +206,29 @@ def create_app(
     if settings is not None:
         reset_settings_cache()
 
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        """AIB-OPS-03 — accept traffic on start; drain + mark executing unknown on stop."""
+        app.state.accepting_traffic = True
+        app.state.shutting_down = False
+        yield
+        app.state.shutting_down = True
+        app.state.accepting_traffic = False
+        guard_sd = getattr(app.state, "confirmation_guard", None)
+        if guard_sd is not None and hasattr(guard_sd, "recover_all_executing_attempts"):
+            guard_sd.recover_all_executing_attempts()
+
     app = FastAPI(
         title="doge-ai-bridge Channel Façade",
         version="0.2.0",
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
+        lifespan=lifespan,
     )
     cfg0 = settings if settings is not None else get_settings()
+    app.state.accepting_traffic = True
+    app.state.shutting_down = False
 
     from aibridge.db import is_postgres_url
 
@@ -249,8 +264,9 @@ def create_app(
         if cfg0.aibridge_action_token_ttl_seconds is not None
         else 15 * 60
     )
+    # R3-P1-02 — always attach BudgetGuard (finite defaults in Settings).
     budget_limits = budget_limits_from_settings(cfg0)
-    budget_guard = BudgetGuard(budget_limits) if any_budget_limit_set(budget_limits) else None
+    budget_guard = BudgetGuard(budget_limits)
 
     connect_ms = (
         int(cfg0.aibridge_http_connect_timeout_ms)
@@ -283,7 +299,7 @@ def create_app(
     else:
         engine = default_recording_engine()
 
-    if budget_guard is not None and engine.budgets is None:
+    if engine.budgets is None:
         engine.budgets = budget_guard
 
     turn_lock: Any | None = None
@@ -356,6 +372,24 @@ def create_app(
 
     max_bytes = cfg0.aibridge_max_request_bytes
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=max_bytes)
+
+    @app.middleware("http")
+    async def channel_drain_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """AIB-OPS-03 — stop accepting new channel turns/actions while shutting down."""
+        if request.url.path.startswith(CHANNEL_PATH_PREFIX) and not getattr(
+            app.state, "accepting_traffic", True
+        ):
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="shutting_down",
+                    message="Bridge is shutting down",
+                    retryable=True,
+                ),
+            )
+        return await call_next(request)
 
     @app.middleware("http")
     async def channel_bearer_middleware(

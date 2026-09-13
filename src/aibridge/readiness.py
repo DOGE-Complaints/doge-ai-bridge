@@ -130,9 +130,14 @@ def evaluate_readiness(
     if not settings.responses_store_false_enforced():
         return ReadinessResult(False, "openai_store_not_false")
 
-    # Until story 14 (R3-P1-03): dry-run must be true for readiness.
-    if not settings.aibridge_schema_validation_complete and not settings.aibridge_dry_run:
-        return ReadinessResult(False, "dry_run_required")
+    # R3-P1-03: dry-run required until full schema validation is proven + flagged.
+    from aibridge.request_assembly import schema_validation_complete
+
+    if not settings.aibridge_dry_run:
+        if not settings.aibridge_schema_validation_complete:
+            return ReadinessResult(False, "dry_run_required")
+        if not schema_validation_complete():
+            return ReadinessResult(False, "schema_validation_incomplete")
 
     if settings.content_configured():
         if deployment is None or not deployment.ready:

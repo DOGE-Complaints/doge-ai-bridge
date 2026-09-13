@@ -4,12 +4,31 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
 from aibridge.tool_gen import (
     CANONICAL_OPERATION_ID,
     strip_server_owned_fields,
+)
+
+# R3-P1-03 — keywords beyond the old type/required/properties subset.
+FULL_SCHEMA_KEYWORDS = frozenset(
+    {
+        "type",
+        "required",
+        "properties",
+        "additionalProperties",
+        "items",
+        "enum",
+        "const",
+        "minimum",
+        "maximum",
+        "minLength",
+        "maxLength",
+        "pattern",
+    }
 )
 
 
@@ -85,7 +104,14 @@ def build_stable_prefix(
 
 
 def _validate_type(instance: Any, schema: dict[str, Any], path: str = "$") -> None:
-    """Minimal JSON Schema subset validator (type/required/properties/additionalProperties)."""
+    """JSON Schema validator covering type/required/properties + enum/const/bounds (R3-P1-03)."""
+    if "const" in schema and instance != schema["const"]:
+        raise ValidationGateError(0, f"const mismatch at {path}")
+    if "enum" in schema:
+        allowed_enum = schema["enum"]
+        if not isinstance(allowed_enum, list) or instance not in allowed_enum:
+            raise ValidationGateError(0, f"enum mismatch at {path}")
+
     types = schema.get("type")
     if types is not None:
         allowed = types if isinstance(types, list) else [types]
@@ -107,6 +133,22 @@ def _validate_type(instance: Any, schema: dict[str, Any], path: str = "$") -> No
                 ok = True
         if not ok:
             raise ValidationGateError(0, f"type mismatch at {path}")
+
+    if isinstance(instance, str):
+        if "minLength" in schema and len(instance) < int(schema["minLength"]):
+            raise ValidationGateError(0, f"minLength at {path}")
+        if "maxLength" in schema and len(instance) > int(schema["maxLength"]):
+            raise ValidationGateError(0, f"maxLength at {path}")
+        if "pattern" in schema:
+            if re.fullmatch(str(schema["pattern"]), instance) is None:
+                raise ValidationGateError(0, f"pattern mismatch at {path}")
+
+    if isinstance(instance, (int, float)) and not isinstance(instance, bool):
+        if "minimum" in schema and instance < schema["minimum"]:
+            raise ValidationGateError(0, f"minimum at {path}")
+        if "maximum" in schema and instance > schema["maximum"]:
+            raise ValidationGateError(0, f"maximum at {path}")
+
     if isinstance(instance, dict):
         props = schema.get("properties") or {}
         required = schema.get("required") or []
@@ -144,6 +186,34 @@ def validate_gate3_wire_body(body: dict[str, Any], wire_schema: dict[str, Any]) 
         _validate_type(body, wire_schema)
     except ValidationGateError as exc:
         raise ValidationGateError(3, str(exc).removeprefix("gate0: ")) from exc
+
+
+def schema_validation_complete() -> bool:
+    """Probe enum/const enforcement (R3-P1-03) — not frozenset membership alone."""
+    enum_schema = {
+        "type": "object",
+        "properties": {"tone": {"type": "string", "enum": ["formal", "casual"]}},
+        "required": ["tone"],
+    }
+    try:
+        validate_gate2_pack_payload({"tone": "formal"}, enum_schema)
+        try:
+            validate_gate2_pack_payload({"tone": "slang"}, enum_schema)
+        except ValidationGateError:
+            pass
+        else:
+            return False
+        validate_gate1_tool_args(
+            {"k": "fixed"},
+            {
+                "type": "object",
+                "properties": {"k": {"const": "fixed"}},
+                "required": ["k"],
+            },
+        )
+        return True
+    except Exception:  # noqa: BLE001 — readiness fail-closed if probe breaks
+        return False
 
 
 def assemble_server_body(

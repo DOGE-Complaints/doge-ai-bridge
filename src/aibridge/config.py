@@ -1,4 +1,4 @@
-"""Runtime configuration for channel façade + content bundle (stories 01–02 / 12)."""
+"""Runtime configuration for channel façade + content bundle (stories 01–02 / 12 / 14)."""
 
 from __future__ import annotations
 
@@ -8,6 +8,21 @@ from urllib.parse import urlparse
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# R3-P1-02 / R3-P1-06 — finite pilot defaults (override via env; documented in .env.example).
+DEFAULT_MAX_RESPONSE_BYTES = 1_048_576
+DEFAULT_SESSION_TTL_SECONDS = 86_400
+DEFAULT_ACTION_TOKEN_TTL_SECONDS = 900
+DEFAULT_HTTP_CONNECT_TIMEOUT_MS = 5_000
+DEFAULT_HTTP_TOTAL_TIMEOUT_MS = 30_000
+DEFAULT_PRINCIPAL_RATE_LIMIT = 60
+DEFAULT_GLOBAL_RATE_LIMIT = 600
+DEFAULT_MAX_INPUT_TOKENS = 100_000
+DEFAULT_MAX_OUTPUT_TOKENS = 16_384
+DEFAULT_MAX_RESPONSES_CALLS_PER_TURN = 8
+DEFAULT_MAX_TOOL_CALLS_PER_TURN = 16
+DEFAULT_OPENAI_TIMEOUT_MS = 60_000
+DEFAULT_MAX_SESSION_TURNS = 100
 
 
 class Settings(BaseSettings):
@@ -33,23 +48,23 @@ class Settings(BaseSettings):
         validation_alias="AIBRIDGE_MAX_REQUEST_BYTES",
     )
     aibridge_max_response_bytes: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_RESPONSE_BYTES,
         validation_alias="AIBRIDGE_MAX_RESPONSE_BYTES",
     )
     aibridge_session_ttl_seconds: int | None = Field(
-        default=None,
+        default=DEFAULT_SESSION_TTL_SECONDS,
         validation_alias="AIBRIDGE_SESSION_TTL_SECONDS",
     )
     aibridge_action_token_ttl_seconds: int | None = Field(
-        default=None,
+        default=DEFAULT_ACTION_TOKEN_TTL_SECONDS,
         validation_alias="AIBRIDGE_ACTION_TOKEN_TTL_SECONDS",
     )
     aibridge_http_connect_timeout_ms: int | None = Field(
-        default=None,
+        default=DEFAULT_HTTP_CONNECT_TIMEOUT_MS,
         validation_alias="AIBRIDGE_HTTP_CONNECT_TIMEOUT_MS",
     )
     aibridge_http_total_timeout_ms: int | None = Field(
-        default=None,
+        default=DEFAULT_HTTP_TOTAL_TIMEOUT_MS,
         validation_alias="AIBRIDGE_HTTP_TOTAL_TIMEOUT_MS",
     )
     aibridge_log_level: str = Field(
@@ -57,11 +72,11 @@ class Settings(BaseSettings):
         validation_alias="AIBRIDGE_LOG_LEVEL",
     )
     aibridge_principal_rate_limit: int | None = Field(
-        default=None,
+        default=DEFAULT_PRINCIPAL_RATE_LIMIT,
         validation_alias="AIBRIDGE_PRINCIPAL_RATE_LIMIT",
     )
     aibridge_global_rate_limit: int | None = Field(
-        default=None,
+        default=DEFAULT_GLOBAL_RATE_LIMIT,
         validation_alias="AIBRIDGE_GLOBAL_RATE_LIMIT",
     )
 
@@ -117,29 +132,29 @@ class Settings(BaseSettings):
         default="openai_responses_telegram",
         validation_alias="DOGESTONIA_ORIGIN_SOURCE",
     )
-    # Budget placeholders — numeric defaults Unknown until measured (do not invent).
+    # R3-P1-02 — finite pilot budget defaults (override via env).
     aibridge_max_input_tokens: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_INPUT_TOKENS,
         validation_alias="AIBRIDGE_MAX_INPUT_TOKENS",
     )
     aibridge_max_output_tokens: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_OUTPUT_TOKENS,
         validation_alias="AIBRIDGE_MAX_OUTPUT_TOKENS",
     )
     aibridge_max_responses_calls_per_turn: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_RESPONSES_CALLS_PER_TURN,
         validation_alias="AIBRIDGE_MAX_RESPONSES_CALLS_PER_TURN",
     )
     aibridge_max_tool_calls_per_turn: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_TOOL_CALLS_PER_TURN,
         validation_alias="AIBRIDGE_MAX_TOOL_CALLS_PER_TURN",
     )
     aibridge_openai_timeout_ms: int | None = Field(
-        default=None,
+        default=DEFAULT_OPENAI_TIMEOUT_MS,
         validation_alias="AIBRIDGE_OPENAI_TIMEOUT_MS",
     )
     aibridge_max_session_turns: int | None = Field(
-        default=None,
+        default=DEFAULT_MAX_SESSION_TURNS,
         validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
     )
     # Story 12 — canonical gateway base URL (REQ-03 §5.6)
