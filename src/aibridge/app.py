@@ -193,6 +193,43 @@ def _init_stores(
     return registry, sessions, deployment
 
 
+def _apply_deployment_to_engine(
+    engine: InterviewEngine,
+    deployment: DeploymentBundleState | None,
+    settings: Settings,
+) -> DeploymentBundleState | None:
+    """ADR-1 — mutate InterviewEngine from a ready deployment (stable prefix).
+
+    Does not reorder create_app. When content is configured and assembled text is
+    empty, returns a fail-closed DeploymentBundleState so /readyz stays 503.
+    """
+    if deployment is None:
+        return None
+    if not deployment.ready or deployment.loaded is None:
+        return deployment
+
+    assembled = (deployment.loaded.assembled_instructions or "").strip()
+    if not assembled:
+        return DeploymentBundleState(
+            loaded=deployment.loaded,
+            registered=deployment.registered,
+            error="assembled_instructions_empty",
+            strict_tool=deployment.strict_tool,
+        )
+
+    engine.prompt_channel = "prefix"
+    engine.instructions = deployment.loaded.assembled_instructions
+    if deployment.strict_tool is not None:
+        engine.tools = [deployment.strict_tool]
+
+    schema_id = (settings.dogestonia_schema_id or "").strip()
+    schema_version = (settings.dogestonia_schema_version or "").strip()
+    if schema_id and schema_version:
+        engine.pack_id = f"{schema_id}/{schema_version}"
+
+    return deployment
+
+
 def create_app(
     *,
     settings: Settings | None = None,
@@ -390,6 +427,10 @@ def create_app(
     app.state.bundle_registry = registry
     app.state.session_store = sessions
     app.state.deployment_bundle = deployment
+    # ADR-1 / REQ-05 §4.1 — wire assembled instructions + tools onto the same engine.
+    app.state.deployment_bundle = _apply_deployment_to_engine(
+        engine, app.state.deployment_bundle, cfg0
+    )
 
     max_bytes = cfg0.aibridge_max_request_bytes
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=max_bytes)
