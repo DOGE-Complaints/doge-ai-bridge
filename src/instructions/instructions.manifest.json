@@ -1,0 +1,30 @@
+{
+  "bundle_version": "uus-veerenni-v3-local-1",
+  "files": [
+    "root.md",
+    "bootstrap.md",
+    "base.md",
+    "communication-presets-reference.md",
+    "instruction-modules-index.md",
+    "story-data-model.md",
+    "story-label-taxonomy.md",
+    "story-interview-flow.md",
+    "story-i18n-policy.md",
+    "story-lifecycle-instructions.md",
+    "ingest-validation.md",
+    "ingest-deep-parsing.md",
+    "safety-compliance.md",
+    "story-policy-gate.md",
+    "story-normalizer.md",
+    "api-orchestrator.md",
+    "story-api-methods-reference.md",
+    "schema-packs.README.md",
+    "schema-packs.uus_veerenni_civic.v3.interview-overlay.md",
+    "schema-packs.uus_veerenni_civic.v3.inbound-validation.md",
+    "schema-packs.uus_veerenni_civic.v3.locale-jurisdiction.md",
+    "schema-packs.uus_veerenni_civic.v3.pack.json",
+    "schema-packs.uus_veerenni_civic.v3.payload.schema.json",
+    "schema-packs.uus_veerenni_civic.v3.taxonomy.json",
+    "activity-legacy-paths-inventory.md"
+  ]
+}
