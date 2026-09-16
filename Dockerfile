@@ -10,6 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY requirements.txt pyproject.toml README.md ./
 COPY src ./src
 COPY migrations ./migrations
+COPY docs/openapi ./docs/openapi
 
 RUN pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir --no-deps .
