@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.sec-error-envelope",
+  "matrix_ids": [
+    "SEC-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+  ],
+  "notes": "synthetic; error envelope stable bounded schema + generated request_id",
+  "payload": {
+    "http_status": 401,
+    "error_keys": [
+      "code",
+      "message",
+      "retryable"
+    ],
+    "require_request_id": true
+  }
+}

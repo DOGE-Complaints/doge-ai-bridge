@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.sec-narrative-absent",
+  "matrix_ids": [
+    "SEC-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+  ],
+  "notes": "synthetic; full narrative absent from audit logs and metrics",
+  "payload": {
+    "forbid_in_audit": [
+      "alice.smith@example.com",
+      "+3725551234",
+      "Ivan Petrov"
+    ],
+    "forbid_in_metrics": [
+      "alice.smith@example.com",
+      "+3725551234",
+      "Ivan Petrov"
+    ]
+  }
+}
