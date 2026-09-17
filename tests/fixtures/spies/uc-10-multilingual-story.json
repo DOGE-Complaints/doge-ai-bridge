@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-10-multilingual-story",
+  "matrix_ids": [
+    "UC-10"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-10 multilingual RU→ET place→EN; raw preserved; gateway body {et,ru,en}",
+  "payload": {
+    "flow": [
+      "turn_ru",
+      "turn_et",
+      "looks_right",
+      "turn_fc_i18n",
+      "send"
+    ],
+    "dry_run": false,
+    "refs": {
+      "gateway_script": "gateway/stashed-201"
+    },
+    "messages": {
+      "ru": "Яма на улице",
+      "et_place": "Tartu tn 12",
+      "en": "Please include English summary"
+    },
+    "expect": {
+      "outcome": "stashed",
+      "gateway_call_count": 1,
+      "narrative_langs": [
+        "et",
+        "ru",
+        "en"
+      ],
+      "raw_messages_preserved": true,
+      "language_not_blind_telegram_code": true
+    }
+  }
+}

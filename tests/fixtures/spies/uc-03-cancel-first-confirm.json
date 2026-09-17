@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-03-cancel-first-confirm",
+  "matrix_ids": [
+    "UC-03"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-03 cancel at first confirmation; no FC; no gateway; LIFE-009 follow-up via post-cancel /turns — characterization capture-first",
+  "payload": {
+    "flow": [
+      "turn",
+      "cancel"
+    ],
+    "dry_run": true,
+    "expect": {
+      "final_state": "cancelled",
+      "gateway_call_count": 0,
+      "openai_calls_max": 1,
+      "pending_actions_invalid": true,
+      "life009_followup": true,
+      "life009_capture": true
+    },
+    "refs": {
+      "life009_fixture": "spies/life-after-cancelled"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-08-geo-scope-mismatch",
+  "matrix_ids": [
+    "UC-08"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-08 gateway 422 → geo_scope_mismatch; no draft/URL",
+  "payload": {
+    "flow": [
+      "turn",
+      "looks_right",
+      "turn_fc",
+      "send"
+    ],
+    "dry_run": false,
+    "refs": {
+      "gateway_script": "gateway/gw-422"
+    },
+    "expect": {
+      "outcome": "geo_scope_mismatch",
+      "draft_id": null,
+      "continuation_url": null,
+      "gateway_call_count": 1,
+      "state_not_success": true
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "cluster": "meta",
+  "fixture_id": "meta.uc-journey-index",
+  "matrix_ids": [
+    "UC-01",
+    "UC-02",
+    "UC-03",
+    "UC-04",
+    "UC-05",
+    "UC-06",
+    "UC-07",
+    "UC-08",
+    "UC-09",
+    "UC-10"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-01…10 journey pack registry for STORY-34; paths relative to tests/fixtures/",
+  "payload": {
+    "packs": [
+      {
+        "matrix_id": "UC-01",
+        "path": "spies/uc-01-normal-dry-run.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-02",
+        "path": "spies/uc-02-normal-live-stash.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-03",
+        "path": "spies/uc-03-cancel-first-confirm.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-04",
+        "path": "spies/uc-04-cancel-before-send.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-05",
+        "path": "spies/uc-05-group-ownership-attack.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-06",
+        "path": "spies/uc-06-telegram-retry-storm.json",
+        "characterization": true
+      },
+      {
+        "matrix_id": "UC-07",
+        "path": "spies/uc-07-ambiguous-gateway-timeout.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-08",
+        "path": "spies/uc-08-geo-scope-mismatch.json",
+        "characterization": false
+      },
+      {
+        "matrix_id": "UC-09",
+        "path": "n8n/uc-09-unsupported-telegram-content.json",
+        "characterization": true
+      },
+      {
+        "matrix_id": "UC-10",
+        "path": "spies/uc-10-multilingual-story.json",
+        "characterization": false
+      }
+    ]
+  }
+}

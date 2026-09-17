@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-04-cancel-before-send",
+  "matrix_ids": [
+    "UC-04"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-04 cancel immediately before Send; frozen draft not posted",
+  "payload": {
+    "flow": [
+      "turn",
+      "looks_right",
+      "turn_fc",
+      "cancel"
+    ],
+    "dry_run": false,
+    "refs": {
+      "gateway_script": "gateway/stashed-201"
+    },
+    "expect": {
+      "final_state": "cancelled",
+      "gateway_call_count": 0,
+      "continuation_url": null,
+      "send_tokens_invalid": true
+    }
+  }
+}

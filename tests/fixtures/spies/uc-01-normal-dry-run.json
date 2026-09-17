@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-01-normal-dry-run",
+  "matrix_ids": [
+    "UC-01"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-01 normal interview dry-run; Edit then Looks right; zero gateway; strict revision > after Edit",
+  "payload": {
+    "refs": {
+      "gateway_script": null,
+      "prior": [
+        "channel/turns-valid-private",
+        "openai/text-only-ru-clarify",
+        "openai/tool-fc-valid"
+      ]
+    },
+    "flow": [
+      "turn",
+      "edit",
+      "turn",
+      "looks_right",
+      "turn_fc",
+      "send"
+    ],
+    "dry_run": true,
+    "expect": {
+      "outcome": "dry_run_ok",
+      "gateway_call_count": 0,
+      "openai_min_calls": 2,
+      "final_state": "stashed",
+      "forbid_substrings": [
+        "published",
+        "sent to dogestonia live"
+      ],
+      "must_mention_not_sent": true,
+      "revision_increases_after_edit": true
+    }
+  }
+}
