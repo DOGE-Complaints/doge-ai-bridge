@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: bad-tool-gen
+  version: "0.0.0"
+paths:
+  /v1/stories/drafts:
+    post:
+      operationId: postStoryDraftStash
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    title:
+                      type: string
+                  required: [title]
+                - type: object
+                  properties:
+                    body:
+                      type: string
+      responses:
+        "201":
+          description: created

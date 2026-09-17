@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-migrations-missing",
+  "matrix_ids": [
+    "READY-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "Preference A: list_migration_files empty → migrations_missing",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "DOGESTONIA_API_BEARER_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "DOGESTONIA_DRAFT_REDIRECT_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "postgresql://fake/aibridge_mig_files_missing",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false
+    },
+    "harness": "fake_pg_migrations_missing",
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "migrations_missing"
+    }
+  }
+}

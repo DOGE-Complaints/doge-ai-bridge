@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-dry-run-required",
+  "matrix_ids": [
+    "READY-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; live mode without schema validation complete flag",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "DOGESTONIA_API_BEARER_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "DOGESTONIA_DRAFT_REDIRECT_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": false,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_SCHEMA_VALIDATION_COMPLETE": false
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "dry_run_required"
+    }
+  }
+}

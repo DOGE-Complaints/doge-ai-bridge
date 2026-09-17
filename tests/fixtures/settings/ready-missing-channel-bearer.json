@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-missing-channel-bearer",
+  "matrix_ids": [
+    "READY-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; empty channel bearer; gateway bearer present and unequal; HTTPS intake URL present",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "",
+      "DOGESTONIA_API_BEARER_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "DOGESTONIA_DRAFT_REDIRECT_BASE_URL": "https://spa.example.invalid",
+      "AIBRIDGE_DRY_RUN": true,
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "channel_auth_missing"
+    }
+  }
+}

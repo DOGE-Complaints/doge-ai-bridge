@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-migration-mismatch",
+  "matrix_ids": [
+    "READY-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "Preference A fake PG: /readyz + evaluate_readiness → migration_version_mismatch",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "DOGESTONIA_API_BEARER_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "DOGESTONIA_DRAFT_REDIRECT_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "postgresql://fake/aibridge_test",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "migration_version_mismatch"
+    },
+    "harness": "fake_pg_migration_mismatch"
+  }
+}

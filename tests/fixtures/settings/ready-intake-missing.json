@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-intake-missing",
+  "matrix_ids": [
+    "READY-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; empty intake URL → intake_base_url_missing. «conflicting» N/A — no distinct reason in readiness.py.",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "DOGESTONIA_API_BEARER_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "DOGESTONIA_INTAKE_BASE_URL": "",
+      "DOGESTONIA_DRAFT_REDIRECT_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "intake_base_url_missing"
+    }
+  }
+}
