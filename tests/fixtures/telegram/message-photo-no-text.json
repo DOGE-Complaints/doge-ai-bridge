@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-photo-no-text",
+  "matrix_ids": [
+    "N8N-010"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; photo without caption/text; must not build invalid /turns",
+  "payload": {
+    "update_id": 848301567,
+    "message": {
+      "message_id": 27,
+      "date": 1758099707,
+      "photo": [
+        {
+          "file_id": "syn_photo_file",
+          "width": 100,
+          "height": 100
+        }
+      ],
+      "from": {
+        "id": 501122334,
+        "is_bot": false,
+        "first_name": "Resident"
+      },
+      "chat": {
+        "id": 501122334,
+        "type": "private"
+      }
+    }
+  }
+}

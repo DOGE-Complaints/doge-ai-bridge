@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-private-ru-pothole",
+  "matrix_ids": ["N8N-001", "N8N-003"],
+  "story_keys": ["STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"],
+  "notes": "synthetic; Cyrillic text; no PII; language_code=ru; private chat civic pothole report",
+  "payload": {
+    "update_id": 848301552,
+    "message": {
+      "message_id": 14,
+      "date": 1758099600,
+      "text": "На улице Вана-Пярну яма на дороге, машины еле объезжают.",
+      "from": {
+        "id": 501122334,
+        "is_bot": false,
+        "first_name": "Резидент",
+        "language_code": "ru"
+      },
+      "chat": {
+        "id": 501122334,
+        "type": "private",
+        "first_name": "Резидент"
+      }
+    }
+  }
+}

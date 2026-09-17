@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-unsupported-media",
+  "matrix_ids": [
+    "N8N-010"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; photo/document/voice without text → no invalid /turns; unsupported prompt",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-photo-no-text",
+    "expected_channel_fixture_id": null,
+    "flow": "unsupported_media",
+    "must_not_build_turns": true,
+    "outbound_telegram": {
+      "unsupported_prompt": true
+    }
+  }
+}

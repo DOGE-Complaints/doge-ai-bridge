@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-unicode-ru",
+  "matrix_ids": [
+    "N8N-003"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; Russian Unicode preserved; language hint optional",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-private-ru-pothole",
+    "expected_channel_fixture_id": "channel.turns-from-private-ru",
+    "flow": "message",
+    "preserve_unicode": true,
+    "ack_order": [
+      "POST /v1/channel/turns",
+      "SendOrEditMessage"
+    ],
+    "outbound_telegram": {
+      "one_reply": true
+    }
+  }
+}

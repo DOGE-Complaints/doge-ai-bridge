@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-group-user-b",
+  "matrix_ids": [
+    "N8N-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; same group different user → separate session principal",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-group-user-b",
+    "expected_channel_fixture_id": null,
+    "flow": "message",
+    "expect_principal": {
+      "user_id": "601100002",
+      "chat_id": "-10042424201"
+    },
+    "session_distinct_from_fixture_id": "telegram.message-group-user-a",
+    "ack_order": [
+      "POST /v1/channel/turns",
+      "SendOrEditMessage"
+    ],
+    "outbound_telegram": {
+      "one_reply": true
+    }
+  }
+}

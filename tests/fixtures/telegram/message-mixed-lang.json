@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-mixed-lang",
+  "matrix_ids": [
+    "N8N-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; mixed RU/ET/EN; hint must not override content",
+  "payload": {
+    "update_id": 848301562,
+    "message": {
+      "message_id": 22,
+      "date": 1758099702,
+      "text": "Яма / teeauk / pothole on Vana-Pärnu.",
+      "from": {
+        "id": 501122336,
+        "is_bot": false,
+        "first_name": "Mix",
+        "language_code": "ru"
+      },
+      "chat": {
+        "id": 501122336,
+        "type": "private",
+        "first_name": "Mix"
+      }
+    }
+  }
+}

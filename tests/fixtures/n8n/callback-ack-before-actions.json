@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.callback-ack-before-actions",
+  "matrix_ids": [
+    "N8N-013",
+    "N8N-014"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; ordering contract; answerCallbackQuery before /actions; N8N-014 failure_timeline: ack completes before simulated aibridge unavailable",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.callback-owner",
+    "expected_channel_fixture_id": "channel.actions-valid-send",
+    "ack_order": [
+      "answerCallbackQuery",
+      "POST /v1/channel/actions",
+      "SendOrEditMessage"
+    ],
+    "outbound_telegram": {
+      "must_ack_callback_before_actions": true,
+      "keyboard_from_actions": true,
+      "claim_published_forbidden": true,
+      "aibridge_slow_or_unavailable_after_ack": {
+        "callback_still_acknowledged_promptly": true,
+        "later_resident_safe_error_via": "SendOrEditMessage",
+        "failure_timeline_ref": "payload.failure_timeline"
+      }
+    },
+    "failure_timeline": [
+      {
+        "seq": 1,
+        "event": "answerCallbackQuery",
+        "status": "ok"
+      },
+      {
+        "seq": 2,
+        "event": "aibridge_unavailable",
+        "status": "fail",
+        "after_ack": true
+      },
+      {
+        "seq": 3,
+        "event": "SendOrEditMessage_resident_safe_error",
+        "status": "ok"
+      }
+    ]
+  }
+}

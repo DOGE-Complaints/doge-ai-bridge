@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.actions-valid-send",
+  "matrix_ids": [
+    "N8N-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; expected /actions mapping from telegram.callback-owner",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "body": {
+      "channel": "telegram",
+      "event_id": "848301570",
+      "callback_query_id": "4242421001",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "tok_syn_opaque_001"
+    }
+  }
+}

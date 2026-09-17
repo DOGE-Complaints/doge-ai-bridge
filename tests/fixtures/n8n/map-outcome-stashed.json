@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-outcome-stashed",
+  "matrix_ids": [
+    "N8N-017"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; outcome=stashed → continuation link; claim_published_forbidden",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-private-ru-pothole",
+    "expected_channel_fixture_id": null,
+    "flow": "response_render",
+    "aibridge_response": {
+      "actions": [],
+      "reply_text": "Continue on SPA",
+      "outcome": "stashed",
+      "continuation_url": "https://spa.example.invalid/draft/syn_draft_001",
+      "draft_id": "syn_draft_001"
+    },
+    "outbound_telegram": {
+      "render_continuation_link": true,
+      "claim_published_forbidden": true
+    }
+  }
+}

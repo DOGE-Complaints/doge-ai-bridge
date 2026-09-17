@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.update-channel-post",
+  "matrix_ids": [
+    "N8N-012"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; channel_post must not enter civic message workflow branch",
+  "payload": {
+    "update_id": 848301569,
+    "channel_post": {
+      "message_id": 29,
+      "date": 1758099709,
+      "text": "Channel announcement",
+      "chat": {
+        "id": -10055555555,
+        "type": "channel",
+        "title": "Syn Channel"
+      }
+    }
+  }
+}
