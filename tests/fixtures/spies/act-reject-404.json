@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-reject-404",
+  "matrix_ids": [
+    "ACT-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; unknown token",
+  "payload": {
+    "http_status": 404,
+    "error_code": "not_found",
+    "gateway_call_count": 0
+  }
+}

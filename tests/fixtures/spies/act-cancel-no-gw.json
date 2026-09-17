@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-cancel-no-gw",
+  "matrix_ids": [
+    "ACT-003"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Cancel \u2014 no gateway",
+  "payload": {
+    "gateway_call_count": 0,
+    "http_status": 200,
+    "state": "cancelled",
+    "openai_call_count": 0
+  }
+}

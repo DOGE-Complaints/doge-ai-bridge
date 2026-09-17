@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-edit-no-gw",
+  "matrix_ids": [
+    "ACT-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Edit \u2014 no gateway; revision++",
+  "payload": {
+    "gateway_call_count": 0,
+    "http_status": 200,
+    "state": "interviewing",
+    "revision_delta": 1,
+    "openai_call_count": 0
+  }
+}

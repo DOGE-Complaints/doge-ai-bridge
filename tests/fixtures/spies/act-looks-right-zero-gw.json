@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-looks-right-zero-gw",
+  "matrix_ids": [
+    "ACT-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Looks right \u2014 zero gateway",
+  "payload": {
+    "gateway_call_count": 0,
+    "http_status": 200,
+    "state": "interpretation_confirmed",
+    "openai_call_count": 0
+  }
+}

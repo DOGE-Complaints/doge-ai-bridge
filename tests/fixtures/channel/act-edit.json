@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-edit",
+  "matrix_ids": [
+    "ACT-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Edit token \u2014 PLACEHOLDER",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-002",
+      "callback_query_id": "cq-act-002",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "PLACEHOLDER_TOKEN"
+    },
+    "expect": {
+      "http_status": 200,
+      "state": "interviewing",
+      "gateway_call_count": 0,
+      "revision_delta": 1
+    }
+  }
+}
