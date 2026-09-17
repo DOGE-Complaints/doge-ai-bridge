@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from aibridge.budgets import BudgetBreachError, BudgetGuard
-from aibridge.history import HistoryStore
+from aibridge.history import HistoryStore, HistoryStoreLike
 from aibridge.metrics import get_metrics
 from aibridge.request_assembly import CacheTelemetry, build_stable_prefix
 from aibridge.responses_client import (
@@ -36,7 +36,7 @@ class InterviewEngine:
     """
 
     client: ResponsesClient
-    history: HistoryStore = field(default_factory=HistoryStore)
+    history: HistoryStoreLike = field(default_factory=HistoryStore)
     locks: SessionTurnLock = field(default_factory=SessionTurnLock)
     budgets: BudgetGuard | None = None
     tools: list[dict[str, Any]] = field(default_factory=list)

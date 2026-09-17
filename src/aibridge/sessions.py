@@ -27,6 +27,8 @@ class SessionRow:
 
 
 class SessionStore(Protocol):
+    ttl_seconds: int | None
+
     def create(
         self,
         *,
@@ -158,7 +160,10 @@ CREATE TABLE IF NOT EXISTS session (
 
 
 class SqliteSessionStore:
-    def __init__(self, path: str | Path) -> None:
+    def __init__(
+        self, path: str | Path, *, ttl_seconds: int | None = None
+    ) -> None:
+        self.ttl_seconds = ttl_seconds
         self._conn = sqlite3.connect(str(path), check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(_SESSION_SCHEMA)

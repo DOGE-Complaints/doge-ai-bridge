@@ -12,13 +12,13 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from aibridge.action_tokens import (
-    ActionTokenStore,
+    ActionTokenStoreLike,
     TokenConflictError,
     TokenNotFoundError,
     TokenRecordState,
 )
 from aibridge.audit import audit_event
-from aibridge.history import HistoryStore
+from aibridge.history import HistoryStoreLike
 
 # REQ-03 §6.2 / privacy-pilot — pilot default 7 days.
 PILOT_SESSION_TTL_SECONDS = 604_800
@@ -63,7 +63,7 @@ class SessionActivityClock:
         self._last.pop(session_id, None)
 
 
-def minimize_narrative(history: HistoryStore, session_id: str) -> None:
+def minimize_narrative(history: HistoryStoreLike, session_id: str) -> None:
     """Delete narrative body; retain a single non-PII tombstone."""
     history.replace(session_id, [dict(TOMBSTONE_ITEM)])
 
@@ -76,7 +76,8 @@ def purge_expired_pending_tokens(
     """Drop pending tokens past ``expires_at``. Keep CONSUMED (tombstone / non-usable)."""
     purge = getattr(tokens, "purge_expired_pending", None)
     if callable(purge):
-        return int(purge(now=now))
+        n: Any = purge(now=now)
+        return int(n)
     ts = now if now is not None else time.time()
     to_drop: list[str] = []
     by_hash = getattr(tokens, "_by_hash", None)
@@ -90,7 +91,7 @@ def purge_expired_pending_tokens(
     return len(to_drop)
 
 
-def assert_consumed_unusable(tokens: ActionTokenStore, raw: str) -> None:
+def assert_consumed_unusable(tokens: ActionTokenStoreLike, raw: str) -> None:
     """Target #2 — consumed token must not verify for consume."""
     try:
         rec = tokens.lookup(raw)
@@ -125,7 +126,7 @@ class OpsDeleteResult:
 
 
 class _ConfirmGuardProto(Protocol):
-    tokens: ActionTokenStore
+    tokens: ActionTokenStoreLike
     _sessions: dict[str, Any]
     _by_principal: dict[tuple[str, str], str]
 
@@ -137,8 +138,8 @@ def ops_delete_session(
     session_id: str,
     ops_bearer_presented: str,
     ops_bearer_expected: str,
-    history: HistoryStore | None = None,
-    tokens: ActionTokenStore | None = None,
+    history: HistoryStoreLike | None = None,
+    tokens: ActionTokenStoreLike | None = None,
     guard: _ConfirmGuardProto | None = None,
     session_store: Any | None = None,
     activity_clock: SessionActivityClock | None = None,
@@ -201,8 +202,8 @@ def expire_idle_session_narrative(
     *,
     session_id: str,
     activity_clock: SessionActivityClock,
-    history: HistoryStore | None,
-    tokens: ActionTokenStore | None = None,
+    history: HistoryStoreLike | None,
+    tokens: ActionTokenStoreLike | None = None,
     now: float | None = None,
 ) -> bool:
     """If idle past TTL: minimize narrative and purge expired pending tokens.

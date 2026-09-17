@@ -10,6 +10,7 @@ from aibridge.config import Settings
 from aibridge.db import connect_postgres, is_postgres_url
 from aibridge.deployment import DeploymentBundleState
 from aibridge.migrate import list_migration_files
+from aibridge.tool_gen import ToolGenError, generate_strict_tool
 
 
 @dataclass(frozen=True)
@@ -88,8 +89,6 @@ def _strict_tool_ok(
     ):
         return ReadinessResult(False, deployment.error)
     try:
-        from aibridge.tool_gen import ToolGenError, generate_strict_tool
-
         generate_strict_tool(
             wire_oas_path=Path(settings.dogestonia_openapi_path),
             pack_schema_path=Path(settings.dogestonia_payload_schema_path),
@@ -115,12 +114,10 @@ def evaluate_readiness(
     if settings.channel_gateway_bearers_equal():
         return ReadinessResult(False, "channel_gateway_bearer_equal")
 
-    if settings.gateway_base_url_conflict():
-        return ReadinessResult(False, "gateway_base_url_conflict")
-    if not settings.resolved_gateway_base_url():
-        return ReadinessResult(False, "gateway_base_url_missing")
-    if not settings.gateway_base_url_https_ok():
-        return ReadinessResult(False, "gateway_base_url_not_https")
+    if not settings.intake_base_url():
+        return ReadinessResult(False, "intake_base_url_missing")
+    if not settings.intake_base_url_https_ok():
+        return ReadinessResult(False, "intake_base_url_not_https")
 
     if not settings.draft_redirect_base_ok():
         return ReadinessResult(False, "draft_redirect_base_invalid")

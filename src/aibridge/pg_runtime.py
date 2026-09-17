@@ -460,7 +460,7 @@ class PostgresActionTokenStore:
 
     def consume(
         self,
-        raw_token: str,
+        raw: str,
         *,
         user_id: str | None = None,
         chat_id: str | None = None,
@@ -476,10 +476,10 @@ class PostgresActionTokenStore:
         ts = time.time() if now is None else now
         if user_id is not None and chat_id is not None:
             rec = self.verify_for_consume(
-                raw_token, user_id=user_id, chat_id=chat_id, now=ts
+                raw, user_id=user_id, chat_id=chat_id, now=ts
             )
         else:
-            rec = self.lookup(raw_token)
+            rec = self.lookup(raw)
             if rec.state is not TokenRecordState.PENDING:
                 raise TokenConflictError("Token not pending")
             if ts > rec.expires_at:

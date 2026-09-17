@@ -355,8 +355,8 @@ def _looks_ambiguous(exc: BaseException) -> bool:
 class HttpxGatewayTransport:
     """Production HTTPS transport — TLS verify on; redirects off.
 
-    Live gateway host comes from ``DOGESTONIA_API_BASE_URL`` (canonical) or
-    temporary alias ``DOGESTONIA_GATEWAY_ORIGIN``. Do not invent host URLs in code.
+    Live intake host comes from mandatory ``DOGESTONIA_INTAKE_BASE_URL``.
+    Do not invent host URLs in code.
     """
 
     verify_tls: bool = True
@@ -398,14 +398,10 @@ class HttpxGatewayTransport:
 
 
 def default_executor_from_settings(settings: Any, transport: GatewayTransport | None = None) -> GatewayExecutor:
-    if hasattr(settings, "resolved_gateway_base_url"):
-        origin = settings.resolved_gateway_base_url()
+    if hasattr(settings, "intake_base_url"):
+        origin = settings.intake_base_url()
     else:
-        origin = (
-            getattr(settings, "dogestonia_api_base_url", "")
-            or getattr(settings, "dogestonia_gateway_origin", "")
-            or ""
-        )
+        origin = getattr(settings, "dogestonia_intake_base_url", "") or ""
     timeout_seconds = float(getattr(settings, "aibridge_gateway_timeout_seconds", 30.0) or 30.0)
     total_ms = getattr(settings, "aibridge_http_total_timeout_ms", None)
     if total_ms is not None:

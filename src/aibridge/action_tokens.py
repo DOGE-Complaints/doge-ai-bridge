@@ -7,7 +7,7 @@ import secrets
 import time
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 
 class TokenActionKind(StrEnum):
@@ -76,6 +76,45 @@ class TokenRecord:
     operation_id: str = "postStoryDraftStash"
     draft_hash: str | None = None
     nonce: str = ""
+
+
+@runtime_checkable
+class ActionTokenStoreLike(Protocol):
+    """Memory + Postgres token stores (structural)."""
+
+    ttl_seconds: int
+
+    def issue(
+        self,
+        *,
+        action: TokenActionKind,
+        session_id: str,
+        user_id: str,
+        chat_id: str,
+        deployment_id: str,
+        revision: int,
+        expected_state: str,
+        draft_hash: str | None = None,
+        nonce: str | None = None,
+        now: float | None = None,
+    ) -> tuple[str, TokenRecord]: ...
+
+    def lookup(self, raw: str) -> TokenRecord: ...
+
+    def verify_for_consume(
+        self,
+        raw: str,
+        *,
+        user_id: str,
+        chat_id: str,
+        now: float | None = None,
+    ) -> TokenRecord: ...
+
+    def consume(self, raw: str) -> TokenRecord: ...
+
+    def invalidate_session_revision(
+        self, session_id: str, revision: int | None = None
+    ) -> int: ...
 
 
 @dataclass

@@ -6,7 +6,7 @@ import json
 import uuid
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
-from typing import Any
+from typing import Any, overload
 
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
@@ -32,7 +32,12 @@ from aibridge.rate_limit import RateLimiter
 from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.responses_client import ProductionResponsesClient
-from aibridge.schemas import ChannelActionRequest, ChannelErrorBody, ChannelTurnRequest
+from aibridge.schemas import (
+    ChannelActionRequest,
+    ChannelErrorBody,
+    ChannelErrorDetail,
+    ChannelTurnRequest,
+)
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
 from aibridge.action_tokens import ActionTokenStore
 
@@ -51,7 +56,7 @@ def error_body(
 ) -> dict[str, Any]:
     return ChannelErrorBody(
         request_id=request_id or str(uuid.uuid4()),
-        error={"code": code, "message": message, "retryable": retryable},
+        error=ChannelErrorDetail(code=code, message=message, retryable=retryable),
     ).model_dump()
 
 
@@ -73,6 +78,18 @@ def validation_http_status(exc: ValidationError) -> tuple[int, str, str]:
         "semantic_invalid",
         "Semantically invalid channel input",
     )
+
+
+@overload
+def parse_channel_body(
+    raw: bytes, model: type[ChannelTurnRequest]
+) -> ChannelTurnRequest | JSONResponse: ...
+
+
+@overload
+def parse_channel_body(
+    raw: bytes, model: type[ChannelActionRequest]
+) -> ChannelActionRequest | JSONResponse: ...
 
 
 def parse_channel_body(

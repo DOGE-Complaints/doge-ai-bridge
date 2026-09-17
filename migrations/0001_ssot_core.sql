@@ -1,5 +1,6 @@
 -- aibridge SSOT schema — versioned migration 0001
 -- Production schema MUST come from migrations, not boot CREATE TABLE IF NOT EXISTS.
+BEGIN;
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
   version TEXT PRIMARY KEY,
@@ -92,3 +93,5 @@ CREATE TABLE IF NOT EXISTS confirm_session (
   state_json JSONB NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+COMMIT;

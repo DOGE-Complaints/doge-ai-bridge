@@ -3,7 +3,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
+
+
+@runtime_checkable
+class HistoryStoreLike(Protocol):
+    """Memory + Postgres history stores (structural)."""
+
+    def append(self, session_id: str, item: dict[str, Any]) -> None: ...
+
+    def list_items(self, session_id: str) -> list[dict[str, Any]]: ...
+
+    def replace(self, session_id: str, items: list[dict[str, Any]]) -> None: ...
+
+    def clear(self, session_id: str) -> None: ...
 
 
 @dataclass

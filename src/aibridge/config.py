@@ -164,15 +164,12 @@ class Settings(BaseSettings):
         default=DEFAULT_MAX_SESSION_TURNS,
         validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
     )
-    # Story 12 — canonical gateway base URL (REQ-03 §5.6)
-    dogestonia_api_base_url: str = Field(
+    # Mandatory HTTPS origin of the node intake service (REQ-03 §5.6).
+    # Complaints node: doge-complaints-gateway. Other node types may point elsewhere.
+    # No fallback aliases (DOGESTONIA_API_BASE_URL / DOGESTONIA_GATEWAY_ORIGIN removed).
+    dogestonia_intake_base_url: str = Field(
         default="",
-        validation_alias="DOGESTONIA_API_BASE_URL",
-    )
-    # Temporary compatibility alias for DOGESTONIA_API_BASE_URL (documented in .env.example).
-    dogestonia_gateway_origin: str = Field(
-        default="",
-        validation_alias="DOGESTONIA_GATEWAY_ORIGIN",
+        validation_alias="DOGESTONIA_INTAKE_BASE_URL",
     )
     dogestonia_draft_redirect_base_url: str = Field(
         default="",
@@ -216,8 +213,7 @@ class Settings(BaseSettings):
         "dogestonia_schema_id",
         "dogestonia_schema_version",
         "dogestonia_origin_source",
-        "dogestonia_api_base_url",
-        "dogestonia_gateway_origin",
+        "dogestonia_intake_base_url",
         "dogestonia_draft_redirect_base_url",
         "aibridge_log_level",
         mode="before",
@@ -239,24 +235,12 @@ class Settings(BaseSettings):
             )
         return normalized or "false"
 
-    def resolved_gateway_base_url(self) -> str:
-        """Canonical gateway HTTPS origin used by the executor."""
-        canonical = (self.dogestonia_api_base_url or "").strip().rstrip("/")
-        alias = (self.dogestonia_gateway_origin or "").strip().rstrip("/")
-        if canonical:
-            return canonical
-        return alias
+    def intake_base_url(self) -> str:
+        """Mandatory HTTPS origin of the intake service used by the executor."""
+        return (self.dogestonia_intake_base_url or "").strip().rstrip("/")
 
-    def gateway_base_url_conflict(self) -> bool:
-        """True when both env names are set to different values (readyz fail)."""
-        canonical = (self.dogestonia_api_base_url or "").strip().rstrip("/")
-        alias = (self.dogestonia_gateway_origin or "").strip().rstrip("/")
-        if not canonical or not alias:
-            return False
-        return canonical != alias
-
-    def gateway_base_url_https_ok(self) -> bool:
-        url = self.resolved_gateway_base_url()
+    def intake_base_url_https_ok(self) -> bool:
+        url = self.intake_base_url()
         if not url:
             return False
         parsed = urlparse(url)

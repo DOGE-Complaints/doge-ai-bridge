@@ -173,8 +173,11 @@ async def process_turn_async(
         if hasattr(store, "get"):
             existing = store.get(body.channel, body.event_id)
         if existing is not None:
-            if hasattr(existing, "body"):
-                return dict(existing.body), False
+            if isinstance(existing, dict):
+                return dict(existing), False
+            body_attr = getattr(existing, "body", None)
+            if body_attr is not None:
+                return dict(body_attr), False
             return dict(existing), False
         claimed = True
 

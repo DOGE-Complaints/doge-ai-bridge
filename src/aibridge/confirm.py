@@ -9,6 +9,7 @@ from typing import Any
 
 from aibridge.action_tokens import (
     ActionTokenStore,
+    ActionTokenStoreLike,
     TokenActionKind,
     TokenConflictError,
     TokenError,
@@ -49,7 +50,7 @@ class ConfirmSession:
 class ConfirmationGuard:
     """Issues tokens, applies dual-confirm; never equates tool intent with Send."""
 
-    tokens: ActionTokenStore = field(default_factory=ActionTokenStore)
+    tokens: ActionTokenStoreLike = field(default_factory=ActionTokenStore)
     executor: GatewayExecutor | None = None
     gateway_attempts: Any | None = None  # GatewayAttemptStore when PG-wired
     confirm_sessions: Any | None = None  # PostgresConfirmSessionStore when PG-wired
