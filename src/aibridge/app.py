@@ -28,7 +28,7 @@ from aibridge.deployment import DeploymentBundleState, verify_and_register_deplo
 from aibridge.gateway import default_executor_from_settings
 from aibridge.interview import InterviewEngine, default_recording_engine
 from aibridge.metrics import get_metrics
-from aibridge.rate_limit import RateLimiter
+from aibridge.rate_limit import RateLimiter, hash_principal_key
 from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.responses_client import ProductionResponsesClient
@@ -491,9 +491,8 @@ def create_app(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         if request.url.path.startswith(CHANNEL_PATH_PREFIX) and rate_limiter.enabled():
-            # Principal key from Authorization prefix only (no token body in metrics).
-            auth = request.headers.get("authorization") or ""
-            principal_key = auth[:24] if auth else "anonymous"
+            # Opaque hash — never store raw Authorization / Bearer prefix (AUTH-009 hygiene).
+            principal_key = hash_principal_key(request.headers.get("authorization"))
             denied = rate_limiter.allow(principal_key)
             if denied is not None:
                 return JSONResponse(

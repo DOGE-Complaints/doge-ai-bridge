@@ -2,9 +2,18 @@
 
 from __future__ import annotations
 
+import hashlib
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
+
+
+def hash_principal_key(authorization: str | None) -> str:
+    """Opaque principal id — never store raw Authorization / Bearer prefix."""
+    if not authorization:
+        return "anonymous"
+    digest = hashlib.sha256(authorization.encode("utf-8")).hexdigest()
+    return f"p:{digest}"
 
 
 @dataclass
