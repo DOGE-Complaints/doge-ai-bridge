@@ -1,0 +1,2543 @@
+{
+  "schema_version": "1.0",
+  "cluster": "meta",
+  "fixture_id": "meta.fixture-index",
+  "matrix_ids": [
+    "Gate-1",
+    "Gate-2",
+    "Gate-3",
+    "Gate-4",
+    "Gate-5",
+    "CHAR-001",
+    "CHAR-002",
+    "CHAR-003",
+    "CHAR-004",
+    "CHAR-005",
+    "CHAR-006",
+    "CHAR-007",
+    "CHAR-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-35-qa-gates-layers-dod"
+  ],
+  "notes": "synthetic registry; paths relative to tests/fixtures/ for fixture rows; program evidence paths relative to doge-ai-bridge/; synced P6 2026-09-17T22:19:41Z; Gate-5/Layer F deferred_live; Layer D deferred+bound; CHAR refs capture-first",
+  "payload": {
+    "fixtures": [
+      {
+        "fixture_id": "channel.act-cancel",
+        "path": "channel/act-cancel.json",
+        "matrix_ids": [
+          "ACT-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-consumed-retry",
+        "path": "channel/act-consumed-retry.json",
+        "matrix_ids": [
+          "ACT-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-deployment-mismatch",
+        "path": "channel/act-deployment-mismatch.json",
+        "matrix_ids": [
+          "ACT-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-draft-hash-mismatch",
+        "path": "channel/act-draft-hash-mismatch.json",
+        "matrix_ids": [
+          "ACT-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-edit",
+        "path": "channel/act-edit.json",
+        "matrix_ids": [
+          "ACT-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-expected-state-mismatch",
+        "path": "channel/act-expected-state-mismatch.json",
+        "matrix_ids": [
+          "ACT-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-expired",
+        "path": "channel/act-expired.json",
+        "matrix_ids": [
+          "ACT-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-foreign-chat",
+        "path": "channel/act-foreign-chat.json",
+        "matrix_ids": [
+          "ACT-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-foreign-user",
+        "path": "channel/act-foreign-user.json",
+        "matrix_ids": [
+          "ACT-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-frozen-missing",
+        "path": "channel/act-frozen-missing.json",
+        "matrix_ids": [
+          "ACT-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-illegal-fsm",
+        "path": "channel/act-illegal-fsm.json",
+        "matrix_ids": [
+          "ACT-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-invalidated-sibling",
+        "path": "channel/act-invalidated-sibling.json",
+        "matrix_ids": [
+          "ACT-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-looks-right",
+        "path": "channel/act-looks-right.json",
+        "matrix_ids": [
+          "ACT-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-random-token",
+        "path": "channel/act-random-token.json",
+        "matrix_ids": [
+          "ACT-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-revision-mismatch",
+        "path": "channel/act-revision-mismatch.json",
+        "matrix_ids": [
+          "ACT-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-send",
+        "path": "channel/act-send.json",
+        "matrix_ids": [
+          "ACT-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.act-token-len-65",
+        "path": "channel/act-token-len-65.json",
+        "matrix_ids": [
+          "ACT-018"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "channel.actions-idem-callback-retry",
+        "path": "channel/actions-idem-callback-retry.json",
+        "matrix_ids": [
+          "IDEM-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.actions-idem-concurrent-send-a",
+        "path": "channel/actions-idem-concurrent-send-a.json",
+        "matrix_ids": [
+          "IDEM-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.actions-idem-concurrent-send-b",
+        "path": "channel/actions-idem-concurrent-send-b.json",
+        "matrix_ids": [
+          "IDEM-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.actions-idem-ns-collision",
+        "path": "channel/actions-idem-ns-collision.json",
+        "matrix_ids": [
+          "IDEM-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.actions-valid-send",
+        "path": "channel/actions-valid-send.json",
+        "matrix_ids": [
+          "N8N-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-basic-scheme",
+        "path": "channel/auth-basic-scheme.json",
+        "matrix_ids": [
+          "AUTH-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-bearer-empty",
+        "path": "channel/auth-bearer-empty.json",
+        "matrix_ids": [
+          "AUTH-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-gateway-as-channel",
+        "path": "channel/auth-gateway-as-channel.json",
+        "matrix_ids": [
+          "AUTH-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-healthz-no-bearer",
+        "path": "channel/auth-healthz-no-bearer.json",
+        "matrix_ids": [
+          "AUTH-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-metrics-private",
+        "path": "channel/auth-metrics-private.json",
+        "matrix_ids": [
+          "AUTH-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-missing",
+        "path": "channel/auth-missing.json",
+        "matrix_ids": [
+          "AUTH-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-previous-bearer",
+        "path": "channel/auth-previous-bearer.json",
+        "matrix_ids": [
+          "AUTH-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-readyz-no-bearer",
+        "path": "channel/auth-readyz-no-bearer.json",
+        "matrix_ids": [
+          "AUTH-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-valid-current",
+        "path": "channel/auth-valid-current.json",
+        "matrix_ids": [
+          "AUTH-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-wrong-diff-length",
+        "path": "channel/auth-wrong-diff-length.json",
+        "matrix_ids": [
+          "AUTH-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.auth-wrong-same-length",
+        "path": "channel/auth-wrong-same-length.json",
+        "matrix_ids": [
+          "AUTH-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "channel.life-turns-private",
+        "path": "channel/life-turns-private.json",
+        "matrix_ids": [
+          "LIFE-001",
+          "LIFE-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "channel.sec-turns-pii-narrative",
+        "path": "channel/sec-turns-pii-narrative.json",
+        "matrix_ids": [
+          "SEC-001",
+          "SEC-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-from-private-ru",
+        "path": "channel/turns-from-private-ru.json",
+        "matrix_ids": [
+          "N8N-001",
+          "N8N-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-concurrent-identical",
+        "path": "channel/turns-idem-concurrent-identical.json",
+        "matrix_ids": [
+          "IDEM-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-ns-collision",
+        "path": "channel/turns-idem-ns-collision.json",
+        "matrix_ids": [
+          "IDEM-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-openai-abort",
+        "path": "channel/turns-idem-openai-abort.json",
+        "matrix_ids": [
+          "IDEM-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-retry-new-event",
+        "path": "channel/turns-idem-retry-new-event.json",
+        "matrix_ids": [
+          "IDEM-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-same-event-diff-body",
+        "path": "channel/turns-idem-same-event-diff-body.json",
+        "matrix_ids": [
+          "IDEM-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-same-event",
+        "path": "channel/turns-idem-same-event.json",
+        "matrix_ids": [
+          "IDEM-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-session-a",
+        "path": "channel/turns-idem-session-a.json",
+        "matrix_ids": [
+          "IDEM-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-session-b",
+        "path": "channel/turns-idem-session-b.json",
+        "matrix_ids": [
+          "IDEM-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-session-x",
+        "path": "channel/turns-idem-session-x.json",
+        "matrix_ids": [
+          "IDEM-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-idem-session-y",
+        "path": "channel/turns-idem-session-y.json",
+        "matrix_ids": [
+          "IDEM-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-oai-429",
+        "path": "channel/turns-oai-429.json",
+        "matrix_ids": [
+          "OAI-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-oai-ordinary",
+        "path": "channel/turns-oai-ordinary.json",
+        "matrix_ids": [
+          "OAI-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-oai-prompt-injection",
+        "path": "channel/turns-oai-prompt-injection.json",
+        "matrix_ids": [
+          "OAI-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-oai-timeout",
+        "path": "channel/turns-oai-timeout.json",
+        "matrix_ids": [
+          "OAI-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-oai-tool-looking-user",
+        "path": "channel/turns-oai-tool-looking-user.json",
+        "matrix_ids": [
+          "OAI-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "channel.turns-valid-private",
+        "path": "channel/turns-valid-private.json",
+        "matrix_ids": [
+          "VAL-001",
+          "AUTH-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-action-token-len-65",
+        "path": "channel/val-action-token-len-65.json",
+        "matrix_ids": [
+          "VAL-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-channel-not-telegram",
+        "path": "channel/val-channel-not-telegram.json",
+        "matrix_ids": [
+          "VAL-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-empty-event-id",
+        "path": "channel/val-empty-event-id.json",
+        "matrix_ids": [
+          "VAL-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-empty-message-text",
+        "path": "channel/val-empty-message-text.json",
+        "matrix_ids": [
+          "VAL-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-invalid-content-length",
+        "path": "channel/val-invalid-content-length.json",
+        "matrix_ids": [
+          "VAL-017"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-invalid-utf8",
+        "path": "channel/val-invalid-utf8.json",
+        "matrix_ids": [
+          "VAL-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-malformed-json",
+        "path": "channel/val-malformed-json.json",
+        "matrix_ids": [
+          "VAL-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-missing-content-type",
+        "path": "channel/val-missing-content-type.json",
+        "matrix_ids": [
+          "VAL-018"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-missing-required",
+        "path": "channel/val-missing-required.json",
+        "matrix_ids": [
+          "VAL-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-negative-chat-id",
+        "path": "channel/val-negative-chat-id.json",
+        "matrix_ids": [
+          "VAL-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-negative-content-length",
+        "path": "channel/val-negative-content-length.json",
+        "matrix_ids": [
+          "VAL-017"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-non-decimal-id",
+        "path": "channel/val-non-decimal-id.json",
+        "matrix_ids": [
+          "VAL-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-numeric-telegram-id",
+        "path": "channel/val-numeric-telegram-id.json",
+        "matrix_ids": [
+          "VAL-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-payload-too-large",
+        "path": "channel/val-payload-too-large.json",
+        "matrix_ids": [
+          "VAL-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-unknown-nested",
+        "path": "channel/val-unknown-nested.json",
+        "matrix_ids": [
+          "VAL-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-unknown-top-level",
+        "path": "channel/val-unknown-top-level.json",
+        "matrix_ids": [
+          "VAL-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-valid-actions",
+        "path": "channel/val-valid-actions.json",
+        "matrix_ids": [
+          "VAL-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "channel.val-whitespace-message",
+        "path": "channel/val-whitespace-message.json",
+        "matrix_ids": [
+          "VAL-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-201-invalid-json",
+        "path": "gateway/gw-201-invalid-json.json",
+        "matrix_ids": [
+          "GW-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-201-missing-draft",
+        "path": "gateway/gw-201-missing-draft.json",
+        "matrix_ids": [
+          "GW-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-201-missing-trace",
+        "path": "gateway/gw-201-missing-trace.json",
+        "matrix_ids": [
+          "GW-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-204",
+        "path": "gateway/gw-204.json",
+        "matrix_ids": [
+          "GW-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-400",
+        "path": "gateway/gw-400.json",
+        "matrix_ids": [
+          "GW-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-401",
+        "path": "gateway/gw-401.json",
+        "matrix_ids": [
+          "GW-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-409",
+        "path": "gateway/gw-409.json",
+        "matrix_ids": [
+          "GW-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-422",
+        "path": "gateway/gw-422.json",
+        "matrix_ids": [
+          "GW-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-429",
+        "path": "gateway/gw-429.json",
+        "matrix_ids": [
+          "GW-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-503",
+        "path": "gateway/gw-503.json",
+        "matrix_ids": [
+          "GW-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-oversized",
+        "path": "gateway/gw-oversized.json",
+        "matrix_ids": [
+          "GW-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.gw-redirect",
+        "path": "gateway/gw-redirect.json",
+        "matrix_ids": [
+          "GW-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.stashed-201",
+        "path": "gateway/stashed-201.json",
+        "matrix_ids": [
+          "GW-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.tool-stash-201",
+        "path": "gateway/tool-stash-201.json",
+        "matrix_ids": [
+          "TOOL-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "gateway.tool-validation-context",
+        "path": "gateway/tool-validation-context.json",
+        "matrix_ids": [
+          "TOOL-002",
+          "TOOL-008",
+          "TOOL-009",
+          "TOOL-010",
+          "TOOL-011",
+          "TOOL-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "meta.uc-journey-index",
+        "path": "meta/uc-journey-index.json",
+        "matrix_ids": [
+          "UC-01",
+          "UC-02",
+          "UC-03",
+          "UC-04",
+          "UC-05",
+          "UC-06",
+          "UC-07",
+          "UC-08",
+          "UC-09",
+          "UC-10"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ],
+        "characterization": true
+      },
+      {
+        "fixture_id": "n8n.callback-ack-before-actions",
+        "path": "n8n/callback-ack-before-actions.json",
+        "matrix_ids": [
+          "N8N-013",
+          "N8N-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-actions-empty",
+        "path": "n8n/map-actions-empty.json",
+        "matrix_ids": [
+          "N8N-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-actions-three",
+        "path": "n8n/map-actions-three.json",
+        "matrix_ids": [
+          "N8N-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-edited-message",
+        "path": "n8n/map-edited-message.json",
+        "matrix_ids": [
+          "N8N-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-emoji",
+        "path": "n8n/map-emoji.json",
+        "matrix_ids": [
+          "N8N-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-group-user-a",
+        "path": "n8n/map-group-user-a.json",
+        "matrix_ids": [
+          "N8N-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-group-user-b",
+        "path": "n8n/map-group-user-b.json",
+        "matrix_ids": [
+          "N8N-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-media-caption",
+        "path": "n8n/map-media-caption.json",
+        "matrix_ids": [
+          "N8N-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-mixed-lang",
+        "path": "n8n/map-mixed-lang.json",
+        "matrix_ids": [
+          "N8N-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-non-workflow-update",
+        "path": "n8n/map-non-workflow-update.json",
+        "matrix_ids": [
+          "N8N-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-outcome-non-stashed-no-link",
+        "path": "n8n/map-outcome-non-stashed-no-link.json",
+        "matrix_ids": [
+          "N8N-018"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-outcome-stashed",
+        "path": "n8n/map-outcome-stashed.json",
+        "matrix_ids": [
+          "N8N-017"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-private-text",
+        "path": "n8n/map-private-text.json",
+        "matrix_ids": [
+          "N8N-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-start-command",
+        "path": "n8n/map-start-command.json",
+        "matrix_ids": [
+          "N8N-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-unicode-et",
+        "path": "n8n/map-unicode-et.json",
+        "matrix_ids": [
+          "N8N-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-unicode-ru",
+        "path": "n8n/map-unicode-ru.json",
+        "matrix_ids": [
+          "N8N-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.map-unsupported-media",
+        "path": "n8n/map-unsupported-media.json",
+        "matrix_ids": [
+          "N8N-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "n8n.uc-09-unsupported-telegram-content",
+        "path": "n8n/uc-09-unsupported-telegram-content.json",
+        "matrix_ids": [
+          "UC-09"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ],
+        "characterization": true
+      },
+      {
+        "fixture_id": "openai.oai-budget-breach",
+        "path": "openai/oai-budget-breach.json",
+        "matrix_ids": [
+          "OAI-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-bundle-change",
+        "path": "openai/oai-bundle-change.json",
+        "matrix_ids": [
+          "OAI-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-cached-tokens",
+        "path": "openai/oai-cached-tokens.json",
+        "matrix_ids": [
+          "OAI-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-empty-output",
+        "path": "openai/oai-empty-output.json",
+        "matrix_ids": [
+          "OAI-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-http-429",
+        "path": "openai/oai-http-429.json",
+        "matrix_ids": [
+          "OAI-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-http-503",
+        "path": "openai/oai-http-503.json",
+        "matrix_ids": [
+          "OAI-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-invalid-body",
+        "path": "openai/oai-invalid-body.json",
+        "matrix_ids": [
+          "OAI-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-parallel-tool-calls",
+        "path": "openai/oai-parallel-tool-calls.json",
+        "matrix_ids": [
+          "OAI-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-prompt-injection-reply",
+        "path": "openai/oai-prompt-injection-reply.json",
+        "matrix_ids": [
+          "OAI-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-received-stub",
+        "path": "openai/oai-received-stub.json",
+        "matrix_ids": [
+          "OAI-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-settings-store-true",
+        "path": "openai/oai-settings-store-true.json",
+        "matrix_ids": [
+          "OAI-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-stable-prefix",
+        "path": "openai/oai-stable-prefix.json",
+        "matrix_ids": [
+          "OAI-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-timeout",
+        "path": "openai/oai-timeout.json",
+        "matrix_ids": [
+          "OAI-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.oai-xor-both-channels",
+        "path": "openai/oai-xor-both-channels.json",
+        "matrix_ids": [
+          "OAI-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.text-only-ru-clarify",
+        "path": "openai/text-only-ru-clarify.json",
+        "matrix_ids": [
+          "OAI-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-args-array",
+        "path": "openai/tool-fc-args-array.json",
+        "matrix_ids": [
+          "TOOL-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-args-scalar",
+        "path": "openai/tool-fc-args-scalar.json",
+        "matrix_ids": [
+          "TOOL-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-before-confirm",
+        "path": "openai/tool-fc-before-confirm.json",
+        "matrix_ids": [
+          "TOOL-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-gate1-fail",
+        "path": "openai/tool-fc-gate1-fail.json",
+        "matrix_ids": [
+          "TOOL-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-malformed-args",
+        "path": "openai/tool-fc-malformed-args.json",
+        "matrix_ids": [
+          "TOOL-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-missing-call-id",
+        "path": "openai/tool-fc-missing-call-id.json",
+        "matrix_ids": [
+          "TOOL-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-missing-payload",
+        "path": "openai/tool-fc-missing-payload.json",
+        "matrix_ids": [
+          "TOOL-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-pack-violate",
+        "path": "openai/tool-fc-pack-violate.json",
+        "matrix_ids": [
+          "TOOL-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-server-override",
+        "path": "openai/tool-fc-server-override.json",
+        "matrix_ids": [
+          "TOOL-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-two-calls",
+        "path": "openai/tool-fc-two-calls.json",
+        "matrix_ids": [
+          "TOOL-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-unknown-name",
+        "path": "openai/tool-fc-unknown-name.json",
+        "matrix_ids": [
+          "TOOL-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-valid",
+        "path": "openai/tool-fc-valid.json",
+        "matrix_ids": [
+          "TOOL-002",
+          "TOOL-012",
+          "TOOL-013",
+          "TOOL-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "openai.tool-fc-wire-violate",
+        "path": "openai/tool-fc-wire-violate.json",
+        "matrix_ids": [
+          "TOOL-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-28-qa-tool-call-validation"
+        ]
+      },
+      {
+        "fixture_id": "settings.auth-channel-equals-gateway",
+        "path": "settings/auth-channel-equals-gateway.json",
+        "matrix_ids": [
+          "AUTH-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "settings.gw-channel-equals-gateway",
+        "path": "settings/gw-channel-equals-gateway.json",
+        "matrix_ids": [
+          "GW-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "settings.gw-non-https-origin",
+        "path": "settings/gw-non-https-origin.json",
+        "matrix_ids": [
+          "GW-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "settings.life-shutting-down",
+        "path": "settings/life-shutting-down.json",
+        "matrix_ids": [
+          "LIFE-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-bearers-equal",
+        "path": "settings/ready-bearers-equal.json",
+        "matrix_ids": [
+          "READY-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-content-bundle-not-ready",
+        "path": "settings/ready-content-bundle-not-ready.json",
+        "matrix_ids": [
+          "READY-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-database-not-postgres",
+        "path": "settings/ready-database-not-postgres.json",
+        "matrix_ids": [
+          "READY-014"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-database-unreachable",
+        "path": "settings/ready-database-unreachable.json",
+        "matrix_ids": [
+          "READY-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-dry-run-required",
+        "path": "settings/ready-dry-run-required.json",
+        "matrix_ids": [
+          "READY-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-intake-missing",
+        "path": "settings/ready-intake-missing.json",
+        "matrix_ids": [
+          "READY-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-intake-not-https",
+        "path": "settings/ready-intake-not-https.json",
+        "matrix_ids": [
+          "READY-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-migration-mismatch",
+        "path": "settings/ready-migration-mismatch.json",
+        "matrix_ids": [
+          "READY-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-migration-version-missing",
+        "path": "settings/ready-migration-version-missing.json",
+        "matrix_ids": [
+          "READY-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-migrations-missing",
+        "path": "settings/ready-migrations-missing.json",
+        "matrix_ids": [
+          "READY-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-missing-channel-bearer",
+        "path": "settings/ready-missing-channel-bearer.json",
+        "matrix_ids": [
+          "READY-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-missing-gateway-bearer",
+        "path": "settings/ready-missing-gateway-bearer.json",
+        "matrix_ids": [
+          "READY-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-no-side-effects",
+        "path": "settings/ready-no-side-effects.json",
+        "matrix_ids": [
+          "READY-015"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-ok-migrated-pg",
+        "path": "settings/ready-ok-migrated-pg.json",
+        "matrix_ids": [
+          "READY-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-ok",
+        "path": "settings/ready-ok.json",
+        "matrix_ids": [
+          "READY-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-openai-missing",
+        "path": "settings/ready-openai-missing.json",
+        "matrix_ids": [
+          "READY-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-openai-store-true",
+        "path": "settings/ready-openai-store-true.json",
+        "matrix_ids": [
+          "READY-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-redirect-invalid",
+        "path": "settings/ready-redirect-invalid.json",
+        "matrix_ids": [
+          "READY-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "settings.ready-tool-gen-failed",
+        "path": "settings/ready-tool-gen-failed.json",
+        "matrix_ids": [
+          "READY-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-33-qa-readiness-configuration"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-cancel-no-gw",
+        "path": "spies/act-cancel-no-gw.json",
+        "matrix_ids": [
+          "ACT-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-edit-no-gw",
+        "path": "spies/act-edit-no-gw.json",
+        "matrix_ids": [
+          "ACT-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-facade-422",
+        "path": "spies/act-facade-422.json",
+        "matrix_ids": [
+          "ACT-018"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-hash-only-persist",
+        "path": "spies/act-hash-only-persist.json",
+        "matrix_ids": [
+          "ACT-017"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-looks-right-zero-gw",
+        "path": "spies/act-looks-right-zero-gw.json",
+        "matrix_ids": [
+          "ACT-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-reject-403",
+        "path": "spies/act-reject-403.json",
+        "matrix_ids": [
+          "ACT-006",
+          "ACT-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-reject-404",
+        "path": "spies/act-reject-404.json",
+        "matrix_ids": [
+          "ACT-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-reject-409",
+        "path": "spies/act-reject-409.json",
+        "matrix_ids": [
+          "ACT-008",
+          "ACT-009",
+          "ACT-010",
+          "ACT-011",
+          "ACT-012",
+          "ACT-013",
+          "ACT-014",
+          "ACT-015",
+          "ACT-016"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.act-send-one-gw",
+        "path": "spies/act-send-one-gw.json",
+        "matrix_ids": [
+          "ACT-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-29-qa-action-token-fsm"
+        ]
+      },
+      {
+        "fixture_id": "spies.auth-forbid-bearer-leak",
+        "path": "spies/auth-forbid-bearer-leak.json",
+        "matrix_ids": [
+          "AUTH-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-dry-run-ok",
+        "path": "spies/gw-dry-run-ok.json",
+        "matrix_ids": [
+          "GW-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-edit-cancel-zero-gw",
+        "path": "spies/gw-edit-cancel-zero-gw.json",
+        "matrix_ids": [
+          "GW-018"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-fc-followup-fail-stash-auth",
+        "path": "spies/gw-fc-followup-fail-stash-auth.json",
+        "matrix_ids": [
+          "GW-020"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-looks-right-zero-gw",
+        "path": "spies/gw-looks-right-zero-gw.json",
+        "matrix_ids": [
+          "GW-017"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-restart-executing",
+        "path": "spies/gw-restart-executing.json",
+        "matrix_ids": [
+          "GW-019"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-stashed-expect",
+        "path": "spies/gw-stashed-expect.json",
+        "matrix_ids": [
+          "GW-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.gw-timeout-unknown",
+        "path": "spies/gw-timeout-unknown.json",
+        "matrix_ids": [
+          "GW-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-30-qa-gateway-continuation"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-callback-retry-same-update",
+        "path": "spies/idem-callback-retry-same-update.json",
+        "matrix_ids": [
+          "IDEM-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-concurrent-identical-turns",
+        "path": "spies/idem-concurrent-identical-turns.json",
+        "matrix_ids": [
+          "IDEM-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-concurrent-send-same-token",
+        "path": "spies/idem-concurrent-send-same-token.json",
+        "matrix_ids": [
+          "IDEM-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-diff-sessions-parallel",
+        "path": "spies/idem-diff-sessions-parallel.json",
+        "matrix_ids": [
+          "IDEM-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-new-event-id-second-openai",
+        "path": "spies/idem-new-event-id-second-openai.json",
+        "matrix_ids": [
+          "IDEM-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-openai-exception-abort",
+        "path": "spies/idem-openai-exception-abort.json",
+        "matrix_ids": [
+          "IDEM-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-same-event-diff-body",
+        "path": "spies/idem-same-event-diff-body.json",
+        "matrix_ids": [
+          "IDEM-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-same-event-once-openai",
+        "path": "spies/idem-same-event-once-openai.json",
+        "matrix_ids": [
+          "IDEM-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-same-session-serialized",
+        "path": "spies/idem-same-session-serialized.json",
+        "matrix_ids": [
+          "IDEM-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.idem-turns-actions-event-collision",
+        "path": "spies/idem-turns-actions-event-collision.json",
+        "matrix_ids": [
+          "IDEM-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-after-cancelled",
+        "path": "spies/life-after-cancelled.json",
+        "matrix_ids": [
+          "LIFE-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-after-stashed",
+        "path": "spies/life-after-stashed.json",
+        "matrix_ids": [
+          "LIFE-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-bundle-gc-eligible",
+        "path": "spies/life-bundle-gc-eligible.json",
+        "matrix_ids": [
+          "LIFE-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-bundle-retained",
+        "path": "spies/life-bundle-retained.json",
+        "matrix_ids": [
+          "LIFE-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-deployment-mismatch",
+        "path": "spies/life-deployment-mismatch.json",
+        "matrix_ids": [
+          "LIFE-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-edit-from-unknown",
+        "path": "spies/life-edit-from-unknown.json",
+        "matrix_ids": [
+          "LIFE-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-restart-consumed-token",
+        "path": "spies/life-restart-consumed-token.json",
+        "matrix_ids": [
+          "LIFE-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-restart-executing-unknown",
+        "path": "spies/life-restart-executing-unknown.json",
+        "matrix_ids": [
+          "LIFE-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-restart-interview",
+        "path": "spies/life-restart-interview.json",
+        "matrix_ids": [
+          "LIFE-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-restart-pending-token",
+        "path": "spies/life-restart-pending-token.json",
+        "matrix_ids": [
+          "LIFE-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.life-session-ttl-expire",
+        "path": "spies/life-session-ttl-expire.json",
+        "matrix_ids": [
+          "LIFE-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-channel-audit-bounded",
+        "path": "spies/sec-channel-audit-bounded.json",
+        "matrix_ids": [
+          "SEC-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-error-envelope",
+        "path": "spies/sec-error-envelope.json",
+        "matrix_ids": [
+          "SEC-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-gateway-bearer-only",
+        "path": "spies/sec-gateway-bearer-only.json",
+        "matrix_ids": [
+          "SEC-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-metrics-scrub",
+        "path": "spies/sec-metrics-scrub.json",
+        "matrix_ids": [
+          "SEC-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-n8n-export-secret-free",
+        "path": "spies/sec-n8n-export-secret-free.json",
+        "matrix_ids": [
+          "SEC-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-narrative-absent",
+        "path": "spies/sec-narrative-absent.json",
+        "matrix_ids": [
+          "SEC-001"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-openai-store-false",
+        "path": "spies/sec-openai-store-false.json",
+        "matrix_ids": [
+          "SEC-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-prompt-injection-allowlist",
+        "path": "spies/sec-prompt-injection-allowlist.json",
+        "matrix_ids": [
+          "SEC-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-secret-redacted",
+        "path": "spies/sec-secret-redacted.json",
+        "matrix_ids": [
+          "SEC-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.sec-token-hash-only",
+        "path": "spies/sec-token-hash-only.json",
+        "matrix_ids": [
+          "SEC-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-01-normal-dry-run",
+        "path": "spies/uc-01-normal-dry-run.json",
+        "matrix_ids": [
+          "UC-01"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-02-normal-live-stash",
+        "path": "spies/uc-02-normal-live-stash.json",
+        "matrix_ids": [
+          "UC-02"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-03-cancel-first-confirm",
+        "path": "spies/uc-03-cancel-first-confirm.json",
+        "matrix_ids": [
+          "UC-03"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-04-cancel-before-send",
+        "path": "spies/uc-04-cancel-before-send.json",
+        "matrix_ids": [
+          "UC-04"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-05-group-ownership-attack",
+        "path": "spies/uc-05-group-ownership-attack.json",
+        "matrix_ids": [
+          "UC-05"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-06-telegram-retry-storm",
+        "path": "spies/uc-06-telegram-retry-storm.json",
+        "matrix_ids": [
+          "UC-06"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ],
+        "characterization": true
+      },
+      {
+        "fixture_id": "spies.uc-07-ambiguous-gateway-timeout",
+        "path": "spies/uc-07-ambiguous-gateway-timeout.json",
+        "matrix_ids": [
+          "UC-07"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-08-geo-scope-mismatch",
+        "path": "spies/uc-08-geo-scope-mismatch.json",
+        "matrix_ids": [
+          "UC-08"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "spies.uc-10-multilingual-story",
+        "path": "spies/uc-10-multilingual-story.json",
+        "matrix_ids": [
+          "UC-10"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+        ]
+      },
+      {
+        "fixture_id": "telegram.callback-owner",
+        "path": "telegram/callback-owner.json",
+        "matrix_ids": [
+          "N8N-013"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-edited",
+        "path": "telegram/message-edited.json",
+        "matrix_ids": [
+          "N8N-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-emoji-combining",
+        "path": "telegram/message-emoji-combining.json",
+        "matrix_ids": [
+          "N8N-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-group-user-a",
+        "path": "telegram/message-group-user-a.json",
+        "matrix_ids": [
+          "N8N-007"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-group-user-b",
+        "path": "telegram/message-group-user-b.json",
+        "matrix_ids": [
+          "N8N-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-mixed-lang",
+        "path": "telegram/message-mixed-lang.json",
+        "matrix_ids": [
+          "N8N-005"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-photo-no-text",
+        "path": "telegram/message-photo-no-text.json",
+        "matrix_ids": [
+          "N8N-010"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-photo-with-caption",
+        "path": "telegram/message-photo-with-caption.json",
+        "matrix_ids": [
+          "N8N-011"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-private-et",
+        "path": "telegram/message-private-et.json",
+        "matrix_ids": [
+          "N8N-004"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-private-ru-pothole",
+        "path": "telegram/message-private-ru-pothole.json",
+        "matrix_ids": [
+          "N8N-001",
+          "N8N-003"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.message-start-command",
+        "path": "telegram/message-start-command.json",
+        "matrix_ids": [
+          "N8N-002"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      },
+      {
+        "fixture_id": "telegram.update-channel-post",
+        "path": "telegram/update-channel-post.json",
+        "matrix_ids": [
+          "N8N-012"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+        ]
+      }
+    ],
+    "program": {
+      "gates": [
+        {
+          "id": "Gate-1",
+          "status": "must",
+          "bound_stories": [
+            "23",
+            "24",
+            "25"
+          ],
+          "evidence_mode": "suite_modules_plus_acceptance",
+          "evidence_paths": [
+            "tests/contract/test_auth_ops_boundaries.py",
+            "tests/contract/test_json_schema_boundary.py",
+            "tests/n8n/test_n8n_telegram_mapping.py",
+            "tests/test_contract_oas.py"
+          ],
+          "acceptance_paths": [
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-23-qa-auth-ops-boundaries/acceptance-verification-task-aibridge-23-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-24-qa-json-schema-boundary/acceptance-verification-task-aibridge-24-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t04-story-gate/acceptance-verification-task-aibridge-25-t04-story-gate.md"
+          ]
+        },
+        {
+          "id": "Gate-2",
+          "status": "must",
+          "bound_stories": [
+            "26",
+            "27",
+            "28"
+          ],
+          "evidence_mode": "suite_modules_plus_acceptance",
+          "evidence_paths": [
+            "tests/test_responses_store_false.py",
+            "tests/integration/test_idempotency_concurrency.py",
+            "tests/unit/test_tool_call_validation.py",
+            "tests/integration/test_openai_prompt_behavior.py"
+          ],
+          "acceptance_paths": [
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-26-qa-idempotency-concurrency/task-aibridge-26-t04-story-gate/acceptance-verification-task-aibridge-26-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-27-qa-openai-prompt-behavior/task-aibridge-27-t04-story-gate/acceptance-verification-task-aibridge-27-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-28-qa-tool-call-validation/task-aibridge-28-t04-story-gate/acceptance-verification-task-aibridge-28-t04-story-gate.md"
+          ]
+        },
+        {
+          "id": "Gate-3",
+          "status": "must",
+          "bound_stories": [
+            "29",
+            "30"
+          ],
+          "evidence_mode": "suite_modules_plus_acceptance",
+          "evidence_paths": [
+            "tests/unit/test_action_token_fsm.py",
+            "tests/integration/test_action_token_fsm_http.py",
+            "tests/integration/test_gateway_continuation.py",
+            "tests/test_gateway_outcomes.py"
+          ],
+          "acceptance_paths": [
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-29-qa-action-token-fsm/task-aibridge-29-t04-story-gate/acceptance-verification-task-aibridge-29-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-30-qa-gateway-continuation/task-aibridge-30-t04-story-gate/acceptance-verification-task-aibridge-30-t04-story-gate.md"
+          ]
+        },
+        {
+          "id": "Gate-4",
+          "status": "must",
+          "bound_stories": [
+            "31",
+            "32",
+            "33"
+          ],
+          "evidence_mode": "suite_modules_plus_acceptance",
+          "evidence_paths": [
+            "tests/integration/test_lifecycle_retention.py",
+            "tests/contract/test_readyz_configuration.py",
+            "tests/integration/test_privacy_observability.py",
+            "tests/test_story_09_postgres_ssot.py"
+          ],
+          "acceptance_paths": [
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-31-qa-restart-lifecycle-retention/task-aibridge-31-t04-story-gate/acceptance-verification-task-aibridge-31-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-32-qa-privacy-logs-observability/task-aibridge-32-t04-story-gate/acceptance-verification-task-aibridge-32-t04-story-gate.md",
+            "doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-33-qa-readiness-configuration/task-aibridge-33-t04-story-gate/acceptance-verification-task-aibridge-33-t04-story-gate.md"
+          ]
+        },
+        {
+          "id": "Gate-5",
+          "status": "deferred_live",
+          "reason": "Layer F live pilot out of default CI; WAIVE live TG/Railway invent"
+        }
+      ],
+      "characterization": [
+        {
+          "id": "CHAR-001",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "spies/life-after-cancelled.json"
+          ],
+          "bound_tests": [
+            "tests/integration/test_lifecycle_retention.py"
+          ]
+        },
+        {
+          "id": "CHAR-002",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "spies/life-after-stashed.json",
+            "n8n/map-outcome-stashed.json"
+          ],
+          "bound_tests": [
+            "tests/integration/test_lifecycle_retention.py",
+            "tests/n8n/test_n8n_telegram_mapping.py"
+          ]
+        },
+        {
+          "id": "CHAR-003",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "channel/val-whitespace-message.json"
+          ],
+          "bound_tests": [
+            "tests/contract/test_json_schema_boundary.py"
+          ]
+        },
+        {
+          "id": "CHAR-004",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "n8n/map-media-caption.json",
+            "telegram/message-photo-with-caption.json"
+          ],
+          "bound_tests": [
+            "tests/n8n/test_n8n_telegram_mapping.py"
+          ]
+        },
+        {
+          "id": "CHAR-005",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "n8n/callback-ack-before-actions.json"
+          ],
+          "bound_tests": [
+            "tests/n8n/test_n8n_telegram_mapping.py"
+          ],
+          "defer_note": "resident notify when aibridge unavailable after ack — capture-first; no product invent"
+        },
+        {
+          "id": "CHAR-006",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "openai/oai-http-429.json",
+            "openai/oai-http-503.json",
+            "channel/turns-oai-429.json"
+          ],
+          "bound_tests": [
+            "tests/integration/test_openai_prompt_behavior.py"
+          ]
+        },
+        {
+          "id": "CHAR-007",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [
+            "gateway/gw-409.json",
+            "spies/act-reject-409.json"
+          ],
+          "bound_tests": [
+            "tests/integration/test_gateway_continuation.py",
+            "tests/test_gateway_outcomes.py"
+          ]
+        },
+        {
+          "id": "CHAR-008",
+          "status": "characterization",
+          "policy": "capture-first; no silent product invent",
+          "refs": [],
+          "bound_tests": [
+            "tests/n8n/test_n8n_telegram_mapping.py"
+          ],
+          "defer_reason": "n8n Send vs Edit Message / duplicate outbound after retry — no fixture envelope yet; capture-first defer; no product invent"
+        }
+      ],
+      "layers": {
+        "A_unit": {
+          "status": "required",
+          "dir": "tests/unit"
+        },
+        "B_contract": {
+          "status": "required",
+          "dir": "tests/contract"
+        },
+        "C_integration": {
+          "status": "required",
+          "dir": "tests/integration"
+        },
+        "D_container": {
+          "status": "deferred",
+          "reason": "container/image smoke out of default CI checklist; bound existing Dockerfile + STORY-21/22 proofs assert-only",
+          "evidence_paths": [
+            "Dockerfile",
+            "tests/test_story_21_oas_path_contract.py",
+            "tests/test_story_22_phase_a_proof.py",
+            "docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-21-oas-image-env-docs/acceptance-verification-task-aibridge-21-t05-story-gate.md"
+          ]
+        },
+        "E_n8n": {
+          "status": "required",
+          "dir": "tests/n8n"
+        },
+        "F_live": {
+          "status": "deferred_live",
+          "reason": "with Gate-5; no live TG invent"
+        }
+      },
+      "updated_at": "2026-09-17T22:19:41Z",
+      "p6_wave": "aibridge_35_audit_20260917"
+    },
+    "stats": {
+      "fixture_count": 224,
+      "synced_at": "2026-09-17T21:44:00Z",
+      "stories_covered": [
+        "STORY-AIBRIDGE-23-qa-auth-ops-boundaries",
+        "STORY-AIBRIDGE-24-qa-json-schema-boundary",
+        "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping",
+        "STORY-AIBRIDGE-26-qa-idempotency-concurrency",
+        "STORY-AIBRIDGE-27-qa-openai-prompt-behavior",
+        "STORY-AIBRIDGE-28-qa-tool-call-validation",
+        "STORY-AIBRIDGE-29-qa-action-token-fsm",
+        "STORY-AIBRIDGE-30-qa-gateway-continuation",
+        "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention",
+        "STORY-AIBRIDGE-32-qa-privacy-logs-observability",
+        "STORY-AIBRIDGE-33-qa-readiness-configuration",
+        "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+      ]
+    }
+  }
+}
