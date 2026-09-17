@@ -113,7 +113,10 @@ def persist_pending_tool(
     frozen: dict[str, Any],
     replay_items: list[dict[str, Any]],
 ) -> None:
-    """Persist call_id, frozen body, replay items before /turns returns actions."""
+    """Persist call_id, frozen body, replay items before /turns returns actions.
+
+    On persist failure: clear in-memory freeze so Send cannot be offered (TOOL-013).
+    """
     guard.set_frozen_tool_intent(
         sess.session_id,
         {
@@ -125,7 +128,15 @@ def persist_pending_tool(
     )
     sess.pending_call_id = str(frozen["call_id"])
     sess.pending_replay_items = list(replay_items)
-    guard._persist_session(sess)  # noqa: SLF001 — intentional before actions return
+    try:
+        guard._persist_session(sess)  # noqa: SLF001 — intentional before actions return
+    except Exception:
+        # Fail closed — no durable pending freeze leak after persist boom.
+        sess.frozen_tool_intent = None
+        sess.draft_hash = None
+        sess.pending_call_id = None
+        sess.pending_replay_items = []
+        raise
 
 
 def build_turn_from_engine(
