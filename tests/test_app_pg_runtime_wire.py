@@ -80,7 +80,7 @@ def test_create_app_wires_pg_runtime_without_manual_inject(pg_url: str) -> None:
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel,
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_GATEWAY_ORIGIN="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
         DATABASE_URL=pg_url,
         AIBRIDGE_ALLOW_MEMORY_STORES=False,

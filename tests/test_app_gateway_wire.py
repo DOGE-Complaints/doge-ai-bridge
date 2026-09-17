@@ -17,7 +17,7 @@ def test_create_app_wires_executor_from_settings() -> None:
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_GATEWAY_ORIGIN="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example",
     )
@@ -36,7 +36,7 @@ def test_testclient_send_dry_run_without_manual_inject() -> None:
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel,
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_GATEWAY_ORIGIN="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())

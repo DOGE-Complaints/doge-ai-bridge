@@ -17,44 +17,32 @@ def _ready_settings(**overrides: object) -> Settings:
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
+        AIBRIDGE_SCHEMA_VALIDATION_COMPLETE=False,
     )
     base.update(overrides)
     return Settings(**base)
 
 
-def test_canonical_api_base_url_used_by_gateway_executor() -> None:
+def test_intake_base_url_used_by_gateway_executor() -> None:
     settings = _ready_settings(
-        DOGESTONIA_API_BASE_URL="https://canonical.example.invalid",
-        DOGESTONIA_GATEWAY_ORIGIN="",
+        DOGESTONIA_INTAKE_BASE_URL="https://canonical.example.invalid",
     )
+    assert settings.intake_base_url() == "https://canonical.example.invalid"
     ex = default_executor_from_settings(settings)
     assert ex.origin == "https://canonical.example.invalid"
 
 
-def test_gateway_origin_alias_fallback() -> None:
-    settings = _ready_settings(
-        DOGESTONIA_API_BASE_URL="",
-        DOGESTONIA_GATEWAY_ORIGIN="https://alias.example.invalid",
-    )
-    assert settings.resolved_gateway_base_url() == "https://alias.example.invalid"
-    ex = default_executor_from_settings(settings)
-    assert ex.origin == "https://alias.example.invalid"
-
-
-def test_readyz_fails_on_base_url_conflict() -> None:
-    settings = _ready_settings(
-        DOGESTONIA_API_BASE_URL="https://a.example.invalid",
-        DOGESTONIA_GATEWAY_ORIGIN="https://b.example.invalid",
-    )
+def test_readyz_fails_when_intake_base_url_missing() -> None:
+    settings = _ready_settings(DOGESTONIA_INTAKE_BASE_URL="")
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")
     assert response.status_code == 503
-    assert response.json()["reason"] == "gateway_base_url_conflict"
+    assert response.json()["reason"] == "intake_base_url_missing"
 
 
 def test_settings_accept_ttl_rate_log_budget_knobs() -> None:
@@ -95,11 +83,11 @@ def test_readyz_fails_openai_missing() -> None:
     assert result.reason == "openai_config_missing"
 
 
-def test_readyz_fails_http_gateway_origin() -> None:
-    settings = _ready_settings(DOGESTONIA_API_BASE_URL="http://insecure.example.invalid")
+def test_readyz_fails_http_intake_base_url() -> None:
+    settings = _ready_settings(DOGESTONIA_INTAKE_BASE_URL="http://insecure.example.invalid")
     result = evaluate_readiness(settings)
     assert result.ready is False
-    assert result.reason == "gateway_base_url_not_https"
+    assert result.reason == "intake_base_url_not_https"
 
 
 def test_dry_run_false_fails_readyz_until_schema_complete() -> None:

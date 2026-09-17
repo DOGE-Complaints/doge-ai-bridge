@@ -280,7 +280,7 @@ def build_e2e_harness(
         DOGESTONIA_API_BEARER_TOKEN=GATEWAY_TOKEN,
         AIBRIDGE_MAX_REQUEST_BYTES=65536,
         PORT=8080,
-        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="",  # never ProductionResponsesClient
         OPENAI_MODEL="gpt-test",

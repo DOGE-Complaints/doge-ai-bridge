@@ -42,7 +42,7 @@ def _ready_settings(**overrides: object) -> Settings:
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",

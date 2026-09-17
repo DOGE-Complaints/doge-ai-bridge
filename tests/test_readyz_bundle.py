@@ -31,7 +31,7 @@ def _content_settings(**overrides: str) -> Settings:
         DOGESTONIA_OPENAPI_PATH=str(WIRE_OAS),
         DOGESTONIA_PAYLOAD_SCHEMA_PATH=str(FIXTURES / "pack" / "payload.schema.json"),
         DATABASE_URL="memory",
-        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",

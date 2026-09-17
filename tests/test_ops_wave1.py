@@ -28,7 +28,7 @@ def _client() -> TestClient:
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
@@ -145,8 +145,7 @@ def test_env_example_lists_required_knobs_without_secrets() -> None:
         "AIBRIDGE_MAX_REQUEST_BYTES",
         "AIBRIDGE_MAX_INPUT_TOKENS",
         "AIBRIDGE_DRY_RUN",
-        "DOGESTONIA_API_BASE_URL",
-        "DOGESTONIA_GATEWAY_ORIGIN",
+        "DOGESTONIA_INTAKE_BASE_URL",
         "AIBRIDGE_SESSION_TTL_SECONDS",
         "AIBRIDGE_ACTION_TOKEN_TTL_SECONDS",
         "AIBRIDGE_MAX_RESPONSE_BYTES",

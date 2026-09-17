@@ -63,7 +63,7 @@ def test_channel_http_errors_increment_on_401() -> None:
     settings = Settings(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_GATEWAY_ORIGIN="https://gateway.example.invalid",
+        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())
