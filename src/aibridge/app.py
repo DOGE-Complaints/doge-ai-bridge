@@ -135,6 +135,14 @@ class BodySizeLimitMiddleware(BaseHTTPMiddleware):
                         message="Invalid Content-Length",
                     ),
                 )
+            if length < 0:
+                return JSONResponse(
+                    status_code=400,
+                    content=error_body(
+                        code="bad_request",
+                        message="Invalid Content-Length",
+                    ),
+                )
             if length > self.max_bytes:
                 return JSONResponse(
                     status_code=413,
