@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.tool-fc-args-scalar",
+  "matrix_ids": [
+    "TOOL-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-28-qa-tool-call-validation"
+  ],
+  "notes": "synthetic; arguments JSON scalar string (not object)",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_tool",
+      "output": [
+        {
+          "type": "function_call",
+          "call_id": "call_tool_scalar",
+          "name": "postStoryDraftStash",
+          "arguments": "\"not-an-object\""
+        },
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "Ready to stash."
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 8,
+        "output_tokens": 4
+      }
+    }
+  }
+}
