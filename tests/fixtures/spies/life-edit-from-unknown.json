@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-edit-from-unknown",
+  "matrix_ids": [
+    "LIFE-011"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; edit from unknown_outcome — new revision; old revision non-resendable",
+  "payload": {
+    "send_blocked_old_revision": false,
+    "revision_delta": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-deployment-mismatch",
+  "matrix_ids": [
+    "LIFE-012"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; token for deployment A invalid when session deployment changes",
+  "payload": {
+    "http_status": 409,
+    "error_code": "conflict"
+  }
+}

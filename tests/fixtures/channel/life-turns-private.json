@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.life-turns-private",
+  "matrix_ids": [
+    "LIFE-001",
+    "LIFE-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; minimal private /turns body for lifecycle drain/restart",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "life-evt-001",
+      "principal": {
+        "user_id": "31",
+        "chat_id": "31"
+      },
+      "message": {
+        "message_id": "1",
+        "text": "lifecycle hello"
+      }
+    }
+  }
+}

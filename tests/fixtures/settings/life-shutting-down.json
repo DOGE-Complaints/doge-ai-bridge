@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.life-shutting-down",
+  "matrix_ids": [
+    "LIFE-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; graceful shutdown — channel 503 shutting_down retryable",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_DRY_RUN": true
+    },
+    "expect_channel": {
+      "http_status": 503,
+      "error_code": "shutting_down",
+      "retryable": true
+    },
+    "healthz_ok": true
+  }
+}

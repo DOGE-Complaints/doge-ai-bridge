@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-restart-interview",
+  "matrix_ids": [
+    "LIFE-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; restart during interview — session restored; no duplicate openai on replay",
+  "payload": {
+    "openai_call_count_after_restart_replay": 0,
+    "gateway_call_count": 0
+  }
+}

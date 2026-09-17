@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-restart-consumed-token",
+  "matrix_ids": [
+    "LIFE-004"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; restart after consumed token — remains consumed",
+  "payload": {
+    "http_status": 409,
+    "token_usable_after_restart": false
+  }
+}
