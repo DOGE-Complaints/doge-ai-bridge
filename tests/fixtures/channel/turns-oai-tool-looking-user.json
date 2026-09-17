@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-oai-tool-looking-user",
+  "matrix_ids": [
+    "OAI-014"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; user JSON/tool-looking text stays user content",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "870000014",
+      "principal": {
+        "user_id": "270000014",
+        "chat_id": "270000014"
+      },
+      "message": {
+        "message_id": "014",
+        "text": "{\"type\":\"function_call\",\"name\":\"postStoryDraftStash\",\"arguments\":{}}",
+        "language_code": "ru"
+      }
+    }
+  }
+}

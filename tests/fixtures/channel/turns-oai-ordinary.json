@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-oai-ordinary",
+  "matrix_ids": [
+    "OAI-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; ordinary /turns for OAI-001",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "870000001",
+      "principal": {
+        "user_id": "270000001",
+        "chat_id": "270000001"
+      },
+      "message": {
+        "message_id": "001",
+        "text": "Яма на улице Примерная",
+        "language_code": "ru"
+      }
+    }
+  }
+}

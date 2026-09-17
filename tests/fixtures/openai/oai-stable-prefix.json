@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-stable-prefix",
+  "matrix_ids": [
+    "OAI-015"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; same bundle/model/tool/pack → identical prefix hash",
+  "payload": {
+    "kind": "stable_prefix",
+    "instructions": "civic interview v1",
+    "pack_id": "uus_veerenni_civic/v3",
+    "tools": []
+  }
+}

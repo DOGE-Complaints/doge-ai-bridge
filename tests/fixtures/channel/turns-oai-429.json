@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-oai-429",
+  "matrix_ids": [
+    "OAI-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "characterization; ASGI path when OpenAI raises",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "870000008",
+      "principal": {
+        "user_id": "270000008",
+        "chat_id": "270000008"
+      },
+      "message": {
+        "message_id": "008",
+        "text": "429 probe",
+        "language_code": "ru"
+      }
+    }
+  }
+}

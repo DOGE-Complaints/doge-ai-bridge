@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-empty-output",
+  "matrix_ids": [
+    "OAI-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; empty output array → bounded fallback",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_test_empty_002",
+      "output": [],
+      "usage": {
+        "input_tokens": 10,
+        "output_tokens": 0,
+        "cached_tokens": 0
+      }
+    }
+  }
+}

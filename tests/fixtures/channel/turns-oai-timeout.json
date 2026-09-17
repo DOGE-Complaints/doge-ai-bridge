@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-oai-timeout",
+  "matrix_ids": [
+    "OAI-010"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; timeout path for dedupe abort",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "870000010",
+      "principal": {
+        "user_id": "270000010",
+        "chat_id": "270000010"
+      },
+      "message": {
+        "message_id": "010",
+        "text": "timeout probe",
+        "language_code": "ru"
+      }
+    }
+  }
+}
