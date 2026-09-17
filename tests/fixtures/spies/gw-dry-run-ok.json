@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.gw-dry-run-ok",
+  "matrix_ids": [
+    "GW-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; dry-run Send → dry_run_ok; zero HTTP transport calls; no published/stashed claim",
+  "payload": {
+    "outcome": "dry_run_ok",
+    "gateway_call_count": 0,
+    "http_posted": false,
+    "forbid_substrings": [
+      "published",
+      "stashed"
+    ],
+    "continuation_url": null
+  }
+}

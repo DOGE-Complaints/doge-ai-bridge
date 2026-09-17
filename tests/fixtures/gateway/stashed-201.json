@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.stashed-201",
+  "matrix_ids": ["GW-002"],
+  "story_keys": ["STORY-AIBRIDGE-30-qa-gateway-continuation"],
+  "notes": "synthetic; valid 201 stash success; draft_id + trace_id both present for stashed/continuation mapping",
+  "payload": {
+    "status_code": 201,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": {
+        "draft_id": "draft_syn_001"
+      },
+      "trace_id": "trace_syn_001"
+    }
+  }
+}

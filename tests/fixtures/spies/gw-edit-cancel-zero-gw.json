@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.gw-edit-cancel-zero-gw",
+  "matrix_ids": [
+    "GW-018"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; Edit and Cancel must not call gateway; capture-first edit→interviewing",
+  "payload": {
+    "gateway_call_count": 0,
+    "edit_state": "interviewing",
+    "cancel_state": "cancelled",
+    "cancel_outcome": "cancelled"
+  }
+}

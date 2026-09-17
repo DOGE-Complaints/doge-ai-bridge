@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-201-missing-trace",
+  "matrix_ids": [
+    "GW-003"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; 201 missing top-level trace_id → contract_mismatch",
+  "payload": {
+    "status_code": 201,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": {
+        "draft_id": "draft_syn_003"
+      }
+    }
+  }
+}

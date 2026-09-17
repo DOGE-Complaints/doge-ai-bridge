@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-redirect",
+  "matrix_ids": [
+    "GW-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; final_url differs from stash URL → contract_mismatch; no redirect follow",
+  "payload": {
+    "status_code": 302,
+    "headers": {
+      "location": "https://other.example/path"
+    },
+    "body": {},
+    "final_url": "https://other.example/path"
+  }
+}

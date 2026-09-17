@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.gw-non-https-origin",
+  "matrix_ids": [
+    "GW-015"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; non-HTTPS intake origin → readiness fails closed",
+  "payload": {
+    "overrides": {
+      "DOGESTONIA_INTAKE_BASE_URL": "http://gateway.example.invalid",
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "ch-gw-015-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "DOGESTONIA_API_BEARER_TOKEN": "gw-gw-015-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "AIBRIDGE_DRY_RUN": true
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "intake_base_url_not_https"
+    },
+    "executor_origin": "http://gateway.example.invalid",
+    "executor_expect_outcome": "internal_bridge_error",
+    "executor_http_posted": false
+  }
+}
