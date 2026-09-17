@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.val-valid-actions",
+  "matrix_ids": [
+    "VAL-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+  ],
+  "notes": "synthetic; schema-valid /actions; token domain 404 expected without issued token",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "99001",
+      "callback_query_id": "cq-1",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "expect": {
+      "http_status_in": [
+        200,
+        403,
+        404,
+        409
+      ]
+    }
+  }
+}
