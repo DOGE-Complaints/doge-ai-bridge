@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.text-only-ru-clarify",
+  "matrix_ids": ["OAI-001"],
+  "story_keys": ["STORY-AIBRIDGE-27-qa-openai-prompt-behavior"],
+  "notes": "synthetic; text-only assistant reply; interviewing-phase clarification in Russian; no tool call",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_test_text_only_001",
+      "output": [
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "Уточните, пожалуйста, на какой улице находится яма — это поможет точнее определить место."
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 412,
+        "output_tokens": 24,
+        "cached_tokens": 300
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.idem-diff-sessions-parallel",
+  "matrix_ids": [
+    "IDEM-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+  ],
+  "notes": "synthetic; different sessions may proceed independently",
+  "payload": {
+    "openai_call_count": 2,
+    "gateway_call_count": 0,
+    "dedupe": "miss",
+    "http_status": 200,
+    "error_code": null,
+    "outcome": null,
+    "state": "interviewing",
+    "revision_delta": 0,
+    "forbid_substrings_in_logs": [
+      "Bearer ",
+      "sk-",
+      "callback_data_raw"
+    ]
+  }
+}

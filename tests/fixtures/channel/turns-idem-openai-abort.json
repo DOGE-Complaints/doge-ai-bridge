@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-idem-openai-abort",
+  "matrix_ids": [
+    "IDEM-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+  ],
+  "notes": "synthetic; OpenAI raises after claim — abort then retry same event_id",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "860000005",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "message": {
+        "message_id": "100",
+        "text": "На улице Вана-Пярну яма на дороге.",
+        "language_code": "ru"
+      }
+    }
+  }
+}
