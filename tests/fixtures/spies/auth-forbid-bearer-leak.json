@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.auth-forbid-bearer-leak",
+  "matrix_ids": [
+    "AUTH-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+  ],
+  "notes": "synthetic; Channel Bearer must be absent from logs/metrics/error bodies",
+  "payload": {
+    "forbid_substrings_in_logs": [
+      "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "forbid_substrings_in_error_body": [
+      "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "forbid_substrings_in_metrics": [
+      "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ]
+  }
+}

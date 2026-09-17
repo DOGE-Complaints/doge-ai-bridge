@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.turns-valid-private",
+  "matrix_ids": ["VAL-001", "AUTH-001"],
+  "story_keys": ["STORY-AIBRIDGE-24-qa-json-schema-boundary"],
+  "notes": "synthetic; minimal valid private /turns body; decimal-string ids; Channel Bearer added by test harness, not in payload",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "body": {
+      "channel": "telegram",
+      "event_id": "848301552",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "message": {
+        "message_id": "14",
+        "text": "На улице Вана-Пярну яма на дороге, машины еле объезжают.",
+        "language_code": "ru"
+      }
+    }
+  }
+}

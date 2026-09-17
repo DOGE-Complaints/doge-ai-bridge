@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.auth-metrics-private",
+  "matrix_ids": [
+    "AUTH-012"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+  ],
+  "notes": "synthetic; /metrics private test; Prometheus text; no PII/secrets",
+  "payload": {
+    "method": "GET",
+    "path": "/metrics",
+    "auth_ref": "none",
+    "expect": {
+      "http_status": 200,
+      "content_type_contains": "text/plain",
+      "forbid_substrings": [
+        "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ]
+    }
+  }
+}

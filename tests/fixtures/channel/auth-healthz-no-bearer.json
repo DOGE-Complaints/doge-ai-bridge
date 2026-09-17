@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.auth-healthz-no-bearer",
+  "matrix_ids": [
+    "AUTH-010"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+  ],
+  "notes": "synthetic; /healthz without Bearer",
+  "payload": {
+    "method": "GET",
+    "path": "/healthz",
+    "auth_ref": "none",
+    "expect": {
+      "http_status": 200,
+      "json": {
+        "status": "ok"
+      }
+    }
+  }
+}
