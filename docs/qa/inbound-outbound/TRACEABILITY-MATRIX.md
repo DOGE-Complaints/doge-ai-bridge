@@ -75,8 +75,8 @@
 | OAI-005 | `store` attempted true by config | Startup/settings or readiness fails closed. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-006 | Both stable prefix and `instructions` used | Fail test; mutually exclusive. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-007 | Parallel tool calls requested | Fail test; must be false. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
-| OAI-008 | OpenAI 429 | Bounded internal channel error under current implementation; no secret/raw response; no gateway. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
-| OAI-009 | OpenAI 5xx | Same bounded failure; retry policy belongs outside unsafe consequential send path. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
+| OAI-008 | OpenAI 429 | Transport `RATE_LIMITED`; channel **429** `rate_limited` retryable (CHAR-006 Option A); no secret/raw; no gateway. Distinct from client middleware RL. | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` · suite STORY-27 | covered |
+| OAI-009 | OpenAI 5xx | Transport `TRANSIENT_FAILURE`; channel **503** `transient_failure` retryable (CHAR-006 Option A); no gateway. | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` · suite STORY-27 | covered |
 | OAI-010 | OpenAI timeout | Bounded 500 `internal_error`, `retryable=true`; dedupe claim aborted so message retry can run. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-011 | Invalid OpenAI JSON/body | Bounded error, no history corruption or gateway. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-012 | Input/output/call/turn budget breach | No gateway; last confirmed state preserved; resident-safe rejection. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
@@ -193,7 +193,7 @@
 | CHAR-003 | Should whitespace-only messages be rejected after trimming? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-004 | Should Telegram media captions enter the text-only façade? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-005 | How should n8n notify a resident when aibridge is unavailable after callback acknowledgement? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
-| CHAR-006 | Should OpenAI 429/5xx remain a channel 500, or later gain a distinct retryable channel outcome? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` | open (Scaffolded · closure STORY-38) |
+| CHAR-006 | Should OpenAI 429/5xx remain a channel 500, or later gain a distinct retryable channel outcome? | **Option A** recorded: map transport → bounded channel (`429 rate_limited` / `503 transient_failure`); decision fixture + tests; middleware RL distinct | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` | covered |
 | CHAR-007 | Should unusual known gateway statuses such as 409 be a specific outcome rather than `unknown_outcome`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-008 | Does the n8n workflow use Send Message or Edit Message for each response state, and how does it prevent duplicate outbound Telegram messages after its own retry? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-39-qa-char008-send-edit-capture` | open (Scaffolded · file-presence ≠ capture · STORY-39) |
 | QUAL-001 | VAL characterization asserts without tautology HTTP band | Explicit expected status (+ shape); no `100<=status<600` sole success | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | open (Scaffolded) |
