@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.char-006-channel-429-expect",
+  "matrix_ids": [
+    "OAI-008",
+    "CHAR-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+  ],
+  "notes": "Option A channel expect for OpenAI transport RATE_LIMITED; promote=copy; no secrets",
+  "payload": {
+    "kind": "channel_error_expect",
+    "transport_outcome": "rate_limited",
+    "http_status": 429,
+    "error": {
+      "code": "rate_limited",
+      "retryable": true
+    },
+    "gateway_calls": 0,
+    "dedupe_aborted": true,
+    "forbid_substrings": [
+      "Bearer ",
+      "sk-"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.char-006-decision",
+  "matrix_ids": [
+    "CHAR-006",
+    "OAI-008",
+    "OAI-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+  ],
+  "notes": "CHAR-006 product decision (capture-first). Option A recorded before product map. Promote=copy to tests/fixtures/openai/. Do not invent gateway publish on OAI errors.",
+  "payload": {
+    "decision": "A",
+    "decision_label": "map_transport_to_bounded_channel_errors",
+    "recorded_at": "2026-09-18T13:43:00Z",
+    "gaps_ref": "TECHNICAL-ARCHITECTURE-GAPS-36-40.md §38",
+    "as_built_before": {
+      "channel_http_status": 500,
+      "error_code": "internal_error",
+      "retryable": true,
+      "path": "ResponsesTransportError unhandled → unhandled_channel_exception",
+      "note": "characterization lock removed by Option A product map"
+    },
+    "option_a": {
+      "RATE_LIMITED": {
+        "http_status": 429,
+        "error_code": "rate_limited",
+        "retryable": true,
+        "distinct_from": "client middleware rate_limited (same code/status; different cause)"
+      },
+      "TRANSIENT_FAILURE": {
+        "http_status": 503,
+        "error_code": "transient_failure",
+        "retryable": true
+      },
+      "TIMEOUT": {
+        "http_status": 500,
+        "error_code": "internal_error",
+        "retryable": true,
+        "note": "OAI-010 keeps bounded 500 internal_error; out of CHAR-006 429/5xx fork"
+      }
+    },
+    "option_b_rejected": "keep 500 internal_error forever as intentional characterization",
+    "non_goals": [
+      "invent OAS schema fields",
+      "authorize gateway on OpenAI errors",
+      "Gate-5 live pilot"
+    ]
+  }
+}

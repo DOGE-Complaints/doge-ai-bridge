@@ -20,7 +20,8 @@
   "story_keys": [
     "STORY-AIBRIDGE-35-qa-gates-layers-dod",
     "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
-    "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
+    "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence",
+    "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
   ],
   "notes": "synthetic registry; paths relative to tests/fixtures/ for fixture rows; program evidence paths relative to doge-ai-bridge/; synced P6 2026-09-17T22:19:41Z; Gate-5/Layer F deferred_live; Layer D deferred+bound; CHAR refs capture-first",
   "payload": {
@@ -2321,6 +2322,43 @@
           "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
         ],
         "notes": "Gate-5 evidence deferred capture-first; default_ci=false; promote=copy"
+      },
+      {
+        "fixture_id": "openai.char-006-decision",
+        "path": "openai/char-006-decision.json",
+        "matrix_ids": [
+          "CHAR-006",
+          "OAI-008",
+          "OAI-009"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+        ],
+        "notes": "CHAR-006 Option A decision; promote=copy; capture-first"
+      },
+      {
+        "fixture_id": "openai.char-006-channel-429-expect",
+        "path": "openai/char-006-channel-429-expect.json",
+        "matrix_ids": [
+          "OAI-008",
+          "CHAR-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+        ],
+        "notes": "Option A channel expect RATE_LIMITED→429; promote=copy"
+      },
+      {
+        "fixture_id": "openai.char-006-channel-503-expect",
+        "path": "openai/char-006-channel-503-expect.json",
+        "matrix_ids": [
+          "OAI-009",
+          "CHAR-006"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+        ],
+        "notes": "Option A channel expect TRANSIENT_FAILURE→503; promote=copy"
       }
     ],
     "program": {
@@ -2475,16 +2513,19 @@
         },
         {
           "id": "CHAR-006",
-          "status": "characterization",
-          "policy": "capture-first; no silent product invent",
+          "status": "decision_recorded",
+          "policy": "Option A map transport→bounded channel; capture-first decision; no silent invent",
           "refs": [
+            "openai/char-006-decision.json",
+            "openai/char-006-channel-429-expect.json",
+            "openai/char-006-channel-503-expect.json",
             "openai/oai-http-429.json",
-            "openai/oai-http-503.json",
-            "channel/turns-oai-429.json"
+            "openai/oai-http-503.json"
           ],
           "bound_tests": [
             "tests/integration/test_openai_prompt_behavior.py"
-          ]
+          ],
+          "decision": "A"
         },
         {
           "id": "CHAR-007",
@@ -2546,8 +2587,8 @@
       "p6_wave": "aibridge_35_audit_20260917"
     },
     "stats": {
-      "fixture_count": 226,
-      "synced_at": "2026-09-18T12:53:26Z",
+      "fixture_count": 229,
+      "synced_at": "2026-09-18T13:43:00Z",
       "stories_covered": [
         "STORY-AIBRIDGE-23-qa-auth-ops-boundaries",
         "STORY-AIBRIDGE-24-qa-json-schema-boundary",
@@ -2563,7 +2604,8 @@
         "STORY-AIBRIDGE-34-qa-product-journey-scenarios",
         "STORY-AIBRIDGE-35-qa-gates-layers-dod",
         "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
-        "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
+        "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence",
+        "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
       ]
     }
   }

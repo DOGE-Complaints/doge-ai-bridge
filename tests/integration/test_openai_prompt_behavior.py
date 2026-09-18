@@ -29,8 +29,10 @@ from aibridge.request_assembly import build_stable_prefix
 from aibridge.responses_client import (
     DualInstructionsError,
     ProductionResponsesClient,
+    RecordingAsyncResponsesTransport,
     RecordingResponsesClient,
     RecordingResponsesTransport,
+    ResponsesClient,
     ResponsesOutcome,
     ResponsesTransportError,
     assert_prompt_xor,
@@ -98,11 +100,12 @@ def _auth() -> dict[str, str]:
 
 def _build(
     *,
-    openai: RecordingResponsesClient | None = None,
+    openai: ResponsesClient | None = None,
     budgets: BudgetGuard | None = None,
     instructions: str = "civic interview",
     pack_id: str = "uus_veerenni_civic/v3",
-) -> tuple[TestClient, Any, RecordingResponsesClient, RecordingGatewayTransport, EventDedupeStore]:
+    settings: Settings | None = None,
+) -> tuple[TestClient, Any, ResponsesClient, RecordingGatewayTransport, EventDedupeStore]:
     reset_confirmation_guard()
     reset_audit_buffer()
     openai = openai or RecordingResponsesClient(
@@ -116,7 +119,7 @@ def _build(
     )
     store = EventDedupeStore()
     app = create_app(
-        settings=_settings(),
+        settings=settings or _settings(),
         dedupe_store=store,
         interview_engine=engine,
     )
@@ -286,8 +289,9 @@ def test_oai_007_parallel_tool_calls_must_be_false() -> None:
 
 
 def test_oai_008_429_bounded_no_secret_characterization() -> None:
-    """OAI-008 characterization: transport 429 → rate_limited; ASGI raise → 500 shape."""
+    """OAI-008: transport 429 → RATE_LIMITED; channel Option A → 429 rate_limited."""
     err_fx = load_fixture("openai", "oai-http-429")["payload"]
+    expect = load_fixture("openai", "char-006-channel-429-expect")["payload"]
     transport = RecordingResponsesTransport(
         scripted=[(int(err_fx["status"]), err_fx.get("body"), json.dumps(err_fx.get("body")))]
     )
@@ -302,7 +306,7 @@ def test_oai_008_429_bounded_no_secret_characterization() -> None:
     assert ei.value.outcome == ResponsesOutcome.RATE_LIMITED.value
     _assert_forbid(str(ei.value))
 
-    # Channel path characterization (current implementation): unhandled → 500 internal_error.
+    # Channel path — CHAR-006 Option A (STORY-38): map transport → bounded channel error.
     boom = _RaiseClient(ResponsesTransportError(ResponsesOutcome.RATE_LIMITED.value, "rate"))
     _client, app, _oai, gw, store = _build(openai=boom)
     client = TestClient(app, raise_server_exceptions=False)
@@ -311,19 +315,96 @@ def test_oai_008_429_bounded_no_secret_characterization() -> None:
         headers=_auth(),
         json=_body("channel", "turns-oai-429"),
     )
-    assert r.status_code == 500  # characterization
+    assert r.status_code == int(expect["http_status"])
     body = r.json()
-    assert body["error"]["code"] == "internal_error"
-    assert body["error"]["retryable"] is True
+    assert body["error"]["code"] == expect["error"]["code"]
+    assert body["error"]["retryable"] is expect["error"]["retryable"]
+    assert body["error"]["message"] == "OpenAI rate limited"
     _assert_forbid(json.dumps(body))
     assert gw.calls == []
+    assert len(gw.calls) == int(expect["gateway_calls"])
     # claim aborted so retry can run
     assert store.get("telegram", "870000008") is None
 
 
+def test_oai_008_middleware_vs_openai_rate_limited_message_discriminator() -> None:
+    """G-02: same 429/rate_limited; middleware message ≠ OpenAI transport message."""
+    boom = _RaiseClient(ResponsesTransportError(ResponsesOutcome.RATE_LIMITED.value, "rate"))
+    _client, app, _oai, gw, store = _build(openai=boom)
+    client = TestClient(app, raise_server_exceptions=False)
+    r_oai = client.post(
+        "/v1/channel/turns",
+        headers=_auth(),
+        json=_body("channel", "turns-oai-429"),
+    )
+    assert r_oai.status_code == 429
+    oai_msg = r_oai.json()["error"]["message"]
+    assert oai_msg == "OpenAI rate limited"
+    assert r_oai.json()["error"]["code"] == "rate_limited"
+
+    mw_client = TestClient(
+        create_app(
+            settings=_settings(AIBRIDGE_PRINCIPAL_RATE_LIMIT=1),
+            dedupe_store=EventDedupeStore(),
+            interview_engine=InterviewEngine(
+                client=RecordingResponsesClient(
+                    scripted=[load_fixture("openai", "text-only-ru-clarify")["payload"]["body"]]
+                ),
+                instructions="civic interview",
+                pack_id="uus_veerenni_civic/v3",
+            ),
+        ),
+        raise_server_exceptions=False,
+    )
+    body1 = {
+        "channel": "telegram",
+        "event_id": "rl-mw-1",
+        "principal": {"user_id": "270000008", "chat_id": "270000008"},
+        "message": {"message_id": "1", "text": "first", "language_code": "en"},
+    }
+    assert mw_client.post("/v1/channel/turns", headers=_auth(), json=body1).status_code == 200
+    body2 = {**body1, "event_id": "rl-mw-2"}
+    r_mw = mw_client.post("/v1/channel/turns", headers=_auth(), json=body2)
+    assert r_mw.status_code == 429
+    assert r_mw.json()["error"]["code"] == "rate_limited"
+    mw_msg = r_mw.json()["error"]["message"]
+    assert mw_msg == "Rate limit exceeded"
+    assert mw_msg != oai_msg
+
+
+def test_oai_008_asgi_production_client_wire_429() -> None:
+    """G-03: ProductionResponsesClient + scripted HTTP 429 through create_app ASGI."""
+    err_fx = load_fixture("openai", "oai-http-429")["payload"]
+    expect = load_fixture("openai", "char-006-channel-429-expect")["payload"]
+    async_transport = RecordingAsyncResponsesTransport(
+        scripted=[(int(err_fx["status"]), err_fx.get("body"), json.dumps(err_fx.get("body")))]
+    )
+    prod = ProductionResponsesClient(
+        api_key="sk-SHOULD-NOT-LEAK",
+        async_transport=async_transport,
+    )
+    _client, app, _oai, gw, store = _build(openai=prod)
+    client = TestClient(app, raise_server_exceptions=False)
+    r = client.post(
+        "/v1/channel/turns",
+        headers=_auth(),
+        json=_body("channel", "turns-oai-429"),
+    )
+    assert r.status_code == int(expect["http_status"])
+    body = r.json()
+    assert body["error"]["code"] == expect["error"]["code"]
+    assert body["error"]["message"] == "OpenAI rate limited"
+    assert body["error"]["retryable"] is True
+    _assert_forbid(json.dumps(body))
+    assert gw.calls == []
+    assert store.get("telegram", "870000008") is None
+    assert len(async_transport.calls) == 1
+
+
 def test_oai_009_5xx_bounded_characterization() -> None:
-    """OAI-009: transport TRANSIENT_FAILURE + ASGI channel depth (G-01 mirror of 008)."""
+    """OAI-009: transport TRANSIENT_FAILURE; channel Option A → 503 transient_failure."""
     err_fx = load_fixture("openai", "oai-http-503")["payload"]
+    expect = load_fixture("openai", "char-006-channel-503-expect")["payload"]
     transport = RecordingResponsesTransport(
         scripted=[(int(err_fx["status"]), None, "upstream")]
     )
@@ -338,7 +419,6 @@ def test_oai_009_5xx_bounded_characterization() -> None:
     assert ei.value.outcome == ResponsesOutcome.TRANSIENT_FAILURE.value
     # characterization: no automatic retry invent on consequential path here
 
-    # G-01: ASGI channel depth — same bounded shape as OAI-008 (no secret/gw; dedupe abort).
     boom = _RaiseClient(
         ResponsesTransportError(ResponsesOutcome.TRANSIENT_FAILURE.value, "upstream 503")
     )
@@ -354,13 +434,56 @@ def test_oai_009_5xx_bounded_characterization() -> None:
             "message": {"message_id": "9", "text": "503 probe", "language_code": "en"},
         },
     )
-    assert r.status_code == 500  # characterization (current implementation)
+    assert r.status_code == int(expect["http_status"])
     body = r.json()
-    assert body["error"]["code"] == "internal_error"
-    assert body["error"]["retryable"] is True
+    assert body["error"]["code"] == expect["error"]["code"]
+    assert body["error"]["retryable"] is expect["error"]["retryable"]
+    assert body["error"]["message"] == "OpenAI upstream transient failure"
     _assert_forbid(json.dumps(body))
     assert gw.calls == []
     assert store.get("telegram", "870000009") is None
+
+
+def test_oai_009_asgi_production_client_wire_503() -> None:
+    """G-03: ProductionResponsesClient + scripted HTTP 503 through create_app ASGI."""
+    err_fx = load_fixture("openai", "oai-http-503")["payload"]
+    expect = load_fixture("openai", "char-006-channel-503-expect")["payload"]
+    async_transport = RecordingAsyncResponsesTransport(
+        scripted=[(int(err_fx["status"]), None, "upstream")]
+    )
+    prod = ProductionResponsesClient(api_key="sk-x", async_transport=async_transport)
+    _client, app, _oai, gw, store = _build(openai=prod)
+    client = TestClient(app, raise_server_exceptions=False)
+    r = client.post(
+        "/v1/channel/turns",
+        headers=_auth(),
+        json={
+            "channel": "telegram",
+            "event_id": "870000009",
+            "principal": {"user_id": "270000009", "chat_id": "270000009"},
+            "message": {"message_id": "9", "text": "503 probe", "language_code": "en"},
+        },
+    )
+    assert r.status_code == int(expect["http_status"])
+    body = r.json()
+    assert body["error"]["code"] == expect["error"]["code"]
+    assert body["error"]["message"] == "OpenAI upstream transient failure"
+    _assert_forbid(json.dumps(body))
+    assert gw.calls == []
+    assert store.get("telegram", "870000009") is None
+    assert len(async_transport.calls) == 1
+
+
+def test_char_006_decision_fixture_option_a() -> None:
+    """STORY-38 T01 — CHAR-006 decision recorded (Option A) before silent invent."""
+    env = load_fixture("openai", "char-006-decision")
+    assert env["fixture_id"] == "openai.char-006-decision"
+    assert "CHAR-006" in env["matrix_ids"]
+    payload = env["payload"]
+    assert payload["decision"] == "A"
+    assert payload["as_built_before"]["error_code"] == "internal_error"
+    assert payload["option_a"]["RATE_LIMITED"]["http_status"] == 429
+    assert payload["option_a"]["TRANSIENT_FAILURE"]["http_status"] == 503
 
 
 def test_oai_010_timeout_internal_error_dedupe_abort() -> None:
