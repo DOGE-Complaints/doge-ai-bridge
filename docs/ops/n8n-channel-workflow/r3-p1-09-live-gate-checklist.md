@@ -70,3 +70,23 @@ For `callback_query` paths, still use the enclosing update's `update_id` as `eve
 
 - Wave-1 façade smoke (partial): [wave1-gate-checklist.md](../wave1-gate-checklist.md)  
 - This file is the **§6.1 / R3-P1-09** SSOT for STORY-AIBRIDGE-15.
+
+---
+
+## N8N-WF-001 pinned export smoke (out of CI)
+
+<a id="n8n-wf-001-pinned-export-smoke-out-of-ci"></a>
+
+**Story:** STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty  
+**Pin pointer:** package `fixtures/meta/n8n-wf-001-pin-pointer.json` → promote copy `tests/fixtures/meta/`  
+**Export path (operator):** `docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json`  
+**Default CI / pytest:** **NO** — this section is **out-of-CI only**. Do not invent Railway SUCCESS or live Telegram PASS in CI.
+
+| # | Check | Live (ops) | Notes |
+|---|-------|------------|-------|
+| W1 | Credential-stripped export present at path above | [ ] | Do **not** invent JSON body |
+| W2 | `sha256` recorded in pin pointer matches file on disk | [ ] | Update pointer + promote=copy after place |
+| W3 | Layer E docs still label `tests/n8n/` as **adapter-contract** | [ ] | TECH §5.1 · package INDEX |
+| W4 | Optional dry-run smoke against pinned workflow (dedicated test bot) | [ ] | Secrets never committed; Gate-5 ownership → STORY-37 |
+
+When export is absent, pin pointer `payload.status=deferred` remains honest coverage until operator places the file.
