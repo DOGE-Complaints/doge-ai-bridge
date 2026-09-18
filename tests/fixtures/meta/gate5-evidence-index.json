@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "meta",
+  "fixture_id": "meta.gate5-evidence-index",
+  "matrix_ids": [
+    "Gate-5"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
+  ],
+  "notes": "Gate-5 evidence index; do not invent live TG PASS / Railway SUCCESS / fake screenshots; promote=copy to tests/fixtures/meta/",
+  "payload": {
+    "status": "deferred",
+    "defer_reason": "No pilot env in this P3 wave — dedicated TG test bot / private aibridge / n8n live credentials not available on disk; capture-first defer (P3 2026-09-18T12:53:26Z). Prior ops BLOCKED note: docs/ops/n8n-channel-workflow/live-evidence-BLOCKED-20260913.md",
+    "evidence_paths": [],
+    "ops_blocked_ref": "docs/ops/n8n-channel-workflow/live-evidence-BLOCKED-20260913.md",
+    "out_of_ci_checklist": "docs/ops/n8n-channel-workflow/r3-p1-09-live-gate-checklist.md#gate-5-live-channel-pilot-out-of-ci",
+    "default_ci": false,
+    "layer_f_status": "deferred_live",
+    "accepted_pack": false,
+    "verified_at": null
+  }
+}

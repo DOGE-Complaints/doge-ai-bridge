@@ -19,7 +19,8 @@
   ],
   "story_keys": [
     "STORY-AIBRIDGE-35-qa-gates-layers-dod",
-    "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty"
+    "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
+    "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
   ],
   "notes": "synthetic registry; paths relative to tests/fixtures/ for fixture rows; program evidence paths relative to doge-ai-bridge/; synced P6 2026-09-17T22:19:41Z; Gate-5/Layer F deferred_live; Layer D deferred+bound; CHAR refs capture-first",
   "payload": {
@@ -2309,6 +2310,17 @@
           "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty"
         ],
         "notes": "pin pointer deferred capture-first; default_ci=false; promote=copy"
+      },
+      {
+        "fixture_id": "meta.gate5-evidence-index",
+        "path": "meta/gate5-evidence-index.json",
+        "matrix_ids": [
+          "Gate-5"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
+        ],
+        "notes": "Gate-5 evidence deferred capture-first; default_ci=false; promote=copy"
       }
     ],
     "program": {
@@ -2398,7 +2410,7 @@
         {
           "id": "Gate-5",
           "status": "deferred_live",
-          "reason": "Layer F live pilot out of default CI; WAIVE live TG/Railway invent"
+          "reason": "deferred_live · out of default CI · no pilot env P3 2026-09-18; evidence index deferred; no invent live TG"
         }
       ],
       "characterization": [
@@ -2534,8 +2546,8 @@
       "p6_wave": "aibridge_35_audit_20260917"
     },
     "stats": {
-      "fixture_count": 225,
-      "synced_at": "2026-09-18T12:42:35Z",
+      "fixture_count": 226,
+      "synced_at": "2026-09-18T12:53:26Z",
       "stories_covered": [
         "STORY-AIBRIDGE-23-qa-auth-ops-boundaries",
         "STORY-AIBRIDGE-24-qa-json-schema-boundary",
@@ -2550,7 +2562,8 @@
         "STORY-AIBRIDGE-33-qa-readiness-configuration",
         "STORY-AIBRIDGE-34-qa-product-journey-scenarios",
         "STORY-AIBRIDGE-35-qa-gates-layers-dod",
-        "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty"
+        "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
+        "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence"
       ]
     }
   }
