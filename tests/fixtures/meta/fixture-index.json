@@ -21,9 +21,10 @@
     "STORY-AIBRIDGE-35-qa-gates-layers-dod",
     "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
     "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence",
-    "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+    "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome",
+    "STORY-AIBRIDGE-39-qa-char008-send-edit-capture"
   ],
-  "notes": "synthetic registry; paths relative to tests/fixtures/ for fixture rows; program evidence paths relative to doge-ai-bridge/; synced P6 2026-09-17T22:19:41Z; Gate-5/Layer F deferred_live; Layer D deferred+bound; CHAR refs capture-first",
+  "notes": "synthetic registry; paths relative to tests/fixtures/ for fixture rows; program evidence paths relative to doge-ai-bridge/; synced P6 2026-09-17T22:19:41Z; Gate-5/Layer F deferred_live; Layer D deferred+bound; CHAR refs capture-first; CHAR-008 defer envelope STORY-39 P3 2026-09-18T14:06:43Z",
   "payload": {
     "fixtures": [
       {
@@ -2359,6 +2360,17 @@
           "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
         ],
         "notes": "Option A channel expect TRANSIENT_FAILURE→503; promote=copy"
+      },
+      {
+        "fixture_id": "n8n.char-008-send-edit-capture",
+        "path": "n8n/char-008-send-edit-capture.json",
+        "matrix_ids": [
+          "CHAR-008"
+        ],
+        "story_keys": [
+          "STORY-AIBRIDGE-39-qa-char008-send-edit-capture"
+        ],
+        "notes": "CHAR-008 capture deferred; export absent; promote=copy; no invent Send/Edit"
       }
     ],
     "program": {
@@ -2543,12 +2555,16 @@
         {
           "id": "CHAR-008",
           "status": "characterization",
-          "policy": "capture-first; no silent product invent",
-          "refs": [],
-          "bound_tests": [
-            "tests/n8n/test_n8n_telegram_mapping.py"
+          "policy": "capture-first; no silent product invent; defer visible until export pin",
+          "refs": [
+            "n8n/char-008-send-edit-capture.json",
+            "meta/n8n-wf-001-pin-pointer.json"
           ],
-          "defer_reason": "n8n Send vs Edit Message / duplicate outbound after retry — no fixture envelope yet; capture-first defer; no product invent"
+          "bound_tests": [
+            "tests/test_char008_send_edit_capture_honesty.py",
+            "tests/test_qa_gates_layers_dod.py"
+          ],
+          "defer_reason": "export ABSENT at docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json; capture envelope status=deferred; no invent Send/Edit (P3 2026-09-18T14:06:43Z)"
         }
       ],
       "layers": {
@@ -2587,8 +2603,8 @@
       "p6_wave": "aibridge_35_audit_20260917"
     },
     "stats": {
-      "fixture_count": 229,
-      "synced_at": "2026-09-18T13:43:00Z",
+      "fixture_count": 230,
+      "synced_at": "2026-09-18T14:16:54Z",
       "stories_covered": [
         "STORY-AIBRIDGE-23-qa-auth-ops-boundaries",
         "STORY-AIBRIDGE-24-qa-json-schema-boundary",
@@ -2605,7 +2621,8 @@
         "STORY-AIBRIDGE-35-qa-gates-layers-dod",
         "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty",
         "STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence",
-        "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome"
+        "STORY-AIBRIDGE-38-qa-oai-channel-error-outcome",
+        "STORY-AIBRIDGE-39-qa-char008-send-edit-capture"
       ]
     }
   }

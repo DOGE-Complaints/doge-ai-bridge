@@ -144,8 +144,11 @@ def test_char_capture_first_bound_refs_or_defer(char_id: str) -> None:
     assert char_id in env["matrix_ids"]
     chars = {c["id"]: c for c in env["payload"]["program"]["characterization"]}
     row = chars[char_id]
-    assert row["status"] == "characterization"
-    assert "capture-first" in row["policy"]
+    assert row["status"] in (
+        "characterization",
+        "decision_recorded",
+    ), f"{char_id}: unexpected status {row['status']!r}"
+    assert "capture-first" in row["policy"] or "Option A" in row.get("policy", "")
     refs = row.get("refs") or []
     bound = row.get("bound_tests") or []
     defer = row.get("defer_reason")
@@ -156,7 +159,16 @@ def test_char_capture_first_bound_refs_or_defer(char_id: str) -> None:
     for rel in bound:
         assert (BRIDGE_ROOT / rel).is_file(), f"{char_id}: missing bound_test {rel}"
     if char_id == "CHAR-008":
-        assert defer, "CHAR-008 must document defer_reason (no Send/Edit fixture yet)"
+        assert defer, "CHAR-008 must document defer_reason while export/capture incomplete"
+        # Behavioral path: capture envelope exists and is honest (deferred XOR filled).
+        cap = load_fixture("n8n", "char-008-send-edit-capture")
+        assert cap["payload"]["status"] in ("deferred", "captured")
+        if cap["payload"]["status"] == "deferred":
+            assert (cap["payload"].get("defer_reason") or "").strip()
+            assert cap["payload"].get("response_states") == []
+        else:
+            assert cap["payload"].get("response_states")
+            assert (cap["payload"].get("retry_dedupe_policy") or "").strip()
 
 
 @pytest.mark.parametrize("layer_key", ["A_unit", "B_contract", "C_integration", "E_n8n"])

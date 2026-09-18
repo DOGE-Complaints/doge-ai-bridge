@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.char-008-send-edit-capture",
+  "matrix_ids": [
+    "CHAR-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-39-qa-char008-send-edit-capture"
+  ],
+  "notes": "CHAR-008 Send/Edit + retry dedupe capture envelope; export absent → deferred capture-first; promote=copy; no invent Send/Edit answers",
+  "payload": {
+    "kind": "char008_send_edit_capture",
+    "status": "deferred",
+    "defer_reason": "Pinned export docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json ABSENT; cannot capture per-state send_message|edit_message or retry dedupe without invent (P3 2026-09-18T14:06:43Z). Pin pointer STORY-36 remains deferred.",
+    "response_states": [],
+    "retry_dedupe_policy": null,
+    "source_export_path": "docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json",
+    "source_export_sha256": null,
+    "ops_readme_notes": {
+      "source": "ops_readme_not_export",
+      "path": "docs/ops/n8n-channel-workflow/README.md",
+      "section": "§2 Required behavior (no-fork)",
+      "summary": "High-level: message→/turns→Send Message; callback→answerCallbackQuery→/actions→Send/Edit Message — not a per-state CHAR-008 capture"
+    },
+    "pin_pointer_ref": "meta/n8n-wf-001-pin-pointer.json",
+    "default_ci": false,
+    "observation_note": "docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-39-qa-char008-send-edit-capture/task-aibridge-39-t01-observe-workflow-outbound/observation-note-20260918-1406.md"
+  }
+}
