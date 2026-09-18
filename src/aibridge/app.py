@@ -31,7 +31,11 @@ from aibridge.metrics import get_metrics
 from aibridge.rate_limit import RateLimiter, hash_principal_key
 from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
-from aibridge.responses_client import ProductionResponsesClient
+from aibridge.responses_client import (
+    ProductionResponsesClient,
+    ResponsesOutcome,
+    ResponsesTransportError,
+)
 from aibridge.schemas import (
     ChannelActionRequest,
     ChannelErrorBody,
@@ -634,6 +638,49 @@ def create_app(
         return JSONResponse(
             status_code=status,
             content=error_body(code=code, message=message),
+        )
+
+    @app.exception_handler(ResponsesTransportError)
+    async def responses_transport_channel_error(
+        request: Request, exc: ResponsesTransportError
+    ) -> JSONResponse:
+        """CHAR-006 Option A — map OpenAI transport outcomes to bounded channel errors.
+
+        Distinct from client rate-limit middleware (also 429 ``rate_limited``).
+        Unmapped outcomes fall through to generic ``internal_error`` handler.
+        """
+        if not request.url.path.startswith(CHANNEL_PATH_PREFIX):
+            return JSONResponse(
+                status_code=500,
+                content={"status": "error", "reason": "internal_error"},
+            )
+        outcome = str(exc.outcome)
+        if outcome == ResponsesOutcome.RATE_LIMITED.value:
+            return JSONResponse(
+                status_code=429,
+                content=error_body(
+                    code="rate_limited",
+                    message="OpenAI rate limited",
+                    retryable=True,
+                ),
+            )
+        if outcome == ResponsesOutcome.TRANSIENT_FAILURE.value:
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="transient_failure",
+                    message="OpenAI upstream transient failure",
+                    retryable=True,
+                ),
+            )
+        # TIMEOUT / CLIENT_ERROR / INTERNAL_ERROR — keep bounded 500 shape (OAI-010 etc.)
+        return JSONResponse(
+            status_code=500,
+            content=error_body(
+                code="internal_error",
+                message="Internal bridge error",
+                retryable=True,
+            ),
         )
 
     @app.exception_handler(Exception)
