@@ -184,9 +184,8 @@ def test_val_characterization_capture_first(name: str, matrix_id: str) -> None:
     payload = env["payload"]
     client = _client()
     response = _request(client, payload)
-    # Capture-first: assert we observed a concrete HTTP status (product decision deferred).
+    # Capture-first: explicit expected status only (no vacuous 100–599 band — QUAL-001 / STORY-40).
     assert isinstance(response.status_code, int)
-    assert 100 <= response.status_code < 600
     # Documented current product (2026-09-17): whitespace passes min_length; missing CT accepted.
     if matrix_id == "VAL-014":
         assert response.status_code == 200
