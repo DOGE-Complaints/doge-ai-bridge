@@ -196,8 +196,8 @@
 | CHAR-006 | Should OpenAI 429/5xx remain a channel 500, or later gain a distinct retryable channel outcome? | **Option A** recorded: map transport → bounded channel (`429 rate_limited` / `503 transient_failure`); decision fixture + tests; middleware RL distinct | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` | covered |
 | CHAR-007 | Should unusual known gateway statuses such as 409 be a specific outcome rather than `unknown_outcome`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-008 | Does the n8n workflow use Send Message or Edit Message for each response state, and how does it prevent duplicate outbound Telegram messages after its own retry? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-39-qa-char008-send-edit-capture` | deferred (export absent · capture envelope status=deferred · capture-first · no invent Send/Edit · P3 2026-09-18T14:06:43Z) |
-| QUAL-001 | VAL characterization asserts without tautology HTTP band | Explicit expected status (+ shape); no `100<=status<600` sole success | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | open (Scaffolded) |
-| QUAL-002 | Fixture promote hash_eq policy | Integrity-only; never sole evidence for matrix Expected | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | open (Scaffolded) |
-| QUAL-003 | Optional non-Recording GW / real-PG concurrency probe | Named probe or explicit WAIVE (not Gate-5) | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | open (Scaffolded) |
+| QUAL-001 | VAL characterization asserts without tautology HTTP band | Explicit expected status (+ shape); no `100<=status<600` sole success | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | covered (band removed · VAL-014/018 explicit 200 · P3 2026-09-18T14:28:02Z) |
+| QUAL-002 | Fixture promote hash_eq policy | Integrity-only; never sole evidence for matrix Expected | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | covered (INDEX + gaps §40 DoD · P3 2026-09-18T14:28:02Z) |
+| QUAL-003 | Optional non-Recording GW / real-PG concurrency probe | Named probe or explicit WAIVE (not Gate-5) | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | waived (gaps §40: UC+LIFE-live PG · Recording GW sufficient · not Gate-5 · P3 2026-09-18T14:28:02Z) |
 
 **Total rows:** 190 (was 186 · +N8N-WF-001 · +QUAL-001…003)
