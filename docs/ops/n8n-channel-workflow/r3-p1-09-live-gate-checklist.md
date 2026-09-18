@@ -90,3 +90,23 @@ For `callback_query` paths, still use the enclosing update's `update_id` as `eve
 | W4 | Optional dry-run smoke against pinned workflow (dedicated test bot) | [ ] | Secrets never committed; Gate-5 ownership → STORY-37 |
 
 When export is absent, pin pointer `payload.status=deferred` remains honest coverage until operator places the file.
+
+---
+
+## Gate-5 — live channel pilot (out of CI)
+
+<a id="gate-5-live-channel-pilot-out-of-ci"></a>
+
+**Story:** STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence  
+**Guide:** §15 Gate-5 · Layer F  
+**Evidence index:** package `fixtures/meta/gate5-evidence-index.json` → promote copy `tests/fixtures/meta/`  
+**Default CI / pytest:** **NO** — out-of-CI only. Do **not** invent Railway SUCCESS or live Telegram PASS. UC-01…10 (STORY-34) are **not** Gate-5.
+
+| # | Check (guide §15) | Live (ops) | Notes |
+|---|-------------------|------------|-------|
+| G1 | Real Telegram → n8n → private aibridge → response works in **dry-run** | [ ] | Dedicated test bot/chat; secrets never committed |
+| G2 | Callback acknowledged immediately (`answerCallbackQuery` before `/actions`) | [ ] | See ops README §2 ack order |
+| G3 | One authorized **staging** stash returns SPA continuation URL | [ ] | After dry-run; no production Story submit |
+| G4 | Resident-facing text never claims the draft is published | [ ] | No claim_published wording |
+
+**If pilot env absent:** leave checks unchecked; keep `gate5-evidence-index.json` `status=deferred` + `defer_reason`; Gate-5 TRACEABILITY / fixture-index program stay `deferred_live`. Do **not** fake screenshots/logs.

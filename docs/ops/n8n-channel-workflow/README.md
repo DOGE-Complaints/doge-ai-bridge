@@ -7,7 +7,8 @@
 This directory holds the **ops contract** for the workflow. A full exported workflow JSON (without credentials) is added when an operator exports a verified workflow — **do not** invent a fake JSON body here.
 
 **Live §6.1 gate checklist (STORY-AIBRIDGE-15):** [r3-p1-09-live-gate-checklist.md](./r3-p1-09-live-gate-checklist.md)  
-**Live evidence status:** [live-evidence-BLOCKED-20260913.md](./live-evidence-BLOCKED-20260913.md)
+**Live evidence status:** [live-evidence-BLOCKED-20260913.md](./live-evidence-BLOCKED-20260913.md)  
+**Gate-5 live pilot (guide §15):** owned by **STORY-AIBRIDGE-37** — see checklist § Gate-5 + package `fixtures/meta/gate5-evidence-index.json`. UC-01…10 PG journeys (STORY-34) are **not** Gate-5. Do **not** invent live Telegram PASS / Railway SUCCESS.
 
 ---
 

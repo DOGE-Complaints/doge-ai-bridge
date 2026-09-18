@@ -187,7 +187,7 @@
 | Gate-2 | interview safety | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | Gate-3 | consequential-action safety | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | Gate-4 | durable runtime | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
-| Gate-5 | live channel | See guide §15 pass criteria | `STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence` | deferred (deferred_live · out of default CI · Scaffolded STORY-37) |
+| Gate-5 | live channel | See guide §15 pass criteria | `STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence` | deferred (deferred_live · out of default CI · no pilot env · capture-first · evidence index deferred · no invent live PASS) |
 | CHAR-001 | What starts a fresh story after `cancelled`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-002 | What starts a fresh story after `stashed`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-003 | Should whitespace-only messages be rejected after trimming? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
