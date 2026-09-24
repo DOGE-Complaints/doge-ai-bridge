@@ -14,6 +14,7 @@ from aibridge.tool_gen import (
 )
 
 # R3-P1-03 — keywords beyond the old type/required/properties subset.
+# REQ-07 / AIB-COMPAT-04 — uniqueItems for Gate 2 canonical pack validation.
 FULL_SCHEMA_KEYWORDS = frozenset(
     {
         "type",
@@ -28,6 +29,7 @@ FULL_SCHEMA_KEYWORDS = frozenset(
         "minLength",
         "maxLength",
         "pattern",
+        "uniqueItems",
     }
 )
 
@@ -38,6 +40,20 @@ class ValidationGateError(ValueError):
     def __init__(self, gate: int, message: str) -> None:
         super().__init__(f"gate{gate}: {message}")
         self.gate = gate
+
+
+def _canonical_json_value(value: Any) -> str:
+    """Structural JSON equality key — object key order independent."""
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _assert_unique_items(instance: list[Any], path: str) -> None:
+    seen: set[str] = set()
+    for index, item in enumerate(instance):
+        key = _canonical_json_value(item)
+        if key in seen:
+            raise ValidationGateError(0, f"uniqueItems at {path}[{index}]")
+        seen.add(key)
 
 
 @dataclass
@@ -162,9 +178,14 @@ def _validate_type(instance: Any, schema: dict[str, Any], path: str = "$") -> No
         for key, child in instance.items():
             if key in props and isinstance(props[key], dict):
                 _validate_type(child, props[key], f"{path}.{key}")
-    if isinstance(instance, list) and isinstance(schema.get("items"), dict):
-        for i, child in enumerate(instance):
-            _validate_type(child, schema["items"], f"{path}[{i}]")
+    if isinstance(instance, list):
+        items_schema = schema.get("items")
+        if isinstance(items_schema, dict):
+            for i, child in enumerate(instance):
+                _validate_type(child, items_schema, f"{path}[{i}]")
+        # AIB-COMPAT-04 — uniqueItems: true only; false/absent = no uniqueness restriction.
+        if schema.get("uniqueItems") is True:
+            _assert_unique_items(instance, path)
 
 
 def validate_gate1_tool_args(args: dict[str, Any], tool_parameters: dict[str, Any]) -> None:
@@ -189,11 +210,16 @@ def validate_gate3_wire_body(body: dict[str, Any], wire_schema: dict[str, Any]) 
 
 
 def schema_validation_complete() -> bool:
-    """Probe enum/const enforcement (R3-P1-03) — not frozenset membership alone."""
+    """Behavioral probe: enum/const + uniqueItems (REQ-07) — not frozenset membership alone."""
     enum_schema = {
         "type": "object",
         "properties": {"tone": {"type": "string", "enum": ["formal", "casual"]}},
         "required": ["tone"],
+    }
+    unique_schema = {
+        "type": "array",
+        "items": {"type": "string"},
+        "uniqueItems": True,
     }
     try:
         validate_gate2_pack_payload({"tone": "formal"}, enum_schema)
@@ -211,6 +237,16 @@ def schema_validation_complete() -> bool:
                 "required": ["k"],
             },
         )
+        # T-READY-03 / AIB-COMPAT-07 — prove uniqueItems enforcement behaviorally.
+        validate_gate2_pack_payload(["24", "26"], unique_schema)
+        try:
+            validate_gate2_pack_payload(["24", "24"], unique_schema)
+        except ValidationGateError:
+            pass
+        else:
+            return False
+        if "uniqueItems" not in FULL_SCHEMA_KEYWORDS:
+            return False
         return True
     except Exception:  # noqa: BLE001 — readiness fail-closed if probe breaks
         return False
