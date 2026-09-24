@@ -1,0 +1,12 @@
+{
+  "description": "STORY-AIBRIDGE-44 merge-gate regression — prior OpenAI Responses rejection when tool schema still carried uniqueItems (invalid_function_parameters).",
+  "source": "REQ-07 §11 / TECH-ARCH §5.1 #5 — automated fixture; not live Telegram evidence",
+  "error": {
+    "type": "invalid_request_error",
+    "code": "invalid_function_parameters",
+    "param": "tools[0].parameters",
+    "message": "'uniqueItems' is not permitted"
+  },
+  "trigger_path_example": "properties.geo.properties.streets.items.properties.houses.uniqueItems",
+  "remediation": "project_schema_for_openai strips uniqueItems from OpenAI-facing tools; Gate 2 enforces uniqueness on canonical pack"
+}
