@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 CANONICAL_OPERATION_ID = "postStoryDraftStash"
+
+# Constructs that make canonical-to-tool conversion impossible (fail generation).
 UNSUPPORTED_KEYWORDS = frozenset(
     {
         "oneOf",
@@ -24,6 +28,16 @@ UNSUPPORTED_KEYWORDS = frozenset(
         "dependentRequired",
     }
 )
+
+# Valid canonical constraints OpenAI rejects; strip only from OpenAI-facing copy
+# (AIB-COMPAT-10/11). Sole allow-list for projection strip targets.
+OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS = frozenset({"uniqueItems"})
+
+# Map keys whose *keys* are names (not schema keywords) — never strip property names.
+_PROPERTY_MAP_KEYS = frozenset({"properties", "patternProperties", "$defs", "definitions"})
+_SCHEMA_LIST_KEYS = frozenset({"allOf", "anyOf", "oneOf", "prefixItems"})
+
+_logger = logging.getLogger(__name__)
 
 # Model / n8n must never set these (AIB-GEN-03).
 SERVER_OWNED_FIELD_PATHS = frozenset(
@@ -169,6 +183,141 @@ def _force_strict_object(schema: dict[str, Any]) -> dict[str, Any]:
     return schema
 
 
+def project_schema_for_openai(schema: dict[str, Any]) -> dict[str, Any]:
+    """Return a deep-copied OpenAI-compatible schema; never mutate input.
+
+    Removes only JSON Schema *keywords* listed in ``OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS``.
+    Does not delete domain property names that happen to match those strings
+    (AIB-COMPAT-02 / T-COMPAT-05).
+    """
+    if not isinstance(schema, dict):
+        raise ToolGenError("openai_schema_projection_failed")
+    try:
+        return _project_schema_node(copy.deepcopy(schema))
+    except ToolGenError:
+        raise
+    except Exception as exc:  # noqa: BLE001 — fail closed
+        raise ToolGenError("openai_schema_projection_failed") from exc
+
+
+def _project_schema_node(node: Any) -> Any:
+    if isinstance(node, list):
+        return [_project_schema_node(item) for item in node]
+    if not isinstance(node, dict):
+        return node
+    out: dict[str, Any] = {}
+    for key, value in node.items():
+        if key in OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS:
+            continue
+        if key in _PROPERTY_MAP_KEYS and isinstance(value, dict):
+            out[key] = {pk: _project_schema_node(pv) for pk, pv in value.items()}
+        elif key in _SCHEMA_LIST_KEYS and isinstance(value, list):
+            out[key] = [_project_schema_node(item) for item in value]
+        elif key == "items":
+            out[key] = _project_schema_node(value)
+        elif key == "additionalProperties" and isinstance(value, dict):
+            out[key] = _project_schema_node(value)
+        elif key in ("not", "if", "then", "else") and isinstance(value, dict):
+            out[key] = _project_schema_node(value)
+        elif isinstance(value, (dict, list)):
+            out[key] = _project_schema_node(value)
+        else:
+            out[key] = value
+    return out
+
+
+def count_openai_unsupported_keywords(schema: Any) -> dict[str, int]:
+    """Count schema-keyword occurrences of policy keywords (not property names)."""
+    counts = {name: 0 for name in sorted(OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS)}
+
+    def walk(node: Any) -> None:
+        if isinstance(node, list):
+            for item in node:
+                walk(item)
+            return
+        if not isinstance(node, dict):
+            return
+        for key, value in node.items():
+            if key in OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS:
+                counts[key] = counts.get(key, 0) + 1
+                continue
+            if key in _PROPERTY_MAP_KEYS and isinstance(value, dict):
+                for pv in value.values():
+                    walk(pv)
+            elif key in _SCHEMA_LIST_KEYS and isinstance(value, list):
+                walk(value)
+            elif key in ("items", "additionalProperties", "not", "if", "then", "else"):
+                walk(value)
+            elif isinstance(value, (dict, list)):
+                walk(value)
+
+    walk(schema)
+    return {k: v for k, v in counts.items() if v > 0}
+
+
+def assert_openai_projection_clean(schema: dict[str, Any]) -> None:
+    """Fail closed if any policy keyword remains as a schema keyword."""
+    found = _first_unsupported_schema_keyword(schema)
+    if found is not None:
+        raise ToolGenError(f"unsupported_keyword_remaining:{found}")
+
+
+def _first_unsupported_schema_keyword(node: Any) -> str | None:
+    if isinstance(node, list):
+        for item in node:
+            found = _first_unsupported_schema_keyword(item)
+            if found is not None:
+                return found
+        return None
+    if not isinstance(node, dict):
+        return None
+    for key, value in node.items():
+        if key in OPENAI_UNSUPPORTED_SCHEMA_KEYWORDS:
+            return key
+        if key in _PROPERTY_MAP_KEYS and isinstance(value, dict):
+            for pv in value.values():
+                found = _first_unsupported_schema_keyword(pv)
+                if found is not None:
+                    return found
+        elif key in _SCHEMA_LIST_KEYS and isinstance(value, list):
+            found = _first_unsupported_schema_keyword(value)
+            if found is not None:
+                return found
+        elif key in ("items", "additionalProperties", "not", "if", "then", "else"):
+            found = _first_unsupported_schema_keyword(value)
+            if found is not None:
+                return found
+        elif isinstance(value, (dict, list)):
+            found = _first_unsupported_schema_keyword(value)
+            if found is not None:
+                return found
+    return None
+
+
+def _emit_projection_ready_event(
+    *,
+    tool: dict[str, Any],
+    pack: dict[str, Any],
+    removed_keywords: dict[str, int],
+) -> None:
+    """Redacted init event (REQ-07 §10). Must never raise into caller."""
+    try:
+        pack_hash = hashlib.sha256(
+            json.dumps(pack, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        tool_hash = hashlib.sha256(tool_schema_canonical_bytes(tool)).hexdigest()
+        _logger.info(
+            "openai_schema_projection_ready tool=%s removed_keywords=%s "
+            "canonical_pack_hash=%s projected_tool_hash=%s",
+            tool.get("name"),
+            removed_keywords,
+            pack_hash,
+            tool_hash,
+        )
+    except Exception:  # noqa: BLE001 — never block readiness on logging
+        pass
+
+
 def resolve_canonical_operation(oas: dict[str, Any]) -> dict[str, Any]:
     matches: list[tuple[str, str, dict[str, Any]]] = []
     for path, item in (oas.get("paths") or {}).items():
@@ -235,6 +384,12 @@ def generate_strict_tool(
             # Keep schema_id/version as strings for model visibility but server overrides on assemble.
     model_schema = _force_strict_object(model_schema)
 
+    # OpenAI compatibility projection (REQ-07 / AIB-COMPAT-01…03): strip policy keywords
+    # from the in-memory tool only — never mutate pack/OAS on disk or the input pack object.
+    removed_keywords = count_openai_unsupported_keywords(model_schema)
+    model_schema = project_schema_for_openai(model_schema)
+    assert_openai_projection_clean(model_schema)
+
     tool = {
         "type": "function",
         "name": CANONICAL_OPERATION_ID,
@@ -248,6 +403,7 @@ def generate_strict_tool(
             "operation_method": resolved["method"],
         },
     }
+    _emit_projection_ready_event(tool=tool, pack=pack, removed_keywords=removed_keywords)
     # Deterministic serialization order via sorted keys when hashed.
     return tool
 
