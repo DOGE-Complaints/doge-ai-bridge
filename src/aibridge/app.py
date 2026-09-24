@@ -23,6 +23,7 @@ from aibridge.budgets import (
 from aibridge.channel import process_action, process_turn_async
 from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
+from aibridge.coordinator import build_validation_context
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
 from aibridge.gateway import default_executor_from_settings
@@ -31,6 +32,7 @@ from aibridge.metrics import get_metrics
 from aibridge.rate_limit import RateLimiter, hash_principal_key
 from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
+from aibridge.request_assembly import ServerConstants
 from aibridge.responses_client import (
     ProductionResponsesClient,
     ResponsesOutcome,
@@ -259,6 +261,58 @@ def _apply_deployment_to_engine(
     return deployment
 
 
+def _bind_validation_context(
+    guard: ConfirmationGuard,
+    settings: Settings,
+    deployment: DeploymentBundleState | None,
+) -> None:
+    """STORY-43 — bind ConfirmationGuard.validation_context with dual schemas.
+
+    When content tooling is configured and deployment has a projected strict_tool:
+    Gate 1 tool_parameters ← strict_tool["parameters"] (projected);
+    Gate 2 pack_schema ← canonical pack JSON;
+    Gate 3 wire_schema ← Story Intake request body schema;
+    constants ← ServerConstants from env stamps.
+    Leaves unbound on failure so /readyz fails closed (validation_context_not_bound).
+    """
+    from pathlib import Path
+
+    from aibridge.tool_gen import ToolGenError, load_wire_request_schema
+
+    if not settings.content_configured():
+        return
+    if deployment is None or not deployment.ready or deployment.strict_tool is None:
+        return
+    params = deployment.strict_tool.get("parameters")
+    if not isinstance(params, dict) or not params:
+        return
+    try:
+        pack_path = Path(settings.dogestonia_payload_schema_path)
+        pack = json.loads(pack_path.read_text(encoding="utf-8"))
+        if not isinstance(pack, dict) or not pack:
+            return
+        wire = load_wire_request_schema(Path(settings.dogestonia_openapi_path))
+    except (OSError, json.JSONDecodeError, ToolGenError, TypeError, ValueError):
+        return
+    schema_id = (settings.dogestonia_schema_id or "").strip()
+    schema_version_pack = (settings.dogestonia_schema_version or "").strip()
+    # Gate 3 wire envelope enum requires m2.story_intake_envelope.v2 — not pack version.
+    guard.validation_context = build_validation_context(
+        tool_parameters=params,
+        pack_schema=pack,
+        wire_schema=wire,
+        constants=ServerConstants(
+            schema_version="m2.story_intake_envelope.v2",
+            schema_id=schema_id,
+            schema_version_pack=schema_version_pack,
+            origin_source=(
+                (settings.dogestonia_origin_source or "openai_responses_telegram").strip()
+                or "openai_responses_telegram"
+            ),
+        ),
+    )
+
+
 def create_app(
     *,
     settings: Settings | None = None,
@@ -460,6 +514,8 @@ def create_app(
     app.state.deployment_bundle = _apply_deployment_to_engine(
         engine, app.state.deployment_bundle, cfg0
     )
+    # REQ-07 / STORY-43 — dual-schema ValidationContext on ConfirmationGuard.
+    _bind_validation_context(guard, cfg0, app.state.deployment_bundle)
 
     max_bytes = cfg0.aibridge_max_request_bytes
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=max_bytes)
@@ -538,7 +594,8 @@ def create_app(
     async def readyz() -> JSONResponse:
         cfg = resolve_settings()
         dep: DeploymentBundleState | None = app.state.deployment_bundle
-        result = evaluate_readiness(cfg, dep)
+        vc = getattr(app.state.confirmation_guard, "validation_context", None)
+        result = evaluate_readiness(cfg, dep, validation_context=vc)
         status = 200 if result.ready else 503
         return JSONResponse(status_code=status, content=readiness_payload(result))
 

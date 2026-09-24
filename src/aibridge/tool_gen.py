@@ -346,14 +346,8 @@ def resolve_canonical_operation(oas: dict[str, Any]) -> dict[str, Any]:
     return {"path": path, "method": method, "operation": op}
 
 
-def generate_strict_tool(
-    *,
-    wire_oas_path: Path,
-    pack_schema_path: Path,
-    schema_id: str,
-    schema_version: str,
-) -> dict[str, Any]:
-    """Return deterministic Responses function tool JSON (strict:true)."""
+def load_wire_request_schema(wire_oas_path: Path) -> dict[str, Any]:
+    """Canonical Story Intake request-body schema (Gate 3) — not OpenAI-projected."""
     oas = _load_oas(wire_oas_path)
     resolved = resolve_canonical_operation(oas)
     op = resolved["operation"]
@@ -364,6 +358,19 @@ def generate_strict_tool(
     wire_schema = _deref(schema_node, oas, set())
     if not isinstance(wire_schema, dict):
         raise ToolGenError("dereferenced request schema must be object")
+    return wire_schema
+
+
+def generate_strict_tool(
+    *,
+    wire_oas_path: Path,
+    pack_schema_path: Path,
+    schema_id: str,
+    schema_version: str,
+) -> dict[str, Any]:
+    """Return deterministic Responses function tool JSON (strict:true)."""
+    wire_schema = load_wire_request_schema(wire_oas_path)
+    resolved = resolve_canonical_operation(_load_oas(wire_oas_path))
 
     if not pack_schema_path.is_file():
         raise ToolGenError(f"Pack schema missing: {pack_schema_path}")

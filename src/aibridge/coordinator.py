@@ -28,6 +28,37 @@ class ValidationContext:
     constants: ServerConstants
 
 
+def validation_context_is_bound(validation: ValidationContext | None) -> bool:
+    """True when dual-schema ValidationContext is present and structurally usable."""
+    if validation is None:
+        return False
+    if not isinstance(validation.tool_parameters, dict) or not validation.tool_parameters:
+        return False
+    if not isinstance(validation.pack_schema, dict) or not validation.pack_schema:
+        return False
+    if not isinstance(validation.wire_schema, dict) or not validation.wire_schema:
+        return False
+    if validation.constants is None:
+        return False
+    return True
+
+
+def build_validation_context(
+    *,
+    tool_parameters: dict[str, Any],
+    pack_schema: dict[str, Any],
+    wire_schema: dict[str, Any],
+    constants: ServerConstants,
+) -> ValidationContext:
+    """Construct ValidationContext — prefer existing dataclass (no alternate invent)."""
+    return ValidationContext(
+        tool_parameters=tool_parameters,
+        pack_schema=pack_schema,
+        wire_schema=wire_schema,
+        constants=constants,
+    )
+
+
 class ToolValidationError(ValueError):
     """Fail-closed tool gates (REQ-03 §4 #3 / AIB-RSP-04)."""
 

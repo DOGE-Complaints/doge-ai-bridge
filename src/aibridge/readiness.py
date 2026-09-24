@@ -105,6 +105,8 @@ def _strict_tool_ok(
 def evaluate_readiness(
     settings: Settings,
     deployment: DeploymentBundleState | None = None,
+    *,
+    validation_context: Any | None = None,
 ) -> ReadinessResult:
     """Return readiness without OpenAI generation or gateway HTTPS writes."""
     if not settings.channel_auth_configured():
@@ -142,6 +144,11 @@ def evaluate_readiness(
             if deployment is not None and deployment.error:
                 reason = deployment.error
             return ReadinessResult(False, reason)
+        # REQ-07 / STORY-43 — gates required when content configured + ready.
+        from aibridge.coordinator import validation_context_is_bound
+
+        if not validation_context_is_bound(validation_context):
+            return ReadinessResult(False, "validation_context_not_bound")
     elif deployment is not None and deployment.error:
         return ReadinessResult(False, deployment.error)
 
