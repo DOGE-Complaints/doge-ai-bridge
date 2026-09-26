@@ -18,7 +18,7 @@ Channel Bearer (`AIBRIDGE_CHANNEL_BEARER_TOKEN`) authenticates **n8n → aibridg
 3. **Update n8n** Header Auth credential to the **new** token (do not put gateway Bearer here).
 4. **Live check:** from n8n, `POST /v1/channel/turns` over Railway private networking → expect 200 (or bounded business response), not 401.
 5. **Drop previous:** clear `AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN`; redeploy/refresh.
-6. **Verify:** `/readyz` ready; logs show no auth spike; optional second live call still succeeds; old token must get 401.
+6. **Verify:** `/ready` ready (REQ9-primary; alias `/readyz` OK); logs show no auth spike; optional second live call still succeeds; old token must get 401.
 
 ## Do not
 

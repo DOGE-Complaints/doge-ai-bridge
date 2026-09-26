@@ -10,8 +10,8 @@
 
 ```text
 uvicorn → aibridge.app:app
-  GET /healthz   — процесс жив (без секретов)
-  GET /readyz    — готовность конфига/зависимостей (может быть 503)
+  GET /health    — REQ9-primary: процесс жив (без секретов); alias /healthz
+  GET /ready     — REQ9-primary: готовность конфига/зависимостей (может быть 503); alias /readyz
 ```
 
 Старт:
@@ -37,7 +37,7 @@ pip install -e ".[dev]"
 cp .env.example .env   # заполнить секреты; не коммитить
 ```
 
-Минимум для старта процесса (не обязательно зелёный `/readyz`):
+Минимум для старта процесса (не обязательно зелёный `/ready` / `/readyz`):
 
 ```env
 PORT=8080
@@ -160,21 +160,26 @@ PYTHONPATH=src python -m uvicorn --app-dir src aibridge.app:app --host 0.0.0.0 -
 ### 1.4 Smoke
 
 ```bash
-curl -sS http://127.0.0.1:8080/healthz
+# REQ9-primary
+curl -sS http://127.0.0.1:8080/health
 # ожидаемо: {"status":"ok"}
 
-curl -sS http://127.0.0.1:8080/readyz
+curl -sS http://127.0.0.1:8080/ready
 # 200 {"status":"ready"} или 503 {"status":"not_ready","reason":"..."}
+
+# aliases (same semantics)
+# curl -sS http://127.0.0.1:8080/healthz
+# curl -sS http://127.0.0.1:8080/readyz
 ```
 
-`/healthz` = процесс слушает. `/readyz` = полный checklist (Bearer’ы, dry-run, content paths, DB, OpenAI presence и т.д.) — см. `src/aibridge/readiness.py`.
+`/health` (`/healthz`) = процесс слушает. `/ready` (`/readyz`) = полный checklist (Bearer’ы, dry-run, content paths, DB, OpenAI presence и т.д.) — см. `src/aibridge/readiness.py`.
 
 ### 1.5 Частые локальные сбои
 
 | Симптом | Что проверить |
 |---------|----------------|
 | Процесс падает при импорте / старте | `DATABASE_URL` недоступен с машины (DNS/сеть). Для локальной разработки к Railway Postgres нужен **публичный** proxy URL; private `*.railway.internal` с ноутбука не резолвится. |
-| `/readyz` 503 | Смотреть `reason` в JSON; добить env по `.env.example` / pilot §8. |
+| `/ready` или `/readyz` 503 | Смотреть `reason` в JSON; добить env по `.env.example` / pilot §8. |
 | IDE: `pydantic_settings` unresolved | Interpreter = `doge-ai-bridge/.venv`, не другой venv репо. |
 
 ---
@@ -234,7 +239,7 @@ AIBRIDGE_CHANNEL_BEARER_TOKEN=<secret>
 DOGESTONIA_API_BEARER_TOKEN=<другой secret>
 ```
 
-Для зелёного `/readyz` нужны ещё OpenAI, intake HTTPS URL, content paths в image и т.д. — полный список в pilot runbook §8 и `.env.example`. Не отключайте `AIBRIDGE_DRY_RUN` только из‑за зелёного `/healthz`.
+Для зелёного `/ready` (`/readyz`) нужны ещё OpenAI, intake HTTPS URL, content paths в image и т.д. — полный список в pilot runbook §8 и `.env.example`. Не отключайте `AIBRIDGE_DRY_RUN` только из‑за зелёного `/health` (`/healthz`).
 
 ### 2.5 Smoke на Railway
 
@@ -242,7 +247,8 @@ DOGESTONIA_API_BEARER_TOKEN=<другой secret>
 - Из другого сервиса в том же private network (или временный one-off):
 
 ```text
-http://<aibridge-service>.railway.internal:8080/healthz
+http://<aibridge-service>.railway.internal:8080/health
+# alias: …/healthz
 ```
 
 Порт в URL = `PORT` сервиса aibridge.
@@ -265,10 +271,10 @@ http://<aibridge-service>.railway.internal:8080/healthz
 
 ## 4. Чеклист «веб поднят»
 
-- [ ] `GET /healthz` → `200` `{"status":"ok"}`
+- [ ] `GET /health` → `200` `{"status":"ok"}` (alias `/healthz` OK)
 - [ ] Процесс на ожидаемом `PORT`
 - [ ] При Postgres: миграции применены (pre-deploy и/или старт app)
-- [ ] (Опционально) `GET /readyz` → разобрать `reason`, если не 200
+- [ ] (Опционально) `GET /ready` → разобрать `reason`, если не 200 (alias `/readyz` OK)
 
 Дальше (канал, n8n, Telegram): pilot runbook.
 )

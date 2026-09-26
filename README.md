@@ -43,7 +43,7 @@ make serve
 
 ## Stories 01–02 scope
 
-- **01:** Channel façade + Bearer + event dedupe + `/healthz`/`/readyz`.
-- **02:** Local content load/hash/pin, register-once registry, session pin, `/readyz` bundle verify, GC + CI packaging note.
+- **01:** Channel façade + Bearer + event dedupe + `/health`/`/ready` (REQ9-primary; aliases `/healthz`/`/readyz`).
+- **02:** Local content load/hash/pin, register-once registry, session pin, `/ready` (alias `/readyz`) bundle verify, GC + CI packaging note.
 
 No OpenAI Responses (03), no gateway HTTPS (05). Absolute CI instruction/pack paths remain **Unknown** until pinned in env.
