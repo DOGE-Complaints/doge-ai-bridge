@@ -111,7 +111,7 @@ def evaluate_readiness(
     """Return readiness without OpenAI generation or gateway HTTPS writes."""
     if not settings.channel_auth_configured():
         return ReadinessResult(False, "channel_auth_missing")
-    if not settings.dogestonia_api_bearer_token:
+    if not settings.gateway_service_api_token:
         return ReadinessResult(False, "gateway_bearer_missing")
     if settings.channel_gateway_bearers_equal():
         return ReadinessResult(False, "channel_gateway_bearer_equal")

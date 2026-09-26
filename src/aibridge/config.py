@@ -40,9 +40,9 @@ class Settings(BaseSettings):
         default="",
         validation_alias="AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN",
     )
-    dogestonia_api_bearer_token: str = Field(
+    gateway_service_api_token: str = Field(
         default="",
-        validation_alias="DOGESTONIA_API_BEARER_TOKEN",
+        validation_alias="GATEWAY_SERVICE_API_TOKEN",
     )
     aibridge_max_request_bytes: int = Field(
         default=65536,
@@ -164,16 +164,16 @@ class Settings(BaseSettings):
         default=DEFAULT_MAX_SESSION_TURNS,
         validation_alias="AIBRIDGE_MAX_SESSION_TURNS",
     )
-    # Mandatory HTTPS origin of the node intake service (REQ-03 §5.6).
+    # Mandatory HTTPS origin of the node intake / gateway peer (REQ-03 §5.6 · REQ9 R1).
     # Complaints node: doge-complaints-gateway. Other node types may point elsewhere.
-    # No fallback aliases (DOGESTONIA_API_BASE_URL / DOGESTONIA_GATEWAY_ORIGIN removed).
-    dogestonia_intake_base_url: str = Field(
+    # Hard cut: GATEWAY_BASE_URL only (no DOGESTONIA_INTAKE_* dual-read).
+    gateway_base_url: str = Field(
         default="",
-        validation_alias="DOGESTONIA_INTAKE_BASE_URL",
+        validation_alias="GATEWAY_BASE_URL",
     )
-    dogestonia_draft_redirect_base_url: str = Field(
+    spa_base_url: str = Field(
         default="",
-        validation_alias="DOGESTONIA_DRAFT_REDIRECT_BASE_URL",
+        validation_alias="SPA_BASE_URL",
     )
     aibridge_dry_run: bool = Field(
         default=False,
@@ -197,7 +197,7 @@ class Settings(BaseSettings):
     @field_validator(
         "aibridge_channel_bearer_token",
         "aibridge_channel_previous_bearer_token",
-        "dogestonia_api_bearer_token",
+        "gateway_service_api_token",
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
@@ -213,8 +213,8 @@ class Settings(BaseSettings):
         "dogestonia_schema_id",
         "dogestonia_schema_version",
         "dogestonia_origin_source",
-        "dogestonia_intake_base_url",
-        "dogestonia_draft_redirect_base_url",
+        "gateway_base_url",
+        "spa_base_url",
         "aibridge_log_level",
         mode="before",
     )
@@ -236,8 +236,8 @@ class Settings(BaseSettings):
         return normalized or "false"
 
     def intake_base_url(self) -> str:
-        """Mandatory HTTPS origin of the intake service used by the executor."""
-        return (self.dogestonia_intake_base_url or "").strip().rstrip("/")
+        """Mandatory HTTPS origin of the intake/gateway peer (from GATEWAY_BASE_URL)."""
+        return (self.gateway_base_url or "").strip().rstrip("/")
 
     def intake_base_url_https_ok(self) -> bool:
         url = self.intake_base_url()
@@ -247,7 +247,7 @@ class Settings(BaseSettings):
         return parsed.scheme == "https" and bool(parsed.netloc)
 
     def draft_redirect_base_ok(self) -> bool:
-        url = (self.dogestonia_draft_redirect_base_url or "").strip()
+        url = (self.spa_base_url or "").strip()
         if not url:
             return False
         parsed = urlparse(url)
@@ -265,7 +265,7 @@ class Settings(BaseSettings):
 
     def channel_gateway_bearers_equal(self) -> bool:
         channel = self.aibridge_channel_bearer_token
-        gateway = self.dogestonia_api_bearer_token
+        gateway = self.gateway_service_api_token
         if not channel or not gateway:
             return False
         return hmac.compare_digest(channel.encode("utf-8"), gateway.encode("utf-8"))

@@ -203,7 +203,7 @@ class GatewayExecutor:
 
     def authorization_header(self) -> str:
         if not self.gateway_bearer:
-            raise ValueError("DOGESTONIA_API_BEARER_TOKEN required for gateway")
+            raise ValueError("GATEWAY_SERVICE_API_TOKEN required for gateway")
         return f"Bearer {self.gateway_bearer}"
 
     def execute_stash(
@@ -355,7 +355,7 @@ def _looks_ambiguous(exc: BaseException) -> bool:
 class HttpxGatewayTransport:
     """Production HTTPS transport — TLS verify on; redirects off.
 
-    Live intake host comes from mandatory ``DOGESTONIA_INTAKE_BASE_URL``.
+    Live intake host comes from mandatory ``GATEWAY_BASE_URL``.
     Do not invent host URLs in code.
     """
 
@@ -398,10 +398,9 @@ class HttpxGatewayTransport:
 
 
 def default_executor_from_settings(settings: Any, transport: GatewayTransport | None = None) -> GatewayExecutor:
-    if hasattr(settings, "intake_base_url"):
-        origin = settings.intake_base_url()
-    else:
-        origin = getattr(settings, "dogestonia_intake_base_url", "") or ""
+    origin = settings.intake_base_url() if hasattr(settings, "intake_base_url") else (
+        getattr(settings, "gateway_base_url", "") or ""
+    )
     timeout_seconds = float(getattr(settings, "aibridge_gateway_timeout_seconds", 30.0) or 30.0)
     total_ms = getattr(settings, "aibridge_http_total_timeout_ms", None)
     if total_ms is not None:
@@ -413,10 +412,10 @@ def default_executor_from_settings(settings: Any, transport: GatewayTransport | 
     max_resp = getattr(settings, "aibridge_max_response_bytes", None)
     return GatewayExecutor(
         origin=origin,
-        gateway_bearer=getattr(settings, "dogestonia_api_bearer_token", "") or "",
+        gateway_bearer=getattr(settings, "gateway_service_api_token", "") or "",
         channel_bearer=getattr(settings, "aibridge_channel_bearer_token", "") or "",
         dry_run=bool(getattr(settings, "aibridge_dry_run", False)),
-        redirect_base=getattr(settings, "dogestonia_draft_redirect_base_url", "") or "",
+        redirect_base=getattr(settings, "spa_base_url", "") or "",
         transport=transport if transport is not None else HttpxGatewayTransport(verify_tls=True),
         timeout_seconds=timeout_seconds,
         connect_timeout_seconds=connect_timeout_seconds,
