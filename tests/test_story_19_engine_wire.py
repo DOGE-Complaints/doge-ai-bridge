@@ -28,7 +28,7 @@ def _content_settings(**overrides: object) -> Settings:
     reset_settings_cache()
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         DOGESTONIA_INSTRUCTIONS_DIR=str(FIXTURES / "instructions"),
         DOGESTONIA_INSTRUCTIONS_MANIFEST=str(FIXTURES / "instructions.manifest.json"),
         DOGESTONIA_CONTENT_SOURCE_COMMIT="ready-commit",
@@ -36,13 +36,13 @@ def _content_settings(**overrides: object) -> Settings:
         DOGESTONIA_PAYLOAD_SCHEMA_PATH=str(FIXTURES / "pack" / "payload.schema.json"),
         DATABASE_URL="memory",
         DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
     )
     base.update(overrides)
-    return Settings(**base)
+    return Settings(_env_file=None, **base)
 
 
 def _loaded(*, assembled: str = "# first\n\n# second") -> LoadedContentBundle:

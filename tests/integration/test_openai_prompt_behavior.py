@@ -81,11 +81,11 @@ def _settings(**overrides: object) -> Settings:
     reset_settings_cache()
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN=CHANNEL_TOKEN,
-        DOGESTONIA_API_BEARER_TOKEN=GATEWAY_TOKEN,
+        GATEWAY_SERVICE_API_TOKEN=GATEWAY_TOKEN,
         DATABASE_URL="memory",
         AIBRIDGE_ALLOW_MEMORY_STORES=True,
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,

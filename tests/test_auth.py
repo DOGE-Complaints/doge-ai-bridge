@@ -37,9 +37,10 @@ def test_previous_token_overlap_accepted(
     previous = "previous-token-cccccccccccccccccccccccccccccccc"
     reset_settings_cache()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel_token,
         AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN=previous,
-        DOGESTONIA_API_BEARER_TOKEN=gateway_token,
+        GATEWAY_SERVICE_API_TOKEN=gateway_token,
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.post(
@@ -55,8 +56,9 @@ def test_equal_channel_gateway_bearer_readyz_fail(
 ) -> None:
     reset_settings_cache()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel_token,
-        DOGESTONIA_API_BEARER_TOKEN=channel_token,
+        GATEWAY_SERVICE_API_TOKEN=channel_token,
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")

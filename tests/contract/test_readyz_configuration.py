@@ -344,7 +344,7 @@ def test_ready_015_no_openai_no_gateway_side_effects() -> None:
     transport = RecordingGatewayTransport()
     executor = GatewayExecutor(
         origin=settings.intake_base_url(),
-        gateway_bearer=settings.dogestonia_api_bearer_token,
+        gateway_bearer=settings.gateway_service_api_token,
         channel_bearer=settings.aibridge_channel_bearer_token,
         transport=transport,
     )

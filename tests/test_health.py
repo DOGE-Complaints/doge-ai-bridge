@@ -41,8 +41,9 @@ def test_ready_alias_parity_with_readyz_when_ready(client: TestClient) -> None:
 def test_readyz_fails_without_channel_token() -> None:
     reset_settings_cache()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")
@@ -54,8 +55,9 @@ def test_ready_alias_parity_with_readyz_when_not_ready() -> None:
     """REQ9 G2 — GET /ready same 503/reason as /readyz when not ready."""
     reset_settings_cache()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     z = client.get("/readyz")
@@ -67,5 +69,5 @@ def test_ready_alias_parity_with_readyz_when_not_ready() -> None:
 
 def test_settings_port_alias() -> None:
     reset_settings_cache()
-    settings = Settings(PORT="9090")
+    settings = Settings(_env_file=None, PORT="9090")
     assert settings.port == 9090

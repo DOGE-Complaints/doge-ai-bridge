@@ -25,15 +25,15 @@ def _full_dump_settings(**overrides: object) -> Settings:
     reset_settings_cache()
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         DOGESTONIA_INSTRUCTIONS_DIR=str(INSTRUCTIONS),
         DOGESTONIA_INSTRUCTIONS_MANIFEST=str(MANIFEST),
         DOGESTONIA_CONTENT_SOURCE_COMMIT="phase-a-proof",
         DOGESTONIA_OPENAPI_PATH=str(WIRE_OAS),
         DOGESTONIA_PAYLOAD_SCHEMA_PATH=str(PAYLOAD),
         DATABASE_URL="memory",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,

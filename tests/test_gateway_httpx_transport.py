@@ -66,8 +66,9 @@ def test_httpx_transport_rejects_allow_redirects_true() -> None:
 
 def test_default_executor_uses_httpx_transport() -> None:
     settings = Settings(
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_API_BEARER_TOKEN="gw",
+        _env_file=None,
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        GATEWAY_SERVICE_API_TOKEN="gw",
         AIBRIDGE_CHANNEL_BEARER_TOKEN="ch",
     )
     ex = default_executor_from_settings(settings)

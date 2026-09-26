@@ -12,8 +12,8 @@
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "same-bearer-cccccccccccccccccccccccccccc",
-      "DOGESTONIA_API_BEARER_TOKEN": "same-bearer-cccccccccccccccccccccccccccc",
-      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "GATEWAY_SERVICE_API_TOKEN": "same-bearer-cccccccccccccccccccccccccccc",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
       "AIBRIDGE_DRY_RUN": true
     },
     "expect_readyz": {

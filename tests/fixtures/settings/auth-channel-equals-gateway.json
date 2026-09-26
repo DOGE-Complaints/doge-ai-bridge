@@ -12,8 +12,8 @@
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "DOGESTONIA_API_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "DOGESTONIA_INTAKE_BASE_URL": "https://gateway.example.invalid",
+      "GATEWAY_SERVICE_API_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
       "AIBRIDGE_DRY_RUN": true
     },
     "expect_readyz": {

@@ -11,9 +11,9 @@
   "notes": "synthetic; non-HTTPS intake origin → readiness fails closed",
   "payload": {
     "overrides": {
-      "DOGESTONIA_INTAKE_BASE_URL": "http://gateway.example.invalid",
+      "GATEWAY_BASE_URL": "http://gateway.example.invalid",
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "ch-gw-015-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "DOGESTONIA_API_BEARER_TOKEN": "gw-gw-015-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_SERVICE_API_TOKEN": "gw-gw-015-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       "AIBRIDGE_DRY_RUN": true
     },
     "expect_readyz": {

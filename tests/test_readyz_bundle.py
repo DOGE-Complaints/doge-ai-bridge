@@ -24,21 +24,24 @@ def _content_settings(**overrides: str) -> Settings:
     reset_settings_cache()
     base = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         DOGESTONIA_INSTRUCTIONS_DIR=str(FIXTURES / "instructions"),
         DOGESTONIA_INSTRUCTIONS_MANIFEST=str(FIXTURES / "instructions.manifest.json"),
         DOGESTONIA_CONTENT_SOURCE_COMMIT="ready-commit",
         DOGESTONIA_OPENAPI_PATH=str(WIRE_OAS),
         DOGESTONIA_PAYLOAD_SCHEMA_PATH=str(FIXTURES / "pack" / "payload.schema.json"),
+        DOGESTONIA_SCHEMA_ID="tallinn_civic",
+        DOGESTONIA_SCHEMA_VERSION="v1",
         DATABASE_URL="memory",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        AIBRIDGE_ALLOW_MEMORY_STORES=True,
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
     )
     base.update(overrides)
-    return Settings(**base)
+    return Settings(_env_file=None, **base)
 
 
 def test_readyz_ok_with_verified_bundle() -> None:

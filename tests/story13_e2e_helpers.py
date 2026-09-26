@@ -275,13 +275,14 @@ def build_e2e_harness(
     openai = RecordingResponsesClient(scripted=list(openai_scripted or []))
     engine = InterviewEngine(client=openai)
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=CHANNEL_TOKEN,
         AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN="",
-        DOGESTONIA_API_BEARER_TOKEN=GATEWAY_TOKEN,
+        GATEWAY_SERVICE_API_TOKEN=GATEWAY_TOKEN,
         AIBRIDGE_MAX_REQUEST_BYTES=65536,
         PORT=8080,
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="",  # never ProductionResponsesClient
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,

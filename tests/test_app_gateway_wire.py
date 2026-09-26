@@ -15,11 +15,12 @@ def test_create_app_wires_executor_from_settings() -> None:
     reset_settings_cache()
     reset_confirmation_guard()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example",
+        SPA_BASE_URL="https://spa.example",
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())
     guard = app.state.confirmation_guard
@@ -34,9 +35,10 @@ def test_testclient_send_dry_run_without_manual_inject() -> None:
     reset_confirmation_guard()
     channel = "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel,
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())

@@ -78,9 +78,10 @@ def test_create_app_wires_pg_runtime_without_manual_inject(pg_url: str) -> None:
     reset_confirmation_guard()
     channel = "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel,
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
         DATABASE_URL=pg_url,
         AIBRIDGE_ALLOW_MEMORY_STORES=False,
@@ -128,6 +129,7 @@ def test_create_app_keeps_memory_when_allow_memory(pg_url: str) -> None:
     reset_settings_cache()
     reset_confirmation_guard()
     settings = Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         DATABASE_URL=pg_url,
         AIBRIDGE_ALLOW_MEMORY_STORES=True,

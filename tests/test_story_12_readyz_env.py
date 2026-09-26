@@ -16,21 +16,21 @@ def _ready_settings(**overrides: object) -> Settings:
     reset_settings_cache()
     base: dict[str, object] = dict(
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        DOGESTONIA_API_BEARER_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
         AIBRIDGE_SCHEMA_VALIDATION_COMPLETE=False,
     )
     base.update(overrides)
-    return Settings(**base)
+    return Settings(_env_file=None, **base)
 
 
 def test_intake_base_url_used_by_gateway_executor() -> None:
     settings = _ready_settings(
-        DOGESTONIA_INTAKE_BASE_URL="https://canonical.example.invalid",
+        GATEWAY_BASE_URL="https://canonical.example.invalid",
     )
     assert settings.intake_base_url() == "https://canonical.example.invalid"
     ex = default_executor_from_settings(settings)
@@ -38,7 +38,7 @@ def test_intake_base_url_used_by_gateway_executor() -> None:
 
 
 def test_readyz_fails_when_intake_base_url_missing() -> None:
-    settings = _ready_settings(DOGESTONIA_INTAKE_BASE_URL="")
+    settings = _ready_settings(GATEWAY_BASE_URL="")
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")
     assert response.status_code == 503
@@ -84,7 +84,7 @@ def test_readyz_fails_openai_missing() -> None:
 
 
 def test_readyz_fails_http_intake_base_url() -> None:
-    settings = _ready_settings(DOGESTONIA_INTAKE_BASE_URL="http://insecure.example.invalid")
+    settings = _ready_settings(GATEWAY_BASE_URL="http://insecure.example.invalid")
     result = evaluate_readiness(settings)
     assert result.ready is False
     assert result.reason == "intake_base_url_not_https"

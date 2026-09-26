@@ -24,13 +24,14 @@ def gateway_token() -> str:
 def settings(channel_token: str, gateway_token: str) -> Settings:
     reset_settings_cache()
     return Settings(
+        _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel_token,
         AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN="",
-        DOGESTONIA_API_BEARER_TOKEN=gateway_token,
+        GATEWAY_SERVICE_API_TOKEN=gateway_token,
         AIBRIDGE_MAX_REQUEST_BYTES=65536,
         PORT=8080,
-        DOGESTONIA_INTAKE_BASE_URL="https://gateway.example.invalid",
-        DOGESTONIA_DRAFT_REDIRECT_BASE_URL="https://spa.example.invalid",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
         AIBRIDGE_DRY_RUN=True,
