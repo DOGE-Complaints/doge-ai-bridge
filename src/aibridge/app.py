@@ -587,10 +587,12 @@ def create_app(
         return response
 
     @app.get("/healthz")
+    @app.get("/health")
     async def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
     @app.get("/readyz")
+    @app.get("/ready")
     async def readyz() -> JSONResponse:
         cfg = resolve_settings()
         dep: DeploymentBundleState | None = app.state.deployment_bundle
