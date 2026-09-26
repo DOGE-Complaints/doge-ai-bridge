@@ -18,9 +18,9 @@ uvicorn → aibridge.app:app
 
 | Где | Команда |
 |-----|---------|
-| Локально | `PORT=8080 python -m aibridge` (`src/aibridge/__main__.py`) |
+| Локально | `make serve` / `make dev` (required `./.env`, G8) · thin alias `PORT=8080 python -m aibridge` |
 | Dockerfile `CMD` | `python -m uvicorn --app-dir src aibridge.app:app --host 0.0.0.0 --port ${PORT:-8080}` |
-| Railpack | то же в `railpack.json` (`${PORT:-8000}`) |
+| Railpack | то же в `railpack.json` (`${PORT:-8080}`) |
 
 При импорте приложения с PostgreSQL `DATABASE_URL` миграции применяются из `create_app()` (`src/aibridge/app.py`). Отдельный pre-deploy на Railway всё равно полезен (fail до старта сервиса).
 
@@ -51,6 +51,41 @@ DOGESTONIA_API_BEARER_TOKEN=dev-gateway-token-different
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/aibridge
 AIBRIDGE_ALLOW_MEMORY_STORES=false
 ```
+
+#### Локальный Postgres из Homebrew (системный сервис)
+
+Если Postgres установлен «из коробки» через Homebrew (`postgresql@15`):
+
+```bash
+# статус
+brew services list | grep postgres
+
+# запуск (остаётся в фоне после перезагрузки логина)
+brew services start postgresql@15
+
+# остановка
+brew services stop postgresql@15
+```
+
+Создать БД/роль под свой `DATABASE_URL` (пример; подставьте user/db):
+
+```bash
+/opt/homebrew/opt/postgresql@15/bin/createdb aibridge
+# затем в .env:
+# DATABASE_URL=postgresql://$(whoami)@localhost:5432/aibridge
+```
+
+**Важно для QA pytest (story 34 UC / часть LIFE):** системный Homebrew Postgres **не** то, что проверяет `pg_available()`. Эти тесты ждут **отдельный disposable** кластер в `doge-ai-bridge/.pgdata-test`:
+
+```bash
+cd doge-ai-bridge
+./scripts/start-disposable-pg.sh
+# URL: postgresql://aibridge@/aibridge_test?host=.../.pgdata-test&port=55432
+```
+
+Скрипт переживает «осиротевший» listener на `:55432` и stale shm (stop/kill + retry). Запускать в **обычном Terminal**, не из sandbox Cursor (иначе `shmget: Operation not permitted`).
+
+Подробный прогон QA: [`../qa/inbound-outbound/TEST-MANUAL.md`](../qa/inbound-outbound/TEST-MANUAL.md).
 
 Только локальный throwaway без Postgres (не для residents / не для pilot):
 
@@ -105,12 +140,18 @@ PYTHONPATH=src python -c "import os; from aibridge.migrate import apply_migratio
 ### 1.3 Старт
 
 ```bash
-# из doge-ai-bridge, с активированным .venv
-# dotenv подхватывается Settings (pydantic-settings), если есть .env
+# из doge-ai-bridge, с активированным .venv и заполненным ./.env (G8)
+make serve
+# или: make dev
+```
+
+Thin alias (без Make `.env` load):
+
+```bash
 PORT=8080 python -m aibridge
 ```
 
-Эквивалент:
+Эквивалент uvicorn напрямую:
 
 ```bash
 PYTHONPATH=src python -m uvicorn --app-dir src aibridge.app:app --host 0.0.0.0 --port 8080

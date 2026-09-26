@@ -20,7 +20,7 @@ src/aibridge/bundle_gc.py    # GC after grace when unreferenced
 src/aibridge/deployment.py   # startup verify + register
 ```
 
-Entrypoint: `python -m aibridge` (binds `PORT` / Railway `$PORT`).
+Primary start: `make serve` / `make dev` (loads required `./.env` — G8). Thin alias: `python -m aibridge` (binds `PORT` / Railway `$PORT`, app `aibridge.app:app`).
 
 ## Quick start
 
@@ -28,11 +28,16 @@ Entrypoint: `python -m aibridge` (binds `PORT` / Railway `$PORT`).
 cd doge-ai-bridge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-export AIBRIDGE_CHANNEL_BEARER_TOKEN='dev-channel-token'
-export DOGESTONIA_API_BEARER_TOKEN='dev-gateway-token-different'
+# Ensure ./.env exists (required by Make serve/dev)
 pytest -q
-PORT=8080 python -m aibridge
+make serve
+# or: make dev
+# thin alias (no Make .env load): PORT=8080 python -m aibridge
 ```
+
+**Runbook (web only, local + Railway):** [`docs/runbooks/aibridge-web-service-local-railway.md`](docs/runbooks/aibridge-web-service-local-railway.md). Full pilot (n8n/Telegram): [`docs/runbooks/AIBRIDGE-RAILWAY-N8N-TELEGRAM-PILOT-RUNBOOK.md`](docs/runbooks/AIBRIDGE-RAILWAY-N8N-TELEGRAM-PILOT-RUNBOOK.md).
+
+**QA inbound/outbound (stories 23–35):** [`docs/qa/inbound-outbound/TEST-MANUAL.md`](docs/qa/inbound-outbound/TEST-MANUAL.md) · matrices [`TRACEABILITY-MATRIX.md`](docs/qa/inbound-outbound/TRACEABILITY-MATRIX.md).
 
 **Railway (Railpack):** start command is pinned in [`railpack.json`](railpack.json) (`python -m uvicorn --app-dir src aibridge.app:app …`). Root `requirements.txt` mirrors runtime deps from `pyproject.toml`. See local analysis note `docs/analysis/railway-railpack-start-command-failure-2026-09-13.md` if present.
 
