@@ -55,7 +55,7 @@ History summarization (if ever enabled) is a separate verified transform; it mus
 ## 5. Gateway
 
 - Exact configured HTTPS origin; TLS verify; no redirects; fixed `POST /story-drafts`.
-- Bearer only in `GatewayExecutor` from `DOGESTONIA_API_BEARER_TOKEN`.
+- Bearer only in `GatewayExecutor` from `GATEWAY_SERVICE_API_TOKEN`.
 - Success only on verified 201 + `draft_id` + `trace_id`.
 - Ambiguous delivery → `unknown_outcome`; **no** automatic retry for that revision.
 - Local best-effort at-most-once; do not claim strict distributed ≤1 without gateway idempotency.

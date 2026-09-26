@@ -105,7 +105,7 @@ components:
       scheme: bearer
       description: >
         Opaque channel token = AIBRIDGE_CHANNEL_BEARER_TOKEN on aibridge.
-        Distinct from DOGESTONIA_API_BEARER_TOKEN (gateway). n8n Header Auth only.
+        Distinct from GATEWAY_SERVICE_API_TOKEN (gateway). n8n Header Auth only.
 
   schemas:
     ChannelPrincipal:

@@ -25,10 +25,10 @@ SPA owner story key at materialize / P3: **Unknown** (fill only when a real spa 
 Code SSOT: `src/aibridge/gateway.py` `build_continuation_url`:
 
 ```text
-{DOGESTONIA_DRAFT_REDIRECT_BASE_URL}/#/story/submit?draft_id={url-encoded draft_id}
+{SPA_BASE_URL}/#/story/submit?draft_id={url-encoded draft_id}
 ```
 
-Env: `DOGESTONIA_DRAFT_REDIRECT_BASE_URL` (`.env.example` / Settings).  
+Env: `SPA_BASE_URL` (`.env.example` / Settings).  
 Wave-1 dry-run may assert URL **shape** in aibridge tests — that is **not** R3-P1-08 real-device SPA proof.
 
 ---
@@ -70,6 +70,6 @@ See [spa-https-continuation-evidence-BLOCKED-20260913.md](./spa-https-continuati
 ## 5. Operator unblock (spa profile)
 
 1. Resolve spa backlog story for HTTPS continuation E2E; record real `STORY-SPA-*` key on disk.
-2. Run real-device HTTPS proof against pilot `DOGESTONIA_DRAFT_REDIRECT_BASE_URL`.
+2. Run real-device HTTPS proof against pilot `SPA_BASE_URL`.
 3. Link Done story + run-summary + redacted evidence into slots above; clear BLOCKED.
 4. Then aibridge may flip Target #1 and lift wave-2 block on the dashboard.

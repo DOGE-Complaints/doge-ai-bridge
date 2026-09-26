@@ -189,9 +189,9 @@ OPENAI_STORE_RESPONSES=false
 AIBRIDGE_CHANNEL_BEARER_TOKEN=<отдельный случайный secret для n8n → aibridge>
 AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN=
 
-DOGESTONIA_INTAKE_BASE_URL=https://<публичный HTTPS-домен intake-сервиса ноды; complaints = doge-complaints-gateway>
-DOGESTONIA_API_BEARER_TOKEN=<Bearer, который gateway/intake выдаёт именно aibridge>
-DOGESTONIA_DRAFT_REDIRECT_BASE_URL=https://<публичный HTTPS-домен SPA>
+GATEWAY_BASE_URL=https://<публичный HTTPS-домен intake-сервиса ноды; complaints = doge-complaints-gateway>
+GATEWAY_SERVICE_API_TOKEN=<Bearer, который gateway/intake выдаёт именно aibridge>
+SPA_BASE_URL=https://<публичный HTTPS-домен SPA>
 
 DOGESTONIA_OPERATION_ID=postStoryDraftStash
 DOGESTONIA_ORIGIN_SOURCE=openai_responses_telegram
@@ -246,7 +246,7 @@ DOGESTONIA_SCHEMA_VERSION=<точная версия активного pack>
 Обязательно разные значения:
 
 - `AIBRIDGE_CHANNEL_BEARER_TOKEN` — знает n8n и aibridge;
-- `DOGESTONIA_API_BEARER_TOKEN` — знают только aibridge и gateway;
+- `GATEWAY_SERVICE_API_TOKEN` — знают только aibridge и gateway;
 - `OPENAI_API_KEY` — знает только aibridge;
 - Telegram Bot token — знает только n8n.
 
@@ -351,7 +351,7 @@ Bearer <точное значение AIBRIDGE_CHANNEL_BEARER_TOKEN>
 В n8n не добавлять:
 
 - `OPENAI_API_KEY`;
-- `DOGESTONIA_API_BEARER_TOKEN`;
+- `GATEWAY_SERVICE_API_TOKEN`;
 - gateway URL;
 - прямой вызов `/story-drafts`.
 

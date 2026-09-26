@@ -42,7 +42,7 @@ cp .env.example .env   # заполнить секреты; не коммити�
 ```env
 PORT=8080
 AIBRIDGE_CHANNEL_BEARER_TOKEN=dev-channel-token
-DOGESTONIA_API_BEARER_TOKEN=dev-gateway-token-different
+GATEWAY_SERVICE_API_TOKEN=dev-gateway-token-different
 ```
 
 Для Postgres (предпочтительно):
@@ -236,10 +236,23 @@ PORT=8080
 DATABASE_URL=${{aibridge-postgres.DATABASE_URL}}
 AIBRIDGE_ALLOW_MEMORY_STORES=false
 AIBRIDGE_CHANNEL_BEARER_TOKEN=<secret>
-DOGESTONIA_API_BEARER_TOKEN=<другой secret>
+GATEWAY_SERVICE_API_TOKEN=<другой secret>
 ```
 
 Для зелёного `/ready` (`/readyz`) нужны ещё OpenAI, intake HTTPS URL, content paths в image и т.д. — полный список в pilot runbook §8 и `.env.example`. Не отключайте `AIBRIDGE_DRY_RUN` только из‑за зелёного `/health` (`/healthz`).
+
+### 2.4.1 Railway target var names (REQ9 checklist — Lock C)
+
+**Names only** — set/verify on live Railway is **STORY-AIBRIDGE-REQ9-04** (do not invent SUCCESS here).
+
+| aibridge Railway var | Role | Peer / note |
+|----------------------|------|-------------|
+| `GATEWAY_BASE_URL` | HTTPS origin of intake/gateway peer | complaints node → gateway public HTTPS origin |
+| `GATEWAY_SERVICE_API_TOKEN` | S2S Bearer aibridge → gateway | **same secret value** as gateway `SERVICE_API_TOKEN` (pairing); **≠** `AIBRIDGE_CHANNEL_BEARER_TOKEN` (R8) |
+| `SPA_BASE_URL` | SPA base for `continuation_url` | resident SPA public origin |
+| `AIBRIDGE_CHANNEL_BEARER_TOKEN` | channel façade Bearer (Keep) | n8n / channel clients only — never equal to gateway S2S |
+
+Removed as primary (no dual-read): `DOGESTONIA_INTAKE_BASE_URL`, `DOGESTONIA_API_BEARER_TOKEN`, `DOGESTONIA_DRAFT_REDIRECT_BASE_URL`.
 
 ### 2.5 Smoke на Railway
 

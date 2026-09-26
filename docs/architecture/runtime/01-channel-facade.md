@@ -2,6 +2,7 @@
 
 **Parent REQ:** [REQ-01 §6–§7](../../requirements/REQ-01-doge-ai-bridge-runtime.md)  
 **Contract SSOT:** [docs/openapi/aibridge-channel-v1.openapi.yaml](../../openapi/aibridge-channel-v1.openapi.yaml)  
+**Runtime API (code):** [docs/runtime-docs/01-api.md](../../runtime-docs/01-api.md)  
 **Overview:** [00-overview.md](./00-overview.md)  
 **n8n ops template:** [docs/ops/n8n-channel-workflow/README.md](../../ops/n8n-channel-workflow/README.md)
 
@@ -26,7 +27,7 @@ Runtime must contract-test live ASGI schemas against the committed channel OpenA
 
 - Every `/v1/channel/*` request: `Authorization: Bearer <token>`.
 - Validate `AIBRIDGE_CHANNEL_BEARER_TOKEN` (+ optional previous during rotation).
-- Must differ from `DOGESTONIA_API_BEARER_TOKEN` or readiness fails.
+- Must differ from `GATEWAY_SERVICE_API_TOKEN` or readiness fails.
 - n8n: Header Auth credential only — **never** gateway Bearer or OpenAI key.
 - Private Railway hostname; reject missing Bearer even on private interface.
 

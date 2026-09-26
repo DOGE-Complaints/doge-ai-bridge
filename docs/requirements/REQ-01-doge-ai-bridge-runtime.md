@@ -4,14 +4,20 @@
 **Index key:** REQ-01 (первый REQ профиля `aibridge`; исторически GPT UI REQ-47.1)  
 **Service / repo:** `doge-ai-bridge`  
 **Status:** Ready for implementation  
-**Version:** 0.4.0 · 2026-09-12  
+**Version:** 0.4.2 · 2026-09-26  
 **Target path:** `doge-ai-bridge/docs/requirements/REQ-01-doge-ai-bridge-runtime.md`  
 **Implementation language:** Python  
 **Deployment target:** Railway-compatible Docker service  
 
 **Related — Architecture:** [docs/architecture/runtime/00-overview.md](../architecture/runtime/00-overview.md) · [01-channel-facade](../architecture/runtime/01-channel-facade.md) · [02-content-packaging](../architecture/runtime/02-content-packaging.md) · [03-confirm-gateway](../architecture/runtime/03-confirm-gateway.md) · [04-ops-security](../architecture/runtime/04-ops-security.md)  
+**Related — Runtime API (code):** [docs/runtime-docs/01-api.md](../runtime-docs/01-api.md)  
+**Related — OpenAPI:** [channel façade v1](../openapi/aibridge-channel-v1.openapi.yaml) · [Story Intake wire](../openapi/story-intake-actions.openapi.yaml)  
 **Related — Tech-arch interview:** [docs/analysis/zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md](../analysis/zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md)  
-**Related — Runbook:** [docs/runbooks/channel-bearer-rotation.md](../runbooks/channel-bearer-rotation.md)  
+**Related — Pilot recommendations:** [docs/analysis/ARCH-RECOMMENDATIONS-REQ-01-PILOT-AND-NODE-SCALING.md](../analysis/ARCH-RECOMMENDATIONS-REQ-01-PILOT-AND-NODE-SCALING.md)  
+**Related — Runbooks:** [channel-bearer-rotation](../runbooks/channel-bearer-rotation.md) · [privacy-pilot](../runbooks/privacy-pilot.md) · [unknown-outcome-reconciliation](../runbooks/unknown-outcome-reconciliation.md)  
+**Related — n8n ops:** [docs/ops/n8n-channel-workflow/README.md](../ops/n8n-channel-workflow/README.md)  
+**Related — Post-pilot:** [REQ-02](./REQ-02-DOGE-AI-BRIDGE-POST-PILOT-EVOLUTION.md)  
+**Related — Ops parity / env naming (REQ-08):** [REQ-08](./REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md) — R1/R2/R4 hard cut: `GATEWAY_BASE_URL` / `GATEWAY_SERVICE_API_TOKEN` / `SPA_BASE_URL` supersede the legacy `DOGESTONIA_API_BASE_URL` / `DOGESTONIA_API_BEARER_TOKEN` / `DOGESTONIA_DRAFT_REDIRECT_BASE_URL` names in this REQ (STORY-AIBRIDGE-REQ9-03).
 
 ---
 
@@ -40,12 +46,12 @@ Resident ↔ Telegram
          ↔ n8n (Telegram UI + routing)
          ↔ doge-ai-bridge (Responses + state + confirm + validation)
          ↔ doge-complaints-gateway POST /story-drafts (gateway Bearer)
-         ↔ SPA {DOGESTONIA_DRAFT_REDIRECT_BASE_URL}/#/story/submit?draft_id=
+         ↔ SPA {SPA_BASE_URL}/#/story/submit?draft_id=
 ```
 
 | Concern | Owner |
 |---|---|
-| Telegram webhook/trigger, messages, inline keyboards, callback acknowledgement | n8n |
+| Telegram webhook/trigger, messages, inline keyboards, **immediate** callback acknowledgement | n8n |
 | Responses API, prompt, tool loop, conversation state | `doge-ai-bridge` |
 | Node pack injection and validation | `doge-ai-bridge` |
 | Dual-confirm policy, nonce/hash/expiry/consume | `doge-ai-bridge` |
@@ -101,14 +107,14 @@ Resident ↔ Telegram
 | Material | SSOT |
 |---|---|
 | Channel rationale and parent framing | GPT UI REQ-47 |
-| Gateway operation, request and response wire | Canonical Story Intake OpenAPI |
+| Gateway operation, request and response wire | `docs/openapi/story-intake-actions.openapi.yaml` (Story Intake wire; `postStoryDraftStash`) |
 | Node-specific structured payload | Active pack `payload.schema.json` |
 | Interview behavior | Root-level instruction bundle manifest |
-| n8n → aibridge transport | Version-controlled `docs/openapi/aibridge-channel-v1.openapi.yaml`, constrained by §6 |
+| n8n → aibridge transport | `docs/openapi/aibridge-channel-v1.openapi.yaml` (channel façade; §6) |
 
-The channel façade is not a second Story Intake contract. It is a transport contract between n8n and aibridge.
+The channel façade is not a second Story Intake contract. It is a transport contract between n8n and aibridge. Changing channel API must not silently rewrite wire OAS and vice versa.
 
-The committed channel OpenAPI is contract SSOT. A live framework-generated `/openapi.json` may be exposed for diagnostics, but must be contract-tested against the committed schema and must not silently replace it.
+The committed channel OpenAPI is façade contract SSOT and exists on disk. A live framework-generated `/openapi.json` may be exposed for diagnostics, but must be contract-tested against the committed channel schema and must not silently replace it. Wire validation and strict tool generation use `story-intake-actions.openapi.yaml` only.
 
 ## 5. Runtime components
 
@@ -205,7 +211,7 @@ Request schema:
 
 Rules:
 
-- n8n must call Telegram `answerCallbackQuery` promptly; aibridge does not call Telegram.
+- n8n must call Telegram `answerCallbackQuery` **immediately** with neutral/empty text (before or without waiting on aibridge latency for the primary ack); aibridge does not call Telegram.
 - `action_token` is the only value copied from Telegram `callback_data`.
 - Action name, draft, revision, session and secrets are not encoded in callback data.
 - Duplicate `event_id` returns the stored response.
@@ -222,7 +228,6 @@ Both endpoints return this bounded envelope:
   "session_id": "opaque-session-reference",
   "state": "interviewing",
   "reply_text": "text for Telegram",
-  "callback_ack_text": null,
   "actions": [
     {
       "label": "Send to DOGEstonia",
@@ -245,6 +250,7 @@ Contract rules:
 - `reply_text` is resident-safe and must not claim publication after stash.
 - `session_id` is not an authorization credential.
 - n8n must not be required to interpret internal state to enforce security.
+- **`callback_ack_text` is not part of channel v1.** n8n must `answerCallbackQuery` immediately with neutral/empty text, then call `/v1/channel/actions`, then Send/Edit from this envelope.
 
 ### AIB-CH-05 — HTTP statuses
 
@@ -286,12 +292,12 @@ Telegram Trigger
         → HTTP Request POST /v1/channel/turns
         → Telegram Send Message (+ inline actions if returned)
       callback_query
-        → Telegram Answer Callback Query
+        → Telegram Answer Callback Query (neutral/empty text, immediate)
         → HTTP Request POST /v1/channel/actions
         → Telegram Send/Edit Message (+ replacement actions if returned)
 ```
 
-The same n8n Header Auth credential is used for both HTTP Request nodes. n8n must never call `POST /story-drafts` directly.
+The same n8n Header Auth credential is used for both HTTP Request nodes. n8n must never call `POST /story-drafts` directly. Versioned workflow ops template: `docs/ops/n8n-channel-workflow/` (JSON export without credentials when available).
 
 ## 7. Channel authentication
 
@@ -354,13 +360,16 @@ The actual filenames are supplied by the content repository and must not be gues
 - A running session remains pinned to the instruction/tool/pack version with which it started.
 - Changing bundle/pack/tool version starts a new session or executes an explicit migration; silent mid-session replacement is forbidden.
 
-### AIB-INS-04 — Delivery into Docker
+### AIB-INS-04 — Delivery into Docker and Postgres registry
 
 - Runtime does not fetch mutable instructions from GitHub at request time.
-- Build/release pipeline supplies an immutable content bundle pinned to source commit SHA.
-- Docker image or read-only deployment artifact contains the manifest, instruction files, OpenAPI and pack files.
-- Startup records source commit, bundle hash, OAS hash and pack hash.
-- Missing/mismatched artifacts make readiness fail.
+- Build/release pipeline uses multi-repository checkout where needed and supplies an immutable content tarball pinned to source commit SHA(s).
+- Docker image contains the manifest, instruction files, Story Intake wire OpenAPI and pack files.
+- On startup: verify artifacts, then **register-once** into PostgreSQL `content_bundle` by `bundle_hash` (immutable row). Session stores `content_bundle_hash` FK.
+- Readiness checks the **current** deployment bundle; session resume loads the **pinned** bundle.
+- GC may delete a bundle only when no active sessions reference it and audit/recovery grace has elapsed.
+- Missing/mismatched artifacts or missing pinned bundle for an active session make readiness or resume fail closed.
+- See `docs/architecture/runtime/02-content-packaging.md`.
 
 ## 9. OpenAPI reuse and strict tool generation
 
@@ -604,7 +613,8 @@ Production/pilot runtime uses PostgreSQL, not process memory, for security state
 
 Persist at minimum:
 
-- sessions and pinned content/tool/pack versions;
+- versioned `content_bundle` registry (hashes + immutable payload/components);
+- sessions with `content_bundle_hash` and server-owned `deployment_id`/`node_id`;
 - replayable Responses items;
 - draft revisions and canonical hashes;
 - action-token hashes and state;
@@ -652,7 +662,7 @@ Application checks alone are insufficient; concurrency tests must exercise datab
 
 ### AIB-HTTP-02 — Gateway Bearer
 
-- Read only from `DOGESTONIA_API_BEARER_TOKEN`.
+- Read only from `GATEWAY_SERVICE_API_TOKEN`.
 - Inject only inside `GatewayExecutor` as `Authorization: Bearer …`.
 - Never place it in Responses input/tools/output, channel requests, n8n credentials, URLs, exceptions or logs.
 - It must differ from `AIBRIDGE_CHANNEL_BEARER_TOKEN`; equality fails readiness.
@@ -716,7 +726,7 @@ If gateway gains such a contract, adopting it requires a separate reviewed proto
 Build only after verified `stashed`:
 
 ```text
-{DOGESTONIA_DRAFT_REDIRECT_BASE_URL}/#/story/submit?draft_id={url-encoded-draft-id}
+{SPA_BASE_URL}/#/story/submit?draft_id={url-encoded-draft-id}
 ```
 
 Rules:
@@ -739,15 +749,15 @@ Rules:
 | `DOGESTONIA_INSTRUCTIONS_DIR` | yes | Root-level instruction bundle path |
 | `DOGESTONIA_INSTRUCTIONS_MANIFEST` | yes | Explicit ordered manifest path |
 | `DOGESTONIA_CONTENT_SOURCE_COMMIT` | yes | Pinned source commit/release ID |
-| `DOGESTONIA_OPENAPI_PATH` | yes | Canonical Story Intake YAML |
+| `DOGESTONIA_OPENAPI_PATH` | yes | Path to Story Intake wire YAML (`story-intake-actions.openapi.yaml`) |
 | `DOGESTONIA_OPERATION_ID` | yes | `postStoryDraftStash` |
 | `DOGESTONIA_PAYLOAD_SCHEMA_PATH` | yes | Active pack payload schema |
 | `DOGESTONIA_SCHEMA_ID` | yes | Active pack ID |
 | `DOGESTONIA_SCHEMA_VERSION` | yes | Active pack version |
 | `DOGESTONIA_ORIGIN_SOURCE` | yes | Default `openai_responses_telegram` |
-| `DOGESTONIA_API_BASE_URL` | yes | Exact approved HTTPS gateway origin |
-| `DOGESTONIA_API_BEARER_TOKEN` | yes | Gateway Bearer; bridge only |
-| `DOGESTONIA_DRAFT_REDIRECT_BASE_URL` | yes | SPA base origin |
+| `GATEWAY_BASE_URL` | yes | Exact approved HTTPS gateway / intake origin (REQ-08 R1; was `DOGESTONIA_API_BASE_URL` / later `DOGESTONIA_INTAKE_BASE_URL`) |
+| `GATEWAY_SERVICE_API_TOKEN` | yes | Gateway S2S Bearer; bridge only (REQ-08 R2; pairs with gateway `SERVICE_API_TOKEN`; was `DOGESTONIA_API_BEARER_TOKEN`) |
+| `SPA_BASE_URL` | yes | SPA base origin (user-reachable HTTPS for mobile pilot; REQ-08 R4; was `DOGESTONIA_DRAFT_REDIRECT_BASE_URL`) |
 | `AIBRIDGE_CHANNEL_BEARER_TOKEN` | yes | n8n → aibridge Bearer |
 | `AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN` | no | Temporary rotation overlap only |
 | `AIBRIDGE_MAX_REQUEST_BYTES` | yes | Channel body limit |
@@ -756,6 +766,14 @@ Rules:
 | `AIBRIDGE_ACTION_TOKEN_TTL_SECONDS` | yes | Confirmation token lifetime |
 | `AIBRIDGE_HTTP_CONNECT_TIMEOUT_MS` | yes | Gateway connect timeout |
 | `AIBRIDGE_HTTP_TOTAL_TIMEOUT_MS` | yes | Gateway total timeout |
+| `AIBRIDGE_MAX_INPUT_TOKENS` | yes | LLM input budget (numeric default after measurement) |
+| `AIBRIDGE_MAX_OUTPUT_TOKENS` | yes | LLM output budget |
+| `AIBRIDGE_MAX_RESPONSES_CALLS_PER_TURN` | yes | Cap OpenAI calls per turn |
+| `AIBRIDGE_MAX_TOOL_CALLS_PER_TURN` | yes | Cap tool calls per turn |
+| `AIBRIDGE_OPENAI_TIMEOUT_MS` | yes | Responses hard timeout |
+| `AIBRIDGE_MAX_SESSION_TURNS` | yes | Cap turns per session |
+| `AIBRIDGE_PRINCIPAL_RATE_LIMIT` | yes | Per channel principal |
+| `AIBRIDGE_GLOBAL_RATE_LIMIT` | yes | Per channel credential / deployment |
 | `AIBRIDGE_LOG_LEVEL` | yes | Structured log level |
 | `AIBRIDGE_DRY_RUN` | no | Validate without gateway execution; default false |
 
@@ -902,9 +920,10 @@ Forbidden by default:
 - [ ] PostgreSQL persists sessions, events, action tokens, tool intents and outcomes.
 - [ ] Event dedupe and session serialization work across concurrent instances.
 - [ ] Responses uses `store: false` and self-managed replayable history.
-- [ ] Root-only manifest instructions are deterministic, pinned and hashed.
-- [ ] Canonical OpenAPI remains the only Story Intake wire SSOT.
+- [ ] Root-only manifest instructions are deterministic, pinned, hashed, and registered in Postgres content_bundle; redeploy keeps pinned sessions.
+- [ ] Canonical OpenAPI remains the only Story Intake wire SSOT (`story-intake-actions.openapi.yaml`).
 - [ ] Generated tool is deterministic and strict.
+- [ ] LLM budget / rate / timeout knobs bound each turn; breach has no gateway side effect.
 - [ ] `parallel_tool_calls` is disabled for the consequential tool flow where supported.
 - [ ] Active pack schema is injected in model projection and validated independently.
 - [ ] Server-owned fields cannot be overridden by model or n8n.
@@ -925,25 +944,28 @@ Forbidden by default:
 ## 22. Deliverables
 
 1. Python application and Dockerfile.
-2. Version-controlled `docs/openapi/aibridge-channel-v1.openapi.yaml` matching §6, plus runtime contract test.
-3. `InstructionBundleLoader` and manifest validation.
-4. Canonical OpenAPI loader and operation resolver.
-5. Strict tool generator and snapshots.
-6. PostgreSQL models and versioned migrations.
-7. Conversation/session repository.
-8. Turn coordinator and Responses tool loop.
-9. Confirmation guard and action-token repository.
-10. Request assembler and three validation gates.
-11. Constrained gateway executor.
-12. Outcome/error mapper.
-13. Health/readiness endpoints and graceful shutdown.
-14. Redacted audit and metrics.
-15. `.env.example` containing names/placeholders only.
-16. Unit, contract, concurrency, restart and E2E tests.
-17. Validated `instructions.manifest.json` supplied with the immutable content bundle.
-18. Operator README covering Railway private networking, n8n mapping, secret generation/rotation, migrations, rollback and reconciliation.
+2. Version-controlled `docs/openapi/aibridge-channel-v1.openapi.yaml` matching §6, plus runtime contract test against ASGI.
+3. Version-controlled `docs/openapi/story-intake-actions.openapi.yaml` as Story Intake wire SSOT (tool/wire); not a duplicate handwritten `StoryDraftStashRequest`.
+4. `InstructionBundleLoader`, manifest validation, and PostgreSQL content_bundle registry/GC.
+5. Canonical OpenAPI loader and operation resolver (wire).
+6. Strict tool generator and snapshots.
+7. PostgreSQL models and versioned migrations (including content_bundle).
+8. Conversation/session repository.
+9. Turn coordinator and Responses tool loop with LLM budget enforcement.
+10. Confirmation guard and action-token repository.
+11. Request assembler and three validation gates.
+12. Constrained gateway executor.
+13. Outcome/error mapper.
+14. Health/readiness endpoints and graceful shutdown.
+15. Redacted audit and metrics (incl. budget-stop reasons).
+16. `.env.example` containing names/placeholders only (incl. budget knobs).
+17. Unit, contract, concurrency, restart and E2E tests (incl. bundle pin across redeploy; budget bounded fail).
+18. Validated `instructions.manifest.json` supplied with the immutable content bundle.
+19. Operator README covering Railway private networking, n8n mapping, secret generation/rotation, migrations, rollback and reconciliation.
+20. Runbooks: `docs/runbooks/channel-bearer-rotation.md`, `privacy-pilot.md`, `unknown-outcome-reconciliation.md`.
+21. Ops artifact location `docs/ops/n8n-channel-workflow/` (credential-stripped workflow export when verified).
 
-Explicitly not delivered: Telegram bot process, n8n fork/custom node, committed n8n workflow JSON or gateway idempotency extension.
+Explicitly not delivered: Telegram bot process, n8n fork/custom node as product base, inventing unverified workflow JSON, or gateway idempotency extension.
 
 ## 23. References
 
@@ -960,7 +982,9 @@ Explicitly not delivered: Telegram bot process, n8n fork/custom node, committed 
 - v0.3.1 — private network + application authentication selected.
 - v0.3.2 — channel authentication standardized on API Bearer.
 - v0.4.0 — implementable channel façade; PostgreSQL state; `store:false`; deterministic instruction manifest; transactional dual-confirm; Telegram callback limits; explicit idempotency boundary; operations, security and expanded tests.
+- v0.4.1 — ARCH-RECOMMENDATIONS applied: split channel vs wire OpenAPI on disk; remove `callback_ack_text`; Postgres content_bundle registry; LLM budget env knobs; privacy + unknown_outcome runbooks; n8n ops workflow location; architecture runtime package synced.
+- v0.4.2 — 2026-09-26: §2 / §15 / §16 / §17 — env names hard-cut to `GATEWAY_BASE_URL` / `GATEWAY_SERVICE_API_TOKEN` / `SPA_BASE_URL` per REQ-08 R1/R2/R4 (STORY-AIBRIDGE-REQ9-03 G-01).
 
 ---
 
-*End of REQ-01 v0.4.0*
+*End of REQ-01 v0.4.2*

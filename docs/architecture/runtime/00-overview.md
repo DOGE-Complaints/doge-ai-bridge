@@ -7,7 +7,8 @@
 **Pilot recommendations:** [ARCH-RECOMMENDATIONS-REQ-01-PILOT-AND-NODE-SCALING.md](../../analysis/ARCH-RECOMMENDATIONS-REQ-01-PILOT-AND-NODE-SCALING.md)  
 **Interview report:** [zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md](../../analysis/zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md)  
 **As-of:** 2026-09-12 (ARCH-RECOMMENDATIONS applied)  
-**Status:** Architecture for pilot — runtime scaffold present (`src/aibridge/`, STORY-AIBRIDGE-01)
+**Status:** Architecture for pilot — runtime scaffold present (`src/aibridge/`, STORY-AIBRIDGE-01)  
+**Related (GPT UI Module-1 / dual-channel map):** [GPT UI docs/architecture](../../../../GPT%20UI/docs/architecture/README.md)
 
 ---
 
@@ -31,7 +32,7 @@ Resident ↔ Telegram
          ↔ n8n (UI + routing) — public host e.g. telegram-bot.dogestonia.me
          ↔ doge-ai-bridge (private Railway hostname + $PORT)
          ↔ doge-complaints-gateway POST /story-drafts
-         ↔ SPA {DOGESTONIA_DRAFT_REDIRECT_BASE_URL}/#/story/submit?draft_id=
+         ↔ SPA {SPA_BASE_URL}/#/story/submit?draft_id=
 ```
 
 | Concern | Owner |
@@ -97,7 +98,7 @@ CI uses **multi-repository checkout**, not fragile in-container monorepo `COPY` 
 | LLM budgets | Required env names in [04-ops-security.md](./04-ops-security.md); **numeric values Unknown** until measured |
 | Listen | `$PORT` only; no public aibridge domain |
 | Channel auth | Private network + `AIBRIDGE_CHANNEL_BEARER_TOKEN` |
-| Gateway Bearer | `DOGESTONIA_API_BEARER_TOKEN` — bridge only |
+| Gateway Bearer | `GATEWAY_SERVICE_API_TOKEN` — bridge only |
 
 ---
 

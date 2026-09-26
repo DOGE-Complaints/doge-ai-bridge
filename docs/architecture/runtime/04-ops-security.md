@@ -52,7 +52,7 @@ On breach: bounded fail, resident-safe text, no gateway side effect, last confir
 | Secret | Where |
 |--------|--------|
 | `AIBRIDGE_CHANNEL_BEARER_TOKEN` (+ previous) | Railway; n8n Header Auth |
-| `DOGESTONIA_API_BEARER_TOKEN` | Bridge only |
+| `GATEWAY_SERVICE_API_TOKEN` | Bridge only |
 | `OPENAI_API_KEY` | Bridge only |
 
 Rotation: [channel-bearer-rotation.md](../../runbooks/channel-bearer-rotation.md). Also summarized in Operator README (REQ deliverable).
