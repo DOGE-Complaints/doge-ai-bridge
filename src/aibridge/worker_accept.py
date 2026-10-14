@@ -4,7 +4,8 @@ Implement names (Open in arch; chosen for this wave, documented in task READMEs)
 - Path: ``POST /v1/worker/sense-brief/accept``
 - Prefix: ``/v1/worker/``
 - Env: ``AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED``, ``AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN``,
-  ``AIBRIDGE_WORKER_TEXT_BRIEF_MODEL`` (STORY-47)
+  ``AIBRIDGE_WORKER_TEXT_BRIEF_MODEL`` (STORY-47),
+  ``AIBRIDGE_WORKER_IMAGE_POSTER_MODEL``, ``AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL`` (STORY-48)
 - JSON: ``issue_id``, ``generation_version``, optional ``corpus``
 """
 
@@ -37,6 +38,7 @@ class WorkerAcceptRecord:
     generation_version: str
     status: str = "accepted"
     brief: dict[str, Any] | None = None
+    poster_url: str | None = None
     pipeline: str = "deferred"
 
 
@@ -71,6 +73,7 @@ class WorkerIdempotencyStore:
         brief: dict[str, Any],
         *,
         pipeline: str = "brief_ready",
+        poster_url: str | None = None,
     ) -> WorkerAcceptRecord:
         key = (issue_id, generation_version)
         with self._lock:
@@ -82,6 +85,8 @@ class WorkerIdempotencyStore:
                 )
                 self._records[key] = record
             record.brief = brief
+            if poster_url is not None:
+                record.poster_url = poster_url
             record.pipeline = pipeline
             record.status = "accepted"
             return record
@@ -97,4 +102,6 @@ def accept_response_body(record: WorkerAcceptRecord, *, created: bool) -> dict[s
     }
     if record.brief is not None:
         body["brief"] = record.brief
+    if record.poster_url is not None:
+        body["poster_url"] = record.poster_url
     return body

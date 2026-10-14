@@ -207,6 +207,16 @@ class Settings(BaseSettings):
         default="",
         validation_alias="AIBRIDGE_WORKER_TEXT_BRIEF_MODEL",
     )
+    # STORY-AIBRIDGE-48 — image-poster slot + aibridge-owned storage (DP2/DP6).
+    # Env names = implement choice; provider/bucket/CDN remain Open (not SSOT).
+    aibridge_worker_image_poster_model: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_WORKER_IMAGE_POSTER_MODEL",
+    )
+    aibridge_worker_storage_upload_credential: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
@@ -214,6 +224,8 @@ class Settings(BaseSettings):
         "gateway_service_api_token",
         "aibridge_worker_sense_brief_s2s_token",
         "aibridge_worker_text_brief_model",
+        "aibridge_worker_image_poster_model",
+        "aibridge_worker_storage_upload_credential",
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
@@ -292,6 +304,26 @@ class Settings(BaseSettings):
         """True when worker enabled but text-brief model slot unset (STORY-47)."""
         return bool(self.aibridge_worker_sense_brief_enabled) and not (
             self.worker_text_brief_configured()
+        )
+
+    def worker_image_poster_configured(self) -> bool:
+        """True when image-poster capability slot (model id) is set."""
+        return bool((self.aibridge_worker_image_poster_model or "").strip())
+
+    def worker_storage_upload_configured(self) -> bool:
+        """True when aibridge-owned storage upload credential is set."""
+        return bool((self.aibridge_worker_storage_upload_credential or "").strip())
+
+    def worker_image_poster_fail_closed(self) -> bool:
+        """True when worker enabled but image-poster model slot unset (STORY-48)."""
+        return bool(self.aibridge_worker_sense_brief_enabled) and not (
+            self.worker_image_poster_configured()
+        )
+
+    def worker_storage_upload_fail_closed(self) -> bool:
+        """True when worker enabled but storage upload creds missing (STORY-48)."""
+        return bool(self.aibridge_worker_sense_brief_enabled) and not (
+            self.worker_storage_upload_configured()
         )
 
     def responses_store_false_enforced(self) -> bool:

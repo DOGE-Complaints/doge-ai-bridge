@@ -121,6 +121,11 @@ def evaluate_readiness(
     # STORY-47 — fail-closed when worker enabled without text-brief model slot.
     if settings.worker_text_brief_fail_closed():
         return ReadinessResult(False, "worker_text_brief_missing")
+    # STORY-48 — fail-closed when worker enabled without image-poster / storage.
+    if settings.worker_image_poster_fail_closed():
+        return ReadinessResult(False, "worker_image_poster_missing")
+    if settings.worker_storage_upload_fail_closed():
+        return ReadinessResult(False, "worker_storage_creds_missing")
 
     if not settings.intake_base_url():
         return ReadinessResult(False, "intake_base_url_missing")
