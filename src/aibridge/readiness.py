@@ -115,6 +115,9 @@ def evaluate_readiness(
         return ReadinessResult(False, "gateway_bearer_missing")
     if settings.channel_gateway_bearers_equal():
         return ReadinessResult(False, "channel_gateway_bearer_equal")
+    # STORY-46 — fail-closed when worker enabled without dedicated S2S.
+    if settings.worker_sense_brief_fail_closed():
+        return ReadinessResult(False, "worker_s2s_missing")
 
     if not settings.intake_base_url():
         return ReadinessResult(False, "intake_base_url_missing")

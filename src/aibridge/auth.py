@@ -1,4 +1,4 @@
-"""Channel Bearer authentication helpers."""
+"""Channel Bearer + worker S2S authentication helpers."""
 
 from __future__ import annotations
 
@@ -40,3 +40,19 @@ def is_channel_authorized(authorization: str | None, settings: Settings) -> bool
     if token is None:
         return False
     return constant_time_token_match(token, settings.accepted_channel_tokens())
+
+
+def is_worker_s2s_authorized(authorization: str | None, settings: Settings) -> bool:
+    """True only for dedicated worker S2S — never channel Bearer / citizen.
+
+    Channel tokens are explicitly rejected even if misconfigured equal to worker S2S.
+    """
+    token = extract_bearer(authorization)
+    if token is None:
+        return False
+    if constant_time_token_match(token, settings.accepted_channel_tokens()):
+        return False
+    worker = (settings.aibridge_worker_sense_brief_s2s_token or "").strip()
+    if not worker:
+        return False
+    return constant_time_token_match(token, (worker,))

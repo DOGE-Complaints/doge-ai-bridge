@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
-from aibridge.auth import is_channel_authorized
+from aibridge.auth import is_channel_authorized, is_worker_s2s_authorized
 from aibridge.budgets import (
     BudgetGuard,
     budget_limits_from_settings,
@@ -46,6 +46,13 @@ from aibridge.schemas import (
 )
 from aibridge.sessions import MemorySessionStore, SessionStore, open_session_store
 from aibridge.action_tokens import ActionTokenStore
+from aibridge.worker_accept import (
+    WORKER_ACCEPT_PATH,
+    WORKER_PATH_PREFIX,
+    WorkerAcceptRequest,
+    WorkerIdempotencyStore,
+    accept_response_body,
+)
 
 CHANNEL_PATH_PREFIX = "/v1/channel/"
 
@@ -368,6 +375,7 @@ def create_app(
         store = EventDedupeStore()
     app.state.dedupe_store = store
     app.state.settings_override = settings
+    app.state.worker_idempotency = WorkerIdempotencyStore()
 
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
@@ -555,6 +563,42 @@ def create_app(
         return await call_next(request)
 
     @app.middleware("http")
+    async def worker_s2s_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """STORY-46 — dedicated worker S2S; never channel Bearer middleware."""
+        if not request.url.path.startswith(WORKER_PATH_PREFIX):
+            return await call_next(request)
+        cfg = resolve_settings()
+        if not cfg.aibridge_worker_sense_brief_enabled:
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="worker_disabled",
+                    message="Sense-brief worker is disabled",
+                    retryable=False,
+                ),
+            )
+        if cfg.worker_sense_brief_fail_closed():
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="worker_s2s_missing",
+                    message="Worker S2S not configured",
+                    retryable=False,
+                ),
+            )
+        if not is_worker_s2s_authorized(request.headers.get("authorization"), cfg):
+            return JSONResponse(
+                status_code=401,
+                content=error_body(
+                    code="unauthorized",
+                    message="Unauthorized",
+                ),
+            )
+        return await call_next(request)
+
+    @app.middleware("http")
     async def channel_rate_limit_middleware(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
@@ -608,6 +652,43 @@ def create_app(
         return PlainTextResponse(
             content=body,
             media_type="text/plain; version=0.0.4; charset=utf-8",
+        )
+
+    @app.post(WORKER_ACCEPT_PATH)
+    async def worker_sense_brief_accept(request: Request) -> JSONResponse:
+        """STORY-46 accept — ≠ channel turns/actions; brief/poster/bind deferred."""
+        raw = await request.body()
+        cfg = resolve_settings()
+        if len(raw) > cfg.aibridge_max_request_bytes:
+            return JSONResponse(
+                status_code=413,
+                content=error_body(code="payload_too_large", message="Request body too large"),
+            )
+        try:
+            payload = json.loads(raw.decode("utf-8") if raw else b"{}")
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            return JSONResponse(
+                status_code=400,
+                content=error_body(code="bad_request", message="Malformed JSON"),
+            )
+        if not isinstance(payload, dict):
+            return JSONResponse(
+                status_code=400,
+                content=error_body(code="bad_request", message="JSON object required"),
+            )
+        try:
+            body = WorkerAcceptRequest.model_validate(payload)
+        except ValidationError as exc:
+            status, code, message = validation_http_status(exc)
+            return JSONResponse(
+                status_code=status,
+                content=error_body(code=code, message=message),
+            )
+        idem: WorkerIdempotencyStore = app.state.worker_idempotency
+        record, created = idem.accept(body.issue_id, body.generation_version)
+        return JSONResponse(
+            status_code=200,
+            content=accept_response_body(record, created=created),
         )
 
     @app.post("/v1/channel/turns")
