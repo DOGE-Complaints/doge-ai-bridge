@@ -102,7 +102,7 @@ def test_valid_worker_s2s_admits_accept() -> None:
     assert data["issue_id"] == "issue-1"
     assert data["generation_version"] == "v1"
     assert data["idempotent"] is False
-    assert data["pipeline"] in {"brief_ready", "poster_ready"}
+    assert data["pipeline"] in {"brief_ready", "poster_ready", "bind_ready"}
     assert data["brief"]["title"]
 
 

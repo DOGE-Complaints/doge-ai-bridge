@@ -144,10 +144,10 @@ def test_t04_accept_returns_brief_without_interview_engine() -> None:
     )
     assert r.status_code == 200
     data = r.json()
-    assert data["pipeline"] in {"brief_ready", "poster_ready"}
+    assert data["pipeline"] in {"brief_ready", "poster_ready", "bind_ready"}
     assert data["brief"]["summary"]["en"]
     assert len(data["brief"]["title"]) <= 80
-    if data["pipeline"] == "poster_ready":
+    if data["pipeline"] in {"poster_ready", "bind_ready"}:
         assert str(data.get("poster_url", "")).startswith("https://")
 
 

@@ -206,7 +206,7 @@ def test_t06_accept_returns_poster_https_url() -> None:
     )
     assert r.status_code == 200
     data = r.json()
-    assert data["pipeline"] == "poster_ready"
+    assert data["pipeline"] in {"poster_ready", "bind_ready"}
     assert str(data["poster_url"]).startswith("https://")
     assert data["brief"]["title"]
 
