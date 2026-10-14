@@ -683,10 +683,12 @@ def create_app(
 
     @app.post(WORKER_ACCEPT_PATH)
     async def worker_sense_brief_accept(request: Request) -> JSONResponse:
-        """STORY-46/47/48 accept — brief + poster HTTPS; bind deferred to 49."""
-        from aibridge.poster.errors import PosterFailure
+        """STORY-46/47/48/49 — brief + poster + gateway bind-in."""
+        from aibridge.poster.errors import PosterFailure, PosterFailureClass
         from aibridge.poster.logging_safe import log_poster_job
         from aibridge.poster.pipeline import upload_poster_https
+        from aibridge.sense_bind.client import client_from_settings
+        from aibridge.sense_bind.errors import BindFailure, BindFailureClass
         from aibridge.sense_brief.errors import BriefFailure, BriefFailureClass
         from aibridge.sense_brief.logging_safe import log_brief_job
         from aibridge.sense_brief.pipeline import generate_sense_brief
@@ -730,6 +732,20 @@ def create_app(
             generation_version=body.generation_version,
             event="accept",
         )
+        bind_transport = getattr(app.state, "sense_bind_transport", None)
+        bind_client = client_from_settings(cfg, transport=bind_transport)
+
+        def _fail_bind(reason: BindFailureClass) -> None:
+            try:
+                bind_client.bind_failure(
+                    issue_id=body.issue_id,
+                    generation_version=body.generation_version,
+                    reason_class=reason,
+                )
+            except BindFailure:
+                # Delivery failure of fail-bind is non-blocking for accept error surface.
+                pass
+
         try:
             brief = generate_sense_brief(
                 body.corpus,
@@ -742,6 +758,12 @@ def create_app(
                 event="brief_failed",
                 failure_class=exc.failure_class.value,
             )
+            bind_cls = (
+                BindFailureClass.CORPUS_INSUFFICIENT
+                if exc.failure_class == BriefFailureClass.CORPUS_INSUFFICIENT
+                else BindFailureClass.BRIEF_GENERATION_FAILED
+            )
+            _fail_bind(bind_cls)
             status = (
                 422
                 if exc.failure_class == BriefFailureClass.CORPUS_INSUFFICIENT
@@ -769,8 +791,32 @@ def create_app(
                 event="poster_failed",
                 failure_class=exc.failure_class.value,
             )
+            bind_cls = (
+                BindFailureClass.IMAGE_GENERATION_FAILED
+                if exc.failure_class == PosterFailureClass.IMAGE_GENERATION_FAILED
+                else BindFailureClass.STORAGE_UPLOAD_FAILED
+            )
+            _fail_bind(bind_cls)
             return JSONResponse(
                 status_code=500,
+                content=error_body(
+                    code=exc.failure_class.value,
+                    message=exc.message,
+                    retryable=False,
+                ),
+            )
+        brief_dump = brief.model_dump()
+        try:
+            bind_client.bind_success(
+                issue_id=body.issue_id,
+                generation_version=body.generation_version,
+                brief=brief_dump,
+                poster_url=poster_url,
+            )
+        except BindFailure as exc:
+            _fail_bind(BindFailureClass.BIND_REJECTED)
+            return JSONResponse(
+                status_code=502,
                 content=error_body(
                     code=exc.failure_class.value,
                     message=exc.message,
@@ -780,9 +826,10 @@ def create_app(
         record = idem.store_brief(
             body.issue_id,
             body.generation_version,
-            brief.model_dump(),
-            pipeline="poster_ready",
+            brief_dump,
+            pipeline="bind_ready",
             poster_url=poster_url,
+            bind_outcome="success",
         )
         log_brief_job(
             issue_id=body.issue_id,

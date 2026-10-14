@@ -39,6 +39,8 @@ class WorkerAcceptRecord:
     status: str = "accepted"
     brief: dict[str, Any] | None = None
     poster_url: str | None = None
+    bind_outcome: str | None = None
+    bind_reason_class: str | None = None
     pipeline: str = "deferred"
 
 
@@ -74,6 +76,8 @@ class WorkerIdempotencyStore:
         *,
         pipeline: str = "brief_ready",
         poster_url: str | None = None,
+        bind_outcome: str | None = None,
+        bind_reason_class: str | None = None,
     ) -> WorkerAcceptRecord:
         key = (issue_id, generation_version)
         with self._lock:
@@ -87,6 +91,10 @@ class WorkerIdempotencyStore:
             record.brief = brief
             if poster_url is not None:
                 record.poster_url = poster_url
+            if bind_outcome is not None:
+                record.bind_outcome = bind_outcome
+            if bind_reason_class is not None:
+                record.bind_reason_class = bind_reason_class
             record.pipeline = pipeline
             record.status = "accepted"
             return record
@@ -104,4 +112,8 @@ def accept_response_body(record: WorkerAcceptRecord, *, created: bool) -> dict[s
         body["brief"] = record.brief
     if record.poster_url is not None:
         body["poster_url"] = record.poster_url
+    if record.bind_outcome is not None:
+        body["bind_outcome"] = record.bind_outcome
+    if record.bind_reason_class is not None:
+        body["bind_reason_class"] = record.bind_reason_class
     return body
