@@ -1,0 +1,7 @@
+{
+  "title": "Incomplete report",
+  "invent_forbidden": ["address", "agency", "event"],
+  "problem": "Something wrong",
+  "address": null,
+  "agency": null
+}

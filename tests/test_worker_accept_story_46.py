@@ -1,6 +1,9 @@
-"""STORY-AIBRIDGE-46 — worker accept entry, S2S, idempotency (no LLM/storage)."""
+"""STORY-AIBRIDGE-46 — worker accept entry, S2S, idempotency (brief corpus for 47 hook)."""
 
 from __future__ import annotations
+
+import json
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -13,6 +16,13 @@ from aibridge.worker_accept import WORKER_ACCEPT_PATH
 WORKER_TOKEN = "worker-s2s-cccccccccccccccccccccccccccccccc"
 CHANNEL_TOKEN = "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 GATEWAY_TOKEN = "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+TEXT_BRIEF_MODEL = "gpt-test-brief"
+
+_GOLDEN = json.loads(
+    (Path(__file__).parent / "fixtures" / "sense_brief_golden_l2.json").read_text(
+        encoding="utf-8"
+    )
+)
 
 
 def _settings(**overrides: object) -> Settings:
@@ -31,6 +41,7 @@ def _settings(**overrides: object) -> Settings:
         "AIBRIDGE_DRY_RUN": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN": WORKER_TOKEN,
+        "AIBRIDGE_WORKER_TEXT_BRIEF_MODEL": TEXT_BRIEF_MODEL,
     }
     base.update(overrides)
     return Settings(**base)  # type: ignore[arg-type]
@@ -46,6 +57,7 @@ def _accept_body(**extra: object) -> dict:
     body: dict = {
         "issue_id": "issue-1",
         "generation_version": "v1",
+        "corpus": dict(_GOLDEN),
     }
     body.update(extra)
     return body
@@ -77,7 +89,7 @@ def test_valid_worker_s2s_admits_accept() -> None:
     client = _client(_settings())
     r = client.post(
         WORKER_ACCEPT_PATH,
-        json=_accept_body(corpus={"opaque": True}),
+        json=_accept_body(),
         headers={"Authorization": f"Bearer {WORKER_TOKEN}"},
     )
     assert r.status_code == 200
@@ -86,7 +98,8 @@ def test_valid_worker_s2s_admits_accept() -> None:
     assert data["issue_id"] == "issue-1"
     assert data["generation_version"] == "v1"
     assert data["idempotent"] is False
-    assert data["pipeline"] == "deferred"
+    assert data["pipeline"] == "brief_ready"
+    assert data["brief"]["title"]
 
 
 def test_same_version_idempotent_no_second_create() -> None:

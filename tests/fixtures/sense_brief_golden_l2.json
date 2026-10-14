@@ -1,0 +1,16 @@
+{
+  "title": "Broken streetlight on Oak Ave",
+  "summary": {
+    "et": "Katkenud tänavavalgusti Oak Ave-l.",
+    "ru": "Неработающий фонарь на Oak Ave.",
+    "en": "Broken streetlight on Oak Ave."
+  },
+  "problem": "Streetlight out for two weeks",
+  "context": "Residential block reported via resident stories",
+  "severity": "medium",
+  "audience": "city maintenance",
+  "desired_outcome": "Restore lighting within 72h",
+  "evidence_refs": ["story-101", "story-102"],
+  "address": "Oak Ave 12",
+  "agency": "Municipal Lighting Dept"
+}
