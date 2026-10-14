@@ -13,6 +13,7 @@
 | 06 | [REQ-06-CONTENT-PHASE-B-SCALABLE-PACKAGING.md](./REQ-06-CONTENT-PHASE-B-SCALABLE-PACKAGING.md) — content Phase B scalable packaging (v0.1.1 · Draft after REQ-05) |
 | 07 | [REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md](./REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md) — OpenAI strict-schema compat projection |
 | 08 | [REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md](./REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md) — REQ9 ops parity + gateway naming hard cut (**Draft — awaiting PA.2**) |
+| 09 | [REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md](./REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) — REQ13 sense brief + civic poster worker (**Draft — awaiting PA.2**) · siblings gateway `57`, spa `23` |
 
 **Architecture:** [runtime/00-overview.md](../architecture/runtime/00-overview.md) · platform [req9-ops-naming](../../../docs/architecture/req9-ops-naming/00-overview.md)  
 **Runtime API (code):** [runtime-docs/01-api.md](../runtime-docs/01-api.md)  
@@ -22,4 +23,4 @@
 **Code gap vs REQ-01:** [req-01-runtime-code-gap-2026-09-13.md](../analysis/req-01-runtime-code-gap-2026-09-13.md) (analysis zone)  
 **Module-1 → aibridge content options:** [module1-instructions-custom-gpt-to-aibridge-organization-2026-09-16.md](../analysis/module1-instructions-custom-gpt-to-aibridge-organization-2026-09-16.md)
 
-**Версия index:** 2026-09-25 (+ REQ-07 row · REQ-08 REQ9 ops/naming).
+**Версия index:** 2026-10-13 (+ REQ-09 REQ13 sense brief + civic poster worker).
