@@ -202,12 +202,18 @@ class Settings(BaseSettings):
         default="",
         validation_alias="AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN",
     )
+    # STORY-AIBRIDGE-47 — text-brief capability slot (DP6). Env name = implement choice.
+    aibridge_worker_text_brief_model: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_WORKER_TEXT_BRIEF_MODEL",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
         "aibridge_channel_previous_bearer_token",
         "gateway_service_api_token",
         "aibridge_worker_sense_brief_s2s_token",
+        "aibridge_worker_text_brief_model",
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
@@ -272,10 +278,20 @@ class Settings(BaseSettings):
     def worker_sense_brief_s2s_configured(self) -> bool:
         return bool((self.aibridge_worker_sense_brief_s2s_token or "").strip())
 
+    def worker_text_brief_configured(self) -> bool:
+        """True when text-brief capability slot (model id) is set."""
+        return bool((self.aibridge_worker_text_brief_model or "").strip())
+
     def worker_sense_brief_fail_closed(self) -> bool:
         """True when worker enabled but dedicated S2S missing → do not accept."""
         return bool(self.aibridge_worker_sense_brief_enabled) and not (
             self.worker_sense_brief_s2s_configured()
+        )
+
+    def worker_text_brief_fail_closed(self) -> bool:
+        """True when worker enabled but text-brief model slot unset (STORY-47)."""
+        return bool(self.aibridge_worker_sense_brief_enabled) and not (
+            self.worker_text_brief_configured()
         )
 
     def responses_store_false_enforced(self) -> bool:

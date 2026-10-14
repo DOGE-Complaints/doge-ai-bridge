@@ -588,6 +588,15 @@ def create_app(
                     retryable=False,
                 ),
             )
+        if cfg.worker_text_brief_fail_closed():
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="worker_text_brief_missing",
+                    message="Worker text-brief model slot not configured",
+                    retryable=False,
+                ),
+            )
         if not is_worker_s2s_authorized(request.headers.get("authorization"), cfg):
             return JSONResponse(
                 status_code=401,
@@ -656,7 +665,11 @@ def create_app(
 
     @app.post(WORKER_ACCEPT_PATH)
     async def worker_sense_brief_accept(request: Request) -> JSONResponse:
-        """STORY-46 accept — ≠ channel turns/actions; brief/poster/bind deferred."""
+        """STORY-46/47 accept — entry ≠ channel; brief pipeline on create; poster/bind deferred."""
+        from aibridge.sense_brief.errors import BriefFailure, BriefFailureClass
+        from aibridge.sense_brief.logging_safe import log_brief_job
+        from aibridge.sense_brief.pipeline import generate_sense_brief
+
         raw = await request.body()
         cfg = resolve_settings()
         if len(raw) > cfg.aibridge_max_request_bytes:
@@ -686,9 +699,55 @@ def create_app(
             )
         idem: WorkerIdempotencyStore = app.state.worker_idempotency
         record, created = idem.accept(body.issue_id, body.generation_version)
+        if not created:
+            return JSONResponse(
+                status_code=200,
+                content=accept_response_body(record, created=False),
+            )
+        log_brief_job(
+            issue_id=body.issue_id,
+            generation_version=body.generation_version,
+            event="accept",
+        )
+        try:
+            brief = generate_sense_brief(
+                body.corpus,
+                text_brief_model=cfg.aibridge_worker_text_brief_model,
+            )
+        except BriefFailure as exc:
+            log_brief_job(
+                issue_id=body.issue_id,
+                generation_version=body.generation_version,
+                event="brief_failed",
+                failure_class=exc.failure_class.value,
+            )
+            status = (
+                422
+                if exc.failure_class == BriefFailureClass.CORPUS_INSUFFICIENT
+                else 500
+            )
+            return JSONResponse(
+                status_code=status,
+                content=error_body(
+                    code=exc.failure_class.value,
+                    message=exc.message,
+                    retryable=False,
+                ),
+            )
+        record = idem.store_brief(
+            body.issue_id,
+            body.generation_version,
+            brief.model_dump(),
+            pipeline="brief_ready",
+        )
+        log_brief_job(
+            issue_id=body.issue_id,
+            generation_version=body.generation_version,
+            event="brief_ready",
+        )
         return JSONResponse(
             status_code=200,
-            content=accept_response_body(record, created=created),
+            content=accept_response_body(record, created=True),
         )
 
     @app.post("/v1/channel/turns")

@@ -1,10 +1,11 @@
-"""Sense-brief worker accept — entry/auth/idempotency (STORY-AIBRIDGE-46).
+"""Sense-brief worker accept — entry/auth/idempotency + brief pipeline hook.
 
 Implement names (Open in arch; chosen for this wave, documented in task READMEs):
 - Path: ``POST /v1/worker/sense-brief/accept``
 - Prefix: ``/v1/worker/``
-- Env: ``AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED``, ``AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN``
-- JSON: ``issue_id``, ``generation_version``, optional ``corpus`` (opaque)
+- Env: ``AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED``, ``AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN``,
+  ``AIBRIDGE_WORKER_TEXT_BRIEF_MODEL`` (STORY-47)
+- JSON: ``issue_id``, ``generation_version``, optional ``corpus``
 """
 
 from __future__ import annotations
@@ -35,6 +36,8 @@ class WorkerAcceptRecord:
     issue_id: str
     generation_version: str
     status: str = "accepted"
+    brief: dict[str, Any] | None = None
+    pipeline: str = "deferred"
 
 
 @dataclass
@@ -61,13 +64,37 @@ class WorkerIdempotencyStore:
             self._records[key] = record
             return record, True
 
+    def store_brief(
+        self,
+        issue_id: str,
+        generation_version: str,
+        brief: dict[str, Any],
+        *,
+        pipeline: str = "brief_ready",
+    ) -> WorkerAcceptRecord:
+        key = (issue_id, generation_version)
+        with self._lock:
+            record = self._records.get(key)
+            if record is None:
+                record = WorkerAcceptRecord(
+                    issue_id=issue_id,
+                    generation_version=generation_version,
+                )
+                self._records[key] = record
+            record.brief = brief
+            record.pipeline = pipeline
+            record.status = "accepted"
+            return record
+
 
 def accept_response_body(record: WorkerAcceptRecord, *, created: bool) -> dict[str, Any]:
-    return {
+    body: dict[str, Any] = {
         "status": record.status,
         "issue_id": record.issue_id,
         "generation_version": record.generation_version,
         "idempotent": not created,
-        # Pipeline (brief/poster/bind) not run in STORY-46 — admitted only.
-        "pipeline": "deferred",
+        "pipeline": record.pipeline,
     }
+    if record.brief is not None:
+        body["brief"] = record.brief
+    return body

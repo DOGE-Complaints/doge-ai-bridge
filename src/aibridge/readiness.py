@@ -118,6 +118,9 @@ def evaluate_readiness(
     # STORY-46 — fail-closed when worker enabled without dedicated S2S.
     if settings.worker_sense_brief_fail_closed():
         return ReadinessResult(False, "worker_s2s_missing")
+    # STORY-47 — fail-closed when worker enabled without text-brief model slot.
+    if settings.worker_text_brief_fail_closed():
+        return ReadinessResult(False, "worker_text_brief_missing")
 
     if not settings.intake_base_url():
         return ReadinessResult(False, "intake_base_url_missing")
