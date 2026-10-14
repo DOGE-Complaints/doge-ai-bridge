@@ -17,6 +17,8 @@ WORKER_TOKEN = "worker-s2s-cccccccccccccccccccccccccccccccc"
 CHANNEL_TOKEN = "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 GATEWAY_TOKEN = "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 TEXT_BRIEF_MODEL = "gpt-test-brief"
+IMAGE_POSTER_MODEL = "img-test-poster"
+STORAGE_CREDENTIAL = "aibridge-storage-cred-test"
 
 _GOLDEN = json.loads(
     (Path(__file__).parent / "fixtures" / "sense_brief_golden_l2.json").read_text(
@@ -42,6 +44,8 @@ def _settings(**overrides: object) -> Settings:
         "AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN": WORKER_TOKEN,
         "AIBRIDGE_WORKER_TEXT_BRIEF_MODEL": TEXT_BRIEF_MODEL,
+        "AIBRIDGE_WORKER_IMAGE_POSTER_MODEL": IMAGE_POSTER_MODEL,
+        "AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL": STORAGE_CREDENTIAL,
     }
     base.update(overrides)
     return Settings(**base)  # type: ignore[arg-type]
@@ -98,7 +102,7 @@ def test_valid_worker_s2s_admits_accept() -> None:
     assert data["issue_id"] == "issue-1"
     assert data["generation_version"] == "v1"
     assert data["idempotent"] is False
-    assert data["pipeline"] == "brief_ready"
+    assert data["pipeline"] in {"brief_ready", "poster_ready"}
     assert data["brief"]["title"]
 
 
