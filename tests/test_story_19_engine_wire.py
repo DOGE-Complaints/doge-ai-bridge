@@ -35,6 +35,7 @@ def _content_settings(**overrides: object) -> Settings:
         DOGESTONIA_OPENAPI_PATH=str(WIRE_OAS),
         DOGESTONIA_PAYLOAD_SCHEMA_PATH=str(FIXTURES / "pack" / "payload.schema.json"),
         DATABASE_URL="memory",
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
         DOGESTONIA_API_BASE_URL="https://gateway.example.invalid",
         SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",

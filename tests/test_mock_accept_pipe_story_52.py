@@ -56,6 +56,7 @@ def _settings(**overrides: object) -> Settings:
         "AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL": STORAGE_CREDENTIAL,
         "AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER": "mock",
         "AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER": "mock",
+        "AIBRIDGE_ALLOW_MOCK_PROVIDERS": True,
     }
     base.update(overrides)
     return Settings(**base)  # type: ignore[arg-type]
