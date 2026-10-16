@@ -73,6 +73,7 @@ def test_t01_image_poster_slot_fail_closed_accept() -> None:
     client = _client(
         _settings(
             AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED=True,
+            AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER="openai",
             AIBRIDGE_WORKER_IMAGE_POSTER_MODEL="",
         )
     )
@@ -93,6 +94,7 @@ def test_t01_image_poster_slot_fail_closed_readyz() -> None:
     client = _client(
         _settings(
             AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED=True,
+            AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER="openai",
             AIBRIDGE_WORKER_IMAGE_POSTER_MODEL="",
         )
     )

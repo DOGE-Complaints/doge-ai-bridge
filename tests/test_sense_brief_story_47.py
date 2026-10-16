@@ -86,6 +86,7 @@ def test_t03_text_brief_slot_fail_closed_accept() -> None:
     client = _client(
         _settings(
             AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED=True,
+            AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="openai",
             AIBRIDGE_WORKER_TEXT_BRIEF_MODEL="",
         )
     )
@@ -106,6 +107,7 @@ def test_t03_text_brief_slot_fail_closed_readyz() -> None:
     client = _client(
         _settings(
             AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED=True,
+            AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="openai",
             AIBRIDGE_WORKER_TEXT_BRIEF_MODEL="",
         )
     )
