@@ -1,7 +1,6 @@
 """Selectable provider ports for worker text-brief and image-poster slots.
 
-Invoke/wire through accept = siblings 52/54. This story only defines the port
-surface for registry resolve (AC-10-01 / AC-10-02).
+Accept wire = STORY-52 (mock) / STORY-54 (live openai text). Registry resolve = STORY-51.
 """
 
 from __future__ import annotations

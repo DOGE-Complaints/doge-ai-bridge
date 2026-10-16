@@ -1,7 +1,7 @@
-"""Port adapters — resolve targets for registry (no accept-pipe wire here).
+"""Port adapters — Present mock backends + openai resolve placeholders.
 
-Mock adapters delegate to Present deterministic pipelines.
-OpenAI adapters are resolve placeholders until STORY-54 (text) / later image lock.
+Mock adapters delegate to Present deterministic pipelines (no third fake path).
+Accept orchestration wires these ports (STORY-52). Live OpenAI text invoke = STORY-54.
 """
 
 from __future__ import annotations
@@ -59,5 +59,5 @@ class OpenAIImagePosterProvider:
 
     def generate_poster_bytes(self, brief: Any, *, image_poster_model: str) -> bytes:
         raise NotImplementedError(
-            "live image-poster provider invoke deferred — not STORY-AIBRIDGE-51"
+            "live image-poster provider invoke deferred — not this story (accept wire is mock-path)"
         )

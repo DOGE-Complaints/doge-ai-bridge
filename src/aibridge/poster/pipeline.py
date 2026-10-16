@@ -16,9 +16,12 @@ def upload_poster_https(
     storage_credential: str,
     object_key: str,
     uploader: PosterUploadPort | None = None,
+    poster_bytes: bytes | None = None,
 ) -> str:
-    """Generate poster from brief and upload; return public HTTPS URL.
+    """Upload poster bytes; return public HTTPS URL.
 
+    When ``poster_bytes`` is omitted, generate via Present ``generate_poster_bytes``
+    (legacy/direct callers). Accept path (STORY-52) supplies bytes from the image port.
     ``uploader`` is injectable for STORY-50 harness / unit tests.
     Aibridge-owned ``storage_credential`` is always required (DP2 fail-closed).
     """
@@ -27,7 +30,11 @@ def upload_poster_https(
             PosterFailureClass.STORAGE_UPLOAD_FAILED,
             "aibridge storage credential missing",
         )
-    data = generate_poster_bytes(brief, image_poster_model=image_poster_model)
+    data = (
+        poster_bytes
+        if poster_bytes is not None
+        else generate_poster_bytes(brief, image_poster_model=image_poster_model)
+    )
     inner: PosterUploadPort = uploader or MockHttpsUploader()
     gated = CredentialGatedUploader(storage_credential, inner)
     return gated.upload(data, content_type="image/png", object_key=object_key)

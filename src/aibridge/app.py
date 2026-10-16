@@ -692,15 +692,18 @@ def create_app(
 
     @app.post(WORKER_ACCEPT_PATH)
     async def worker_sense_brief_accept(request: Request) -> JSONResponse:
-        """STORY-46/47/48/49 — brief + poster + gateway bind-in."""
+        """STORY-46/47/48/49/52 — brief + poster via provider ports + gateway bind-in."""
         from aibridge.poster.errors import PosterFailure, PosterFailureClass
         from aibridge.poster.logging_safe import log_poster_job
         from aibridge.poster.pipeline import upload_poster_https
+        from aibridge.providers.registry import (
+            resolve_image_poster_provider,
+            resolve_text_brief_provider,
+        )
         from aibridge.sense_bind.client import client_from_settings
         from aibridge.sense_bind.errors import BindFailure, BindFailureClass
         from aibridge.sense_brief.errors import BriefFailure, BriefFailureClass
         from aibridge.sense_brief.logging_safe import log_brief_job
-        from aibridge.sense_brief.pipeline import generate_sense_brief
 
         raw = await request.body()
         cfg = resolve_settings()
@@ -756,7 +759,8 @@ def create_app(
                 pass
 
         try:
-            brief = generate_sense_brief(
+            text_provider = resolve_text_brief_provider(cfg)
+            brief = text_provider.generate_brief(
                 body.corpus,
                 text_brief_model=cfg.aibridge_worker_text_brief_model,
             )
@@ -786,12 +790,50 @@ def create_app(
                     retryable=False,
                 ),
             )
+        except NotImplementedError as exc:
+            log_brief_job(
+                issue_id=body.issue_id,
+                generation_version=body.generation_version,
+                event="brief_failed",
+                failure_class=BriefFailureClass.BRIEF_GENERATION_FAILED.value,
+            )
+            _fail_bind(BindFailureClass.BRIEF_GENERATION_FAILED)
+            return JSONResponse(
+                status_code=501,
+                content=error_body(
+                    code=BriefFailureClass.BRIEF_GENERATION_FAILED.value,
+                    message=str(exc),
+                    retryable=False,
+                ),
+            )
         try:
+            image_provider = resolve_image_poster_provider(cfg)
+            poster_bytes = image_provider.generate_poster_bytes(
+                brief,
+                image_poster_model=cfg.aibridge_worker_image_poster_model,
+            )
             poster_url = upload_poster_https(
                 brief,
                 image_poster_model=cfg.aibridge_worker_image_poster_model,
                 storage_credential=cfg.aibridge_worker_storage_upload_credential,
                 object_key=f"{body.issue_id}/{body.generation_version}.png",
+                poster_bytes=poster_bytes,
+            )
+        except NotImplementedError as exc:
+            log_poster_job(
+                issue_id=body.issue_id,
+                generation_version=body.generation_version,
+                event="poster_failed",
+                failure_class=PosterFailureClass.IMAGE_GENERATION_FAILED.value,
+            )
+            _fail_bind(BindFailureClass.IMAGE_GENERATION_FAILED)
+            return JSONResponse(
+                status_code=501,
+                content=error_body(
+                    code=PosterFailureClass.IMAGE_GENERATION_FAILED.value,
+                    message=str(exc),
+                    retryable=False,
+                ),
             )
         except PosterFailure as exc:
             log_poster_job(
