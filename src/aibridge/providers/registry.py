@@ -43,12 +43,22 @@ class ProviderRegistry:
 
     text_provider_id: ProviderId
     image_provider_id: ProviderId
+    settings: Settings | None = None
 
     def resolve_text(self) -> TextBriefProviderPort:
         if self.text_provider_id is ProviderId.MOCK:
             return MockTextBriefProvider()
         if self.text_provider_id is ProviderId.OPENAI:
-            return OpenAITextBriefProvider()
+            cfg = self.settings
+            timeout = (
+                int(cfg.aibridge_openai_timeout_ms)
+                if cfg is not None and cfg.aibridge_openai_timeout_ms
+                else 30_000
+            )
+            return OpenAITextBriefProvider(
+                api_key=(cfg.openai_api_key if cfg is not None else "") or "",
+                timeout_ms=timeout,
+            )
         raise ProviderConfigError(
             ProviderFailureClass.UNKNOWN_PROVIDER,
             f"unmapped text provider: {self.text_provider_id}",
@@ -76,7 +86,11 @@ def registry_from_settings(settings: Settings) -> ProviderRegistry:
     image_id = normalize_provider_id(
         settings.aibridge_worker_image_poster_provider, slot="image_poster"
     )
-    return ProviderRegistry(text_provider_id=text_id, image_provider_id=image_id)
+    return ProviderRegistry(
+        text_provider_id=text_id,
+        image_provider_id=image_id,
+        settings=settings,
+    )
 
 
 def resolve_text_brief_provider(settings: Settings) -> TextBriefProviderPort:

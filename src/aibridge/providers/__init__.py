@@ -2,7 +2,7 @@
 
 Channel/interview OpenAI client is out of scope (L10-1). Accept-pipe mock wire = STORY-52;
 readyz/accept allow-mock refuse = STORY-53 (`worker_mock_not_allowed`);
-live OpenAI text invoke = STORY-54.
+live OpenAI text invoke = STORY-54 (`providers/openai_text_live.py`).
 """
 
 from aibridge.providers.errors import ProviderConfigError, ProviderFailureClass
