@@ -201,7 +201,8 @@ def test_t07_accept_path_and_channel_prefix_unchanged() -> None:
     assert r2.status_code != 404
 
 
-def test_openai_text_provider_not_implemented_is_honest_501() -> None:
+def test_openai_text_provider_requires_stories_corpus() -> None:
+    """STORY-54: openai text expects gateway {stories:[…]}; L2 golden alone → insufficient."""
     client = _client(
         _settings(
             AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="openai",
@@ -213,5 +214,5 @@ def test_openai_text_provider_not_implemented_is_honest_501() -> None:
         json=_accept_body(generation_version="v-oai"),
         headers={"Authorization": f"Bearer {WORKER_TOKEN}"},
     )
-    assert r.status_code == 501
-    assert r.json()["error"]["code"] == "brief_generation_failed"
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "corpus_insufficient"
