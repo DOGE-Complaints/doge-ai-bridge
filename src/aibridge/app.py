@@ -588,6 +588,15 @@ def create_app(
                     retryable=False,
                 ),
             )
+        if cfg.worker_provider_unknown_fail_closed():
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="worker_provider_unknown",
+                    message="Worker provider id unknown (no silent OpenAI fallback)",
+                    retryable=False,
+                ),
+            )
         if cfg.worker_text_brief_fail_closed():
             return JSONResponse(
                 status_code=503,

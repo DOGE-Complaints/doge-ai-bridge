@@ -217,6 +217,16 @@ class Settings(BaseSettings):
         default="",
         validation_alias="AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL",
     )
+    # STORY-AIBRIDGE-51 — worker provider selectors (REQ-10). Unset → mock (arch 02).
+    # Channel/interview registry unchanged (L10-1).
+    aibridge_worker_text_brief_provider: str = Field(
+        default="mock",
+        validation_alias="AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER",
+    )
+    aibridge_worker_image_poster_provider: str = Field(
+        default="mock",
+        validation_alias="AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
@@ -226,6 +236,8 @@ class Settings(BaseSettings):
         "aibridge_worker_text_brief_model",
         "aibridge_worker_image_poster_model",
         "aibridge_worker_storage_upload_credential",
+        "aibridge_worker_text_brief_provider",
+        "aibridge_worker_image_poster_provider",
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
@@ -300,11 +312,33 @@ class Settings(BaseSettings):
             self.worker_sense_brief_s2s_configured()
         )
 
-    def worker_text_brief_fail_closed(self) -> bool:
-        """True when worker enabled but text-brief model slot unset (STORY-47)."""
-        return bool(self.aibridge_worker_sense_brief_enabled) and not (
-            self.worker_text_brief_configured()
+    def worker_text_brief_provider_normalized(self) -> str:
+        """Raw selector normalized; blank → mock (arch unset default)."""
+        value = (self.aibridge_worker_text_brief_provider or "").strip().lower()
+        return value or "mock"
+
+    def worker_image_poster_provider_normalized(self) -> str:
+        """Raw selector normalized; blank → mock (arch unset default)."""
+        value = (self.aibridge_worker_image_poster_provider or "").strip().lower()
+        return value or "mock"
+
+    def worker_provider_unknown_fail_closed(self) -> bool:
+        """True when worker enabled and a selector is not mock|openai (AC-10-05)."""
+        if not self.aibridge_worker_sense_brief_enabled:
+            return False
+        allowed = {"mock", "openai"}
+        return (
+            self.worker_text_brief_provider_normalized() not in allowed
+            or self.worker_image_poster_provider_normalized() not in allowed
         )
+
+    def worker_text_brief_fail_closed(self) -> bool:
+        """Model-id fail-closed only when text provider is openai (STORY-51 nest)."""
+        if not self.aibridge_worker_sense_brief_enabled:
+            return False
+        if self.worker_text_brief_provider_normalized() != "openai":
+            return False
+        return not self.worker_text_brief_configured()
 
     def worker_image_poster_configured(self) -> bool:
         """True when image-poster capability slot (model id) is set."""
@@ -315,10 +349,12 @@ class Settings(BaseSettings):
         return bool((self.aibridge_worker_storage_upload_credential or "").strip())
 
     def worker_image_poster_fail_closed(self) -> bool:
-        """True when worker enabled but image-poster model slot unset (STORY-48)."""
-        return bool(self.aibridge_worker_sense_brief_enabled) and not (
-            self.worker_image_poster_configured()
-        )
+        """Model-id fail-closed only when image provider is openai (STORY-51 nest)."""
+        if not self.aibridge_worker_sense_brief_enabled:
+            return False
+        if self.worker_image_poster_provider_normalized() != "openai":
+            return False
+        return not self.worker_image_poster_configured()
 
     def worker_storage_upload_fail_closed(self) -> bool:
         """True when worker enabled but storage upload creds missing (STORY-48)."""

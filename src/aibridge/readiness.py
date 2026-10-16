@@ -118,10 +118,13 @@ def evaluate_readiness(
     # STORY-46 — fail-closed when worker enabled without dedicated S2S.
     if settings.worker_sense_brief_fail_closed():
         return ReadinessResult(False, "worker_s2s_missing")
-    # STORY-47 — fail-closed when worker enabled without text-brief model slot.
+    # STORY-51 — unknown provider id fail-closed (no silent OpenAI fallback).
+    if settings.worker_provider_unknown_fail_closed():
+        return ReadinessResult(False, "worker_provider_unknown")
+    # STORY-47/51 — model-id fail-closed only when that slot's provider is openai.
     if settings.worker_text_brief_fail_closed():
         return ReadinessResult(False, "worker_text_brief_missing")
-    # STORY-48 — fail-closed when worker enabled without image-poster / storage.
+    # STORY-48/51 — image model nest + storage.
     if settings.worker_image_poster_fail_closed():
         return ReadinessResult(False, "worker_image_poster_missing")
     if settings.worker_storage_upload_fail_closed():
