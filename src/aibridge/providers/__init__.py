@@ -1,7 +1,8 @@
 """Worker AI provider registry + ports (STORY-AIBRIDGE-51 / REQ-10).
 
 Channel/interview OpenAI client is out of scope (L10-1). Accept-pipe mock wire = STORY-52;
-readyz allow-mock = STORY-53; live OpenAI text invoke = STORY-54.
+readyz/accept allow-mock refuse = STORY-53 (`worker_mock_not_allowed`);
+live OpenAI text invoke = STORY-54.
 """
 
 from aibridge.providers.errors import ProviderConfigError, ProviderFailureClass

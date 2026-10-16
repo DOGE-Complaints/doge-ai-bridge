@@ -227,6 +227,12 @@ class Settings(BaseSettings):
         default="mock",
         validation_alias="AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER",
     )
+    # STORY-AIBRIDGE-53 — explicit allow for mock backends (AC-10-09 / arch 02).
+    # Absent/false → refuse mock at /readyz and worker accept.
+    aibridge_allow_mock_providers: bool = Field(
+        default=False,
+        validation_alias="AIBRIDGE_ALLOW_MOCK_PROVIDERS",
+    )
 
     @field_validator(
         "aibridge_channel_bearer_token",
@@ -295,6 +301,37 @@ class Settings(BaseSettings):
 
     def openai_presence_ok(self) -> bool:
         return bool(self.openai_api_key) and bool(self.openai_model)
+
+    def allow_mock_providers(self) -> bool:
+        """True when AIBRIDGE_ALLOW_MOCK_PROVIDERS is truthy (AC-10-09)."""
+        return bool(self.aibridge_allow_mock_providers)
+
+    def worker_uses_mock_provider(self) -> bool:
+        """True when worker enabled and any selected slot is mock."""
+        if not self.aibridge_worker_sense_brief_enabled:
+            return False
+        return (
+            self.worker_text_brief_provider_normalized() == "mock"
+            or self.worker_image_poster_provider_normalized() == "mock"
+        )
+
+    def worker_mock_not_allowed_fail_closed(self) -> bool:
+        """True when mock is selected but allow flag is false (AC-10-09)."""
+        return self.worker_uses_mock_provider() and not self.allow_mock_providers()
+
+    def worker_openai_presence_required(self) -> bool:
+        """Whether OPENAI key/model gate applies for this process.
+
+        Worker mock+mock → not required for the worker gate (AC-10-08).
+        Any worker openai slot → required. Worker off → channel Present needs key.
+        """
+        if not self.aibridge_worker_sense_brief_enabled:
+            return True
+        text = self.worker_text_brief_provider_normalized()
+        image = self.worker_image_poster_provider_normalized()
+        if text == "mock" and image == "mock":
+            return False
+        return text == "openai" or image == "openai"
 
     def channel_auth_configured(self) -> bool:
         return bool(self.aibridge_channel_bearer_token)

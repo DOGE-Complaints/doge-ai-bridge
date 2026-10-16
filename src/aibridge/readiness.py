@@ -121,6 +121,9 @@ def evaluate_readiness(
     # STORY-51 — unknown provider id fail-closed (no silent OpenAI fallback).
     if settings.worker_provider_unknown_fail_closed():
         return ReadinessResult(False, "worker_provider_unknown")
+    # STORY-53 — refuse mock without AIBRIDGE_ALLOW_MOCK_PROVIDERS (AC-10-09).
+    if settings.worker_mock_not_allowed_fail_closed():
+        return ReadinessResult(False, "worker_mock_not_allowed")
     # STORY-47/51 — model-id fail-closed only when that slot's provider is openai.
     if settings.worker_text_brief_fail_closed():
         return ReadinessResult(False, "worker_text_brief_missing")
@@ -138,7 +141,8 @@ def evaluate_readiness(
     if not settings.draft_redirect_base_ok():
         return ReadinessResult(False, "draft_redirect_base_invalid")
 
-    if not settings.openai_presence_ok():
+    # STORY-53 — slot-gated OpenAI presence (AC-10-08): mock+mock skips worker key gate.
+    if settings.worker_openai_presence_required() and not settings.openai_presence_ok():
         return ReadinessResult(False, "openai_config_missing")
     if not settings.responses_store_false_enforced():
         return ReadinessResult(False, "openai_store_not_false")

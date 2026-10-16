@@ -597,6 +597,15 @@ def create_app(
                     retryable=False,
                 ),
             )
+        if cfg.worker_mock_not_allowed_fail_closed():
+            return JSONResponse(
+                status_code=503,
+                content=error_body(
+                    code="worker_mock_not_allowed",
+                    message="Mock providers require AIBRIDGE_ALLOW_MOCK_PROVIDERS",
+                    retryable=False,
+                ),
+            )
         if cfg.worker_text_brief_fail_closed():
             return JSONResponse(
                 status_code=503,
