@@ -1,23 +1,27 @@
 # 01. HTTP API
 
-> Актуализировано 2026-09-13 по коду `src/aibridge/`. Machine SSOT канала: [`../openapi/aibridge-channel-v1.openapi.yaml`](../openapi/aibridge-channel-v1.openapi.yaml). Wire Story Intake (не этот фасад): [`../openapi/story-intake-actions.openapi.yaml`](../openapi/story-intake-actions.openapi.yaml).  
-> Сверка с REQ-01: [`../analysis/req-01-runtime-code-gap-2026-09-13.md`](../analysis/req-01-runtime-code-gap-2026-09-13.md).
+> Актуализировано 2026-10-15 по коду `src/aibridge/` (channel + sense-brief worker).  
+> Machine SSOT канала: [`../openapi/aibridge-channel-v1.openapi.yaml`](../openapi/aibridge-channel-v1.openapi.yaml).  
+> Machine SSOT worker accept: [`../openapi/aibridge-worker-sense-brief-v1.openapi.yaml`](../openapi/aibridge-worker-sense-brief-v1.openapi.yaml).  
+> Wire Story Intake (не этот фасад): [`../openapi/story-intake-actions.openapi.yaml`](../openapi/story-intake-actions.openapi.yaml).  
+> REQ-09 validation: [`../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md`](../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md).
 
 ## О чём этот документ
 
-`doge-ai-bridge` — server-to-server channel façade для n8n (Telegram UI). Здесь — **фактические** HTTP-маршруты ASGI-приложения: кто пускается, какие тела/статусы, где в коде.
+`doge-ai-bridge` — server-to-server ASGI: (1) channel façade для n8n/Telegram; (2) sense-brief worker accept для gateway (REQ-09). Здесь — **фактические** HTTP-маршруты: кто пускается, какие тела/статусы, где в коде.
 
 Источники истины:
 
-- [`app.py`](../../src/aibridge/app.py) — маршруты, middleware, `/healthz`/`/readyz`/`/metrics`
+- [`app.py`](../../src/aibridge/app.py) — маршруты, middleware, `/healthz`/`/readyz`/`/metrics`, worker accept
 - [`schemas.py`](../../src/aibridge/schemas.py) — Pydantic-модели канала
-- [`auth.py`](../../src/aibridge/auth.py) — Channel Bearer
+- [`auth.py`](../../src/aibridge/auth.py) — Channel Bearer + worker S2S
+- [`worker_accept.py`](../../src/aibridge/worker_accept.py) — worker path/idempotency
 - [`channel.py`](../../src/aibridge/channel.py) / [`confirm.py`](../../src/aibridge/confirm.py) — turns/actions
 - [`metrics.py`](../../src/aibridge/metrics.py) — Prometheus text
 
-FastAPI interactive docs **отключены** (`docs_url=None`, `redoc_url=None`, `openapi_url=None`) — [`app.py:176–181`](../../src/aibridge/app.py).
+FastAPI interactive docs **отключены** (`docs_url=None`, `redoc_url=None`, `openapi_url=None`).
 
-Gateway `POST /story-drafts` **не** является HTTP-маршрутом aibridge; executor ходит на gateway по wire OAS ([`gateway.py`](../../src/aibridge/gateway.py)).
+Gateway Story Intake stash и sense-brief **bind** — **не** HTTP-маршруты aibridge; clients в [`gateway.py`](../../src/aibridge/gateway.py) / [`sense_bind/client.py`](../../src/aibridge/sense_bind/client.py).
 
 ---
 
@@ -25,13 +29,44 @@ Gateway `POST /story-drafts` **не** является HTTP-маршрутом a
 
 | Метод | Путь | Auth | Что сейчас | Где в коде |
 |-------|------|------|------------|------------|
-| GET | `/healthz` | нет | `{"status":"ok"}` — liveness | [`app.py:239–241`](../../src/aibridge/app.py) |
-| GET | `/readyz` | нет | 200 `{"status":"ready"}` или 503 `{"status":"not_ready","reason":…}` | [`app.py:243–271`](../../src/aibridge/app.py) |
-| GET | `/metrics` | нет (ожидается private network) | Prometheus text (`text/plain; version=0.0.4`) | [`app.py:273–280`](../../src/aibridge/app.py), [`metrics.py`](../../src/aibridge/metrics.py) |
-| POST | `/v1/channel/turns` | Channel Bearer | 200 success envelope (сейчас stub `Received: …` — **не** Responses/InterviewEngine; см. gap C1) или 4xx | [`app.py:282–295`](../../src/aibridge/app.py), [`channel.py:55–81`](../../src/aibridge/channel.py) |
-| POST | `/v1/channel/actions` | Channel Bearer | 200 success envelope или 4xx error body | [`app.py:297–328`](../../src/aibridge/app.py) |
+| GET | `/healthz` · `/health` | нет | `{"status":"ok"}` — liveness | [`app.py`](../../src/aibridge/app.py) health handlers |
+| GET | `/readyz` · `/ready` | нет | 200 ready / 503 not_ready (+ worker fail-closed reasons when enabled) | readiness + worker slot checks |
+| GET | `/metrics` | нет (private network) | Prometheus text | metrics handlers |
+| POST | `/v1/channel/turns` | Channel Bearer | channel turn envelope | `CHANNEL_PATH_PREFIX` · channel turns |
+| POST | `/v1/channel/actions` | Channel Bearer | channel action envelope | channel actions |
+| POST | `/v1/worker/sense-brief/accept` | Worker S2S Bearer | sense brief + poster + outbound bind | [`app.py:684–847`](../../src/aibridge/app.py), [`worker_accept.py`](../../src/aibridge/worker_accept.py) |
 
-Префикс, на котором требуется Bearer: `CHANNEL_PATH_PREFIX = "/v1/channel/"` — [`app.py:29`](../../src/aibridge/app.py), [`app.py:214–224`](../../src/aibridge/app.py).
+Префиксы auth:
+
+- Channel: `CHANNEL_PATH_PREFIX = "/v1/channel/"` — [`app.py:57`](../../src/aibridge/app.py)
+- Worker: `WORKER_PATH_PREFIX = "/v1/worker/"` — [`worker_accept.py:21`](../../src/aibridge/worker_accept.py); middleware [`app.py:566–626`](../../src/aibridge/app.py)
+
+---
+
+## Sense-brief worker (`POST /v1/worker/sense-brief/accept`)
+
+OpenAPI: [`aibridge-worker-sense-brief-v1.openapi.yaml`](../openapi/aibridge-worker-sense-brief-v1.openapi.yaml). Arch: [`../architecture/sense-brief-poster-worker/00-overview.md`](../architecture/sense-brief-poster-worker/00-overview.md). Gateway handoff: [`../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md`](../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md).
+
+| Env | Role |
+|-----|------|
+| `AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED` | Master switch (default false) |
+| `AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN` | Accept auth (≠ channel Bearer) |
+| `AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER` | `mock` \| `openai` (default `mock`) |
+| `AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER` | `mock` \| `openai` (default `mock`; live image deferred) |
+| `AIBRIDGE_WORKER_TEXT_BRIEF_MODEL` | text-brief model nest (when text=`openai`) |
+| `AIBRIDGE_WORKER_IMAGE_POSTER_MODEL` | image-poster model nest (when image=`openai`) |
+| `AIBRIDGE_ALLOW_MOCK_PROVIDERS` | Allow worker `mock` at readyz/accept (AC-10-09) |
+| `AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL` | aibridge-owned upload cred |
+| `GATEWAY_BASE_URL` + `GATEWAY_SERVICE_API_TOKEN` | Outbound bind client |
+
+Provider list + mock-first ops: [`02-ai-provider-selection.md`](./02-ai-provider-selection.md).
+
+**Request JSON:** `issue_id`, `generation_version` (required); `corpus` optional.  
+**Idempotency:** same `(issue_id, generation_version)` → 200 with `idempotent: true` (in-process store).  
+**Success path:** brief L2 → poster HTTPS URL → bind success to gateway → response may include `brief`, `poster_url`, `pipeline=bind_ready`.  
+**Failure:** error envelope `error.code` = reason class; worker also attempts fail-bind to gateway (no fake brief).
+
+Outbound (not served by aibridge): `POST {GATEWAY_BASE_URL}/v1/issue-sense-brief/bind` with gateway service Bearer.
 
 ---
 

@@ -51,12 +51,14 @@ Story-50 isolation harness mocks peers; it does **not** replace runtime selectab
 | Accept/bind HTTP | Unchanged (REQ-09 as-built) |
 | Channel OpenAI | Untouched registry (L10-1) |
 
-**As-is cite anchors (Present):**
+**As-is cite anchors (Present after STORY-51…54):**
 
-- `readiness.py` — `openai_presence_ok` unconditional today  
-- `sense_brief/pipeline.py` — corpus-grounded; live reserved  
+- `providers/` — ports + registry + `openai_text_live.py` (mocked SUCCESS in tests; live vendor residual Unknown)  
+- `readiness.py` — slot-gated OpenAI presence + `AIBRIDGE_ALLOW_MOCK_PROVIDERS` refuse  
+- `sense_brief/pipeline.py` — corpus-grounded mock path  
 - `poster/image.py` — deterministic PNG  
 - REQ-09 arch `sense-brief-poster-worker/` — accept/bind SSOT  
+- Runtime verify map: [`../../runtime-docs/03-provider-verify-matrix.md`](../../runtime-docs/03-provider-verify-matrix.md)  
 
 ---
 
