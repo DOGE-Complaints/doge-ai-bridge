@@ -10,7 +10,8 @@
 | [04-confirm-gateway-keep-pipe.md](./04-confirm-gateway-keep-pipe.md) | Dual-confirm + stash + SPA Keep pipe (STORY-56 / REQ-11) |
 | [05-l11-invalidation-seam.md](./05-l11-invalidation-seam.md) | L11-1 invalidate_send_permission seam · AC-02 Partial vs Done (STORY-57) |
 | [06-ac07-stub-live-evidence-gates.md](./06-ac07-stub-live-evidence-gates.md) | AC-07 stub matrix + live Explicit Partial (STORY-58) · no invent live SUCCESS |
-| [07-interview-provider-port-env.md](./07-interview-provider-port-env.md) | Interview port + env fail-closed (STORY-59 / REQ-12) · D4 wire · OOS 60/61 |
+| [07-interview-provider-port-env.md](./07-interview-provider-port-env.md) | Interview port + env fail-closed (STORY-59 / REQ-12) · D4 wire |
+| [08-ac04-interview-stub-live-evidence-gates.md](./08-ac04-interview-stub-live-evidence-gates.md) | AC-04 stub matrix + live Explicit Partial (STORY-61) · no invent live SUCCESS |
 
 ## Related
 
