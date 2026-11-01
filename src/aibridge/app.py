@@ -27,14 +27,17 @@ from aibridge.coordinator import build_validation_context
 from aibridge.dedupe import EventDedupeStore
 from aibridge.deployment import DeploymentBundleState, verify_and_register_deployment
 from aibridge.gateway import default_executor_from_settings
-from aibridge.interview import InterviewEngine, default_recording_engine
+from aibridge.interview import InterviewEngine
+from aibridge.interview_providers import (
+    InterviewProviderConfigError,
+    bind_interview_engine_at_wire,
+)
 from aibridge.metrics import get_metrics
 from aibridge.rate_limit import RateLimiter, hash_principal_key
 from aibridge.readiness import evaluate_readiness, readiness_payload
 from aibridge.registry import BundleRegistry, MemoryBundleRegistry, open_bundle_registry
 from aibridge.request_assembly import ServerConstants
 from aibridge.responses_client import (
-    ProductionResponsesClient,
     ResponsesOutcome,
     ResponsesTransportError,
 )
@@ -411,21 +414,22 @@ def create_app(
         )
     )
 
-    # Interview engine — production client when key present; else recording default.
+    # Interview engine — STORY-59: wire/start bind via interview port (D4).
+    # Fail-closed before Responses/recording; recording ≠ typed OK provider.
+    # Injected interview_engine = test/override only (still subject to /readyz gates).
     if interview_engine is not None:
         engine = interview_engine
-    elif cfg0.openai_api_key:
-        engine = InterviewEngine(
-            client=ProductionResponsesClient(
-                api_key=cfg0.openai_api_key,
-                model=cfg0.openai_model or "gpt-4.1-mini",
+    else:
+        try:
+            engine = bind_interview_engine_at_wire(
+                cfg0,
                 timeout_ms=openai_timeout_ms,
                 connect_timeout_ms=connect_ms,
-            ),
-            model=cfg0.openai_model or "gpt-4.1-mini",
-        )
-    else:
-        engine = default_recording_engine()
+            )
+        except InterviewProviderConfigError as exc:
+            raise RuntimeError(
+                f"interview provider fail-closed at wire/start: {exc.failure_class}"
+            ) from exc
 
     if engine.budgets is None:
         engine.budgets = budget_guard

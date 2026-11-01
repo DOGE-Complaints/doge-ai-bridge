@@ -115,6 +115,12 @@ def evaluate_readiness(
         return ReadinessResult(False, "gateway_bearer_missing")
     if settings.channel_gateway_bearers_equal():
         return ReadinessResult(False, "channel_gateway_bearer_equal")
+    # STORY-59 — interview provider required + L12-3 nest (no silent OpenAI).
+    if settings.interview_provider_fail_closed():
+        return ReadinessResult(
+            False,
+            settings.interview_provider_fail_reason() or "interview_provider_missing",
+        )
     # STORY-46 — fail-closed when worker enabled without dedicated S2S.
     if settings.worker_sense_brief_fail_closed():
         return ReadinessResult(False, "worker_s2s_missing")

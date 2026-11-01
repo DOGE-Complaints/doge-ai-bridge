@@ -218,7 +218,7 @@ class Settings(BaseSettings):
         validation_alias="AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL",
     )
     # STORY-AIBRIDGE-51 — worker provider selectors (REQ-10). Unset → mock (arch 02).
-    # Channel/interview registry unchanged (L10-1).
+    # Channel/interview registry unchanged (L10-1). Cannot select interview (AC-12-02).
     aibridge_worker_text_brief_provider: str = Field(
         default="mock",
         validation_alias="AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER",
@@ -226,6 +226,24 @@ class Settings(BaseSettings):
     aibridge_worker_image_poster_provider: str = Field(
         default="mock",
         validation_alias="AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER",
+    )
+    # STORY-AIBRIDGE-59 — interview provider (REQ-12 L12-1). Required; no silent OpenAI.
+    # Nest L12-3: openai → OPENAI_*; deepseek → AIBRIDGE_INTERVIEW_DEEPSEEK_*.
+    aibridge_interview_provider: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_INTERVIEW_PROVIDER",
+    )
+    aibridge_interview_deepseek_api_key: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_INTERVIEW_DEEPSEEK_API_KEY",
+    )
+    aibridge_interview_deepseek_base_url: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_INTERVIEW_DEEPSEEK_BASE_URL",
+    )
+    aibridge_interview_deepseek_model: str = Field(
+        default="",
+        validation_alias="AIBRIDGE_INTERVIEW_DEEPSEEK_MODEL",
     )
     # STORY-AIBRIDGE-53 — explicit allow for mock backends (AC-10-09 / arch 02).
     # Absent/false → refuse mock at /readyz and worker accept.
@@ -244,6 +262,10 @@ class Settings(BaseSettings):
         "aibridge_worker_storage_upload_credential",
         "aibridge_worker_text_brief_provider",
         "aibridge_worker_image_poster_provider",
+        "aibridge_interview_provider",
+        "aibridge_interview_deepseek_api_key",
+        "aibridge_interview_deepseek_base_url",
+        "aibridge_interview_deepseek_model",
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
@@ -302,6 +324,50 @@ class Settings(BaseSettings):
     def openai_presence_ok(self) -> bool:
         return bool(self.openai_api_key) and bool(self.openai_model)
 
+    def interview_provider_normalized(self) -> str:
+        """Raw interview selector; blank stays blank (required — no silent default)."""
+        return (self.aibridge_interview_provider or "").strip().lower()
+
+    def interview_provider_missing(self) -> bool:
+        return not self.interview_provider_normalized()
+
+    def interview_provider_unknown(self) -> bool:
+        value = self.interview_provider_normalized()
+        return bool(value) and value not in {"deepseek", "openai"}
+
+    def interview_deepseek_nest_ok(self) -> bool:
+        return bool(
+            (self.aibridge_interview_deepseek_api_key or "").strip()
+            and (self.aibridge_interview_deepseek_base_url or "").strip()
+            and (self.aibridge_interview_deepseek_model or "").strip()
+        )
+
+    def interview_provider_nest_incomplete(self) -> bool:
+        """True when known provider selected but nest slots incomplete (L12-3)."""
+        value = self.interview_provider_normalized()
+        if value == "openai":
+            return not self.openai_presence_ok()
+        if value == "deepseek":
+            return not self.interview_deepseek_nest_ok()
+        return False
+
+    def interview_provider_fail_closed(self) -> bool:
+        """True when unset/unknown/incomplete — refuse interview wire (D2)."""
+        return (
+            self.interview_provider_missing()
+            or self.interview_provider_unknown()
+            or self.interview_provider_nest_incomplete()
+        )
+
+    def interview_provider_fail_reason(self) -> str | None:
+        if self.interview_provider_missing():
+            return "interview_provider_missing"
+        if self.interview_provider_unknown():
+            return "interview_provider_unknown"
+        if self.interview_provider_nest_incomplete():
+            return "interview_provider_incomplete"
+        return None
+
     def allow_mock_providers(self) -> bool:
         """True when AIBRIDGE_ALLOW_MOCK_PROVIDERS is truthy (AC-10-09)."""
         return bool(self.aibridge_allow_mock_providers)
@@ -320,13 +386,15 @@ class Settings(BaseSettings):
         return self.worker_uses_mock_provider() and not self.allow_mock_providers()
 
     def worker_openai_presence_required(self) -> bool:
-        """Whether OPENAI key/model gate applies for this process.
+        """Whether OPENAI key/model gate applies beyond interview nest.
 
         Worker mock+mock → not required for the worker gate (AC-10-08).
-        Any worker openai slot → required. Worker off → channel Present needs key.
+        Any worker openai slot → required.
+        Worker off → True only when interview provider is openai (STORY-59 Adapt;
+        interview nest incomplete is gated separately via interview_provider_*).
         """
         if not self.aibridge_worker_sense_brief_enabled:
-            return True
+            return self.interview_provider_normalized() == "openai"
         text = self.worker_text_brief_provider_normalized()
         image = self.worker_image_poster_provider_normalized()
         if text == "mock" and image == "mock":
