@@ -3,6 +3,7 @@
 from aibridge.interview_providers.errors import (
     InterviewProviderConfigError,
     InterviewProviderFailureClass,
+    InterviewProviderTransportError,
 )
 from aibridge.interview_providers.ids import (
     ALLOWED_INTERVIEW_PROVIDER_IDS,
@@ -22,6 +23,7 @@ __all__ = [
     "InterviewProviderFailureClass",
     "InterviewProviderId",
     "InterviewProviderRegistry",
+    "InterviewProviderTransportError",
     "bind_interview_engine_at_wire",
     "normalize_interview_provider_id",
     "port_from_settings",

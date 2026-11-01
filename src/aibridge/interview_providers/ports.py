@@ -1,7 +1,7 @@
 """Logical InterviewProviderPort — supplies Responses-compatible client for InterviewEngine.
 
 Home: ``aibridge.interview_providers`` (must not live under ``aibridge.providers``).
-Adapter HTTP bodies for DeepSeek = OOS STORY-60.
+OpenAI Keep ProductionResponsesClient · DeepSeek Chat Completions (STORY-60).
 """
 
 from __future__ import annotations

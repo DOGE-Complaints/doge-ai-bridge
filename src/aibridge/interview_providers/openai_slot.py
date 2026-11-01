@@ -1,4 +1,4 @@
-"""OpenAI interview slot — Keep ProductionResponsesClient (STORY-59)."""
+"""OpenAI interview slot — Keep ProductionResponsesClient behind port (STORY-59/60)."""
 
 from __future__ import annotations
 
