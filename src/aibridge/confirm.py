@@ -404,10 +404,24 @@ class ConfirmationGuard:
             actions.append({"label": label, "token": raw, "style": style})
         return actions
 
-    def apply_edit(self, session_id: str) -> ConfirmSession:
+    def invalidate_send_permission(
+        self,
+        session_id: str,
+        *,
+        reason: str = "edit",
+    ) -> ConfirmSession:
+        """L11-1 named seam — clear send permission / tokens / frozen intent.
+
+        Same clearance effects as historical ``apply_edit`` body: invalidate
+        tokens for current revision, bump revision, clear gateway auth,
+        frozen intent, draft/continuation fields. No second permission store,
+        no HTTP, no REQ-13 semantic taxonomy.
+
+        Callers: ``apply_edit`` (transition C); future meaning-change (target A).
+        """
+        _ = reason  # documented caller tag; no taxonomy branching
         sess = self._sessions[session_id]
         old_rev = sess.revision
-        sess.state = next_state(sess.state, ConfirmAction.EDIT)
         self.tokens.invalidate_session_revision(session_id, revision=old_rev)
         sess.revision += 1
         sess.frozen_tool_intent = None
@@ -418,11 +432,17 @@ class ConfirmationGuard:
         sess.continuation_url = None
         sess.pending_call_id = None
         sess.pending_replay_items = None
-        # Edit increments revision — clears unknown block for *old* revision only.
+        # Revision bump clears unknown block for *old* revision only.
         if sess.unknown_outcome_revision == old_rev:
             sess.unknown_outcome_revision = None
         self._persist_session(sess)
         return sess
+
+    def apply_edit(self, session_id: str) -> ConfirmSession:
+        """Transition C enforce: FSM EDIT then L11-1 invalidate seam."""
+        sess = self._sessions[session_id]
+        sess.state = next_state(sess.state, ConfirmAction.EDIT)
+        return self.invalidate_send_permission(session_id, reason="edit")
 
     def apply_cancel(self, session_id: str) -> ConfirmSession:
         sess = self._sessions[session_id]
