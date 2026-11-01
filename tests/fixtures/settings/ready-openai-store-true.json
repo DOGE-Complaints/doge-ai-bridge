@@ -20,7 +20,8 @@
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "memory",
       "AIBRIDGE_ALLOW_MEMORY_STORES": true,
-      "OPENAI_STORE_RESPONSES": "true"
+      "OPENAI_STORE_RESPONSES": "true",
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect": {
       "settings_raises": true,

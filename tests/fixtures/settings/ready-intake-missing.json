@@ -8,7 +8,7 @@
   "story_keys": [
     "STORY-AIBRIDGE-33-qa-readiness-configuration"
   ],
-  "notes": "synthetic; empty intake URL → intake_base_url_missing. «conflicting» N/A — no distinct reason in readiness.py.",
+  "notes": "synthetic; empty intake URL \u2192 intake_base_url_missing. \u00abconflicting\u00bb N/A \u2014 no distinct reason in readiness.py.",
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -19,7 +19,8 @@
       "OPENAI_MODEL": "gpt-test",
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "memory",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": true
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

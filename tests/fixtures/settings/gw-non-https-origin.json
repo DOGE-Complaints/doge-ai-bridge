@@ -8,13 +8,14 @@
   "story_keys": [
     "STORY-AIBRIDGE-30-qa-gateway-continuation"
   ],
-  "notes": "synthetic; non-HTTPS intake origin → readiness fails closed",
+  "notes": "synthetic; non-HTTPS intake origin \u2192 readiness fails closed",
   "payload": {
     "overrides": {
       "GATEWAY_BASE_URL": "http://gateway.example.invalid",
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "ch-gw-015-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "GATEWAY_SERVICE_API_TOKEN": "gw-gw-015-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "AIBRIDGE_DRY_RUN": true
+      "AIBRIDGE_DRY_RUN": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

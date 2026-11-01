@@ -8,7 +8,7 @@
   "story_keys": [
     "STORY-AIBRIDGE-33-qa-readiness-configuration"
   ],
-  "notes": "Preference A fake PG: /readyz + evaluate_readiness → migration_version_mismatch",
+  "notes": "Preference A fake PG: /readyz + evaluate_readiness \u2192 migration_version_mismatch",
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -19,7 +19,8 @@
       "OPENAI_MODEL": "gpt-test",
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "postgresql://fake/aibridge_test",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": false
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

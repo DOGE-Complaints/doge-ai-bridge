@@ -187,6 +187,7 @@ def _settings(**overrides: object) -> Settings:
         SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
         AIBRIDGE_DRY_RUN=True,
     )
     base.update(overrides)

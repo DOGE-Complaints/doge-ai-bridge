@@ -8,7 +8,7 @@
   "story_keys": [
     "STORY-AIBRIDGE-33-qa-readiness-configuration"
   ],
-  "notes": "Preference A: postgres URL + fake connect_postgres returns expected schema_migrations version → /readyz 200. No Railway invent.",
+  "notes": "Preference A: postgres URL + fake connect_postgres returns expected schema_migrations version \u2192 /readyz 200. No Railway invent.",
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -19,7 +19,8 @@
       "OPENAI_MODEL": "gpt-test",
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "postgresql://fake/aibridge_ready001",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": false
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "harness": "fake_pg_migration_ok",
     "expect_readyz": {

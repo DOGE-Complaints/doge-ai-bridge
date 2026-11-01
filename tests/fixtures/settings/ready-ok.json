@@ -19,7 +19,8 @@
       "OPENAI_MODEL": "gpt-test",
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "memory",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": true
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 200,

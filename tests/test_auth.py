@@ -8,6 +8,7 @@ from aibridge.app import create_app
 from aibridge.auth import constant_time_token_match, is_channel_authorized
 from aibridge.config import Settings, reset_settings_cache
 from aibridge.dedupe import EventDedupeStore
+from aibridge.interview import default_recording_engine
 
 
 def test_unauthenticated_channel_returns_401(
@@ -41,8 +42,20 @@ def test_previous_token_overlap_accepted(
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel_token,
         AIBRIDGE_CHANNEL_PREVIOUS_BEARER_TOKEN=previous,
         GATEWAY_SERVICE_API_TOKEN=gateway_token,
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
+        AIBRIDGE_DRY_RUN=True,
+        GATEWAY_BASE_URL="https://gateway.example.invalid",
+        SPA_BASE_URL="https://spa.example.invalid",
     )
-    client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
+    client = TestClient(
+        create_app(
+            settings=settings,
+            dedupe_store=EventDedupeStore(),
+            interview_engine=default_recording_engine(),
+        )
+    )
     response = client.post(
         "/v1/channel/turns",
         json=turn_payload,
@@ -59,6 +72,9 @@ def test_equal_channel_gateway_bearer_readyz_fail(
         _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN=channel_token,
         GATEWAY_SERVICE_API_TOKEN=channel_token,
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")

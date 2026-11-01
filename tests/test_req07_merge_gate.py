@@ -76,6 +76,7 @@ def _content_settings(**overrides: object) -> Settings:
         SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
         AIBRIDGE_DRY_RUN=True,
         DATABASE_URL="memory",
         AIBRIDGE_ALLOW_MEMORY_STORES=True,

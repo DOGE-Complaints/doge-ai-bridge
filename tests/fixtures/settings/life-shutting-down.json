@@ -8,10 +8,11 @@
   "story_keys": [
     "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
   ],
-  "notes": "synthetic; graceful shutdown — channel 503 shutting_down retryable",
+  "notes": "synthetic; graceful shutdown \u2014 channel 503 shutting_down retryable",
   "payload": {
     "overrides": {
-      "AIBRIDGE_DRY_RUN": true
+      "AIBRIDGE_DRY_RUN": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_channel": {
       "http_status": 503,

@@ -8,7 +8,7 @@
   "story_keys": [
     "STORY-AIBRIDGE-33-qa-readiness-configuration"
   ],
-  "notes": "synthetic; valid content paths + oneOf OAS → tool_gen_failed",
+  "notes": "synthetic; valid content paths + oneOf OAS \u2192 tool_gen_failed",
   "payload": {
     "overrides": {
       "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -26,7 +26,8 @@
       "DOGESTONIA_OPENAPI_PATH": "tests/fixtures/content/bad-tool-gen.openapi.yaml",
       "DOGESTONIA_PAYLOAD_SCHEMA_PATH": "tests/fixtures/content/pack/payload.schema.json",
       "DOGESTONIA_INSTRUCTIONS_DIR": "tests/fixtures/content/instructions",
-      "DOGESTONIA_INSTRUCTIONS_MANIFEST": "tests/fixtures/content/instructions.manifest.json"
+      "DOGESTONIA_INSTRUCTIONS_MANIFEST": "tests/fixtures/content/instructions.manifest.json",
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

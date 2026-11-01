@@ -21,6 +21,9 @@ def test_create_app_wires_executor_from_settings() -> None:
         GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
         SPA_BASE_URL="https://spa.example",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())
     guard = app.state.confirmation_guard
@@ -40,6 +43,9 @@ def test_testclient_send_dry_run_without_manual_inject() -> None:
         GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
     )
     app = create_app(settings=settings, dedupe_store=EventDedupeStore())
     client = TestClient(app)

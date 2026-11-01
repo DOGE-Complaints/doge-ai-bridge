@@ -64,6 +64,9 @@ def test_channel_http_errors_increment_on_401() -> None:
         _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
         GATEWAY_BASE_URL="https://gateway.example.invalid",
         AIBRIDGE_DRY_RUN=True,
     )

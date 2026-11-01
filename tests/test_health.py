@@ -44,6 +44,9 @@ def test_readyz_fails_without_channel_token() -> None:
         _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="",
         GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     response = client.get("/readyz")
@@ -58,6 +61,9 @@ def test_ready_alias_parity_with_readyz_when_not_ready() -> None:
         _env_file=None,
         AIBRIDGE_CHANNEL_BEARER_TOKEN="",
         GATEWAY_SERVICE_API_TOKEN="gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
     )
     client = TestClient(create_app(settings=settings, dedupe_store=EventDedupeStore()))
     z = client.get("/readyz")

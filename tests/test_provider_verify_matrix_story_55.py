@@ -56,6 +56,7 @@ def _settings(**overrides: object) -> Settings:
         "SPA_BASE_URL": "https://spa.example.invalid",
         "OPENAI_API_KEY": "sk-test-not-real",
         "OPENAI_MODEL": "gpt-test",
+        "AIBRIDGE_INTERVIEW_PROVIDER": "openai",
         "AIBRIDGE_DRY_RUN": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN": WORKER_TOKEN,
@@ -101,6 +102,11 @@ def test_readyz_matrix_ac_10_08_and_09() -> None:
     ready = evaluate_readiness(
         _settings(
             OPENAI_API_KEY="",
+            OPENAI_MODEL="",
+            AIBRIDGE_INTERVIEW_PROVIDER="deepseek",
+            AIBRIDGE_INTERVIEW_DEEPSEEK_API_KEY="ds-key",
+            AIBRIDGE_INTERVIEW_DEEPSEEK_BASE_URL="https://api.deepseek.com",
+            AIBRIDGE_INTERVIEW_DEEPSEEK_MODEL="deepseek-v4-pro",
             AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="mock",
             AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER="mock",
             AIBRIDGE_ALLOW_MOCK_PROVIDERS=True,

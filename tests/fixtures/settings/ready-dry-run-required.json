@@ -20,7 +20,8 @@
       "AIBRIDGE_DRY_RUN": false,
       "DATABASE_URL": "memory",
       "AIBRIDGE_ALLOW_MEMORY_STORES": true,
-      "AIBRIDGE_SCHEMA_VALIDATION_COMPLETE": false
+      "AIBRIDGE_SCHEMA_VALIDATION_COMPLETE": false,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

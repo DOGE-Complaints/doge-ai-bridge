@@ -69,6 +69,9 @@ def test_default_executor_uses_httpx_transport() -> None:
         _env_file=None,
         GATEWAY_BASE_URL="https://gateway.example.invalid",
         GATEWAY_SERVICE_API_TOKEN="gw",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
+        OPENAI_API_KEY="sk-test-not-real",
+        OPENAI_MODEL="gpt-test",
         AIBRIDGE_CHANNEL_BEARER_TOKEN="ch",
     )
     ex = default_executor_from_settings(settings)

@@ -285,6 +285,7 @@ def build_e2e_harness(
         SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="",  # never ProductionResponsesClient
         OPENAI_MODEL="gpt-test",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
         AIBRIDGE_DRY_RUN=True,
         DATABASE_URL=pg_url,
         AIBRIDGE_ALLOW_MEMORY_STORES=False,

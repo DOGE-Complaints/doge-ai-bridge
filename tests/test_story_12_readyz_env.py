@@ -21,6 +21,7 @@ def _ready_settings(**overrides: object) -> Settings:
         SPA_BASE_URL="https://spa.example.invalid",
         OPENAI_API_KEY="sk-test-not-real",
         OPENAI_MODEL="gpt-test",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
         AIBRIDGE_DRY_RUN=True,
         AIBRIDGE_SCHEMA_VALIDATION_COMPLETE=False,
     )
@@ -77,10 +78,11 @@ def test_readyz_ok_when_strict_checks_pass() -> None:
 
 
 def test_readyz_fails_openai_missing() -> None:
+    # Interview provider=openai + empty nest → L12-3 incomplete (STORY-59).
     settings = _ready_settings(OPENAI_API_KEY="", OPENAI_MODEL="")
     result = evaluate_readiness(settings)
     assert result.ready is False
-    assert result.reason == "openai_config_missing"
+    assert result.reason == "interview_provider_incomplete"
 
 
 def test_readyz_fails_http_intake_base_url() -> None:

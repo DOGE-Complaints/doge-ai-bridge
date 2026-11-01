@@ -19,7 +19,8 @@
       "OPENAI_API_KEY": "sk-test-not-real",
       "OPENAI_MODEL": "gpt-test",
       "DATABASE_URL": "memory",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": true
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

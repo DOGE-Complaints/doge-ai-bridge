@@ -28,6 +28,7 @@ def _settings(**overrides: object) -> Settings:
         "SPA_BASE_URL": "https://spa.example.invalid",
         "OPENAI_API_KEY": "sk-test-not-real",
         "OPENAI_MODEL": "gpt-test",
+        "AIBRIDGE_INTERVIEW_PROVIDER": "openai",
         "AIBRIDGE_DRY_RUN": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED": True,
         "AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN": WORKER_TOKEN,
@@ -54,9 +55,14 @@ def test_allow_mock_env_surface_truthy() -> None:
 
 
 def test_ac_10_08_readyz_mock_mock_without_openai_key() -> None:
+    # Interview nest independent: deepseek complete so empty OPENAI_* exercises worker gate only.
     s = _settings(
         OPENAI_API_KEY="",
         OPENAI_MODEL="",
+        AIBRIDGE_INTERVIEW_PROVIDER="deepseek",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_API_KEY="ds-key",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_BASE_URL="https://api.deepseek.com",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_MODEL="deepseek-v4-pro",
         AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="mock",
         AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER="mock",
         AIBRIDGE_ALLOW_MOCK_PROVIDERS=True,
@@ -73,6 +79,10 @@ def test_openai_still_required_when_worker_slot_openai() -> None:
     s = _settings(
         OPENAI_API_KEY="",
         OPENAI_MODEL="",
+        AIBRIDGE_INTERVIEW_PROVIDER="deepseek",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_API_KEY="ds-key",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_BASE_URL="https://api.deepseek.com",
+        AIBRIDGE_INTERVIEW_DEEPSEEK_MODEL="deepseek-v4-pro",
         AIBRIDGE_WORKER_TEXT_BRIEF_PROVIDER="openai",
         AIBRIDGE_WORKER_IMAGE_POSTER_PROVIDER="mock",
         AIBRIDGE_ALLOW_MOCK_PROVIDERS=True,
@@ -118,13 +128,15 @@ def test_both_openai_slots_skip_allow_mock_gate() -> None:
 
 
 def test_channel_readyz_still_requires_openai_when_worker_off() -> None:
+    # STORY-59: interview=openai + empty nest → interview_provider_incomplete (L12-3).
     s = _settings(
         AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED=False,
         OPENAI_API_KEY="",
         OPENAI_MODEL="",
+        AIBRIDGE_INTERVIEW_PROVIDER="openai",
         AIBRIDGE_ALLOW_MOCK_PROVIDERS=False,
     )
     assert s.worker_openai_presence_required() is True
     result = evaluate_readiness(s)
     assert result.ready is False
-    assert result.reason == "openai_config_missing"
+    assert result.reason == "interview_provider_incomplete"

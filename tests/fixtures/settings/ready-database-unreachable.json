@@ -19,7 +19,8 @@
       "OPENAI_MODEL": "gpt-test",
       "AIBRIDGE_DRY_RUN": true,
       "DATABASE_URL": "postgresql://127.0.0.1:1/aibridge_no_listen",
-      "AIBRIDGE_ALLOW_MEMORY_STORES": false
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503,

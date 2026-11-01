@@ -24,7 +24,8 @@
       "DOGESTONIA_OPENAPI_PATH": "docs/openapi/story-intake-actions.openapi.yaml",
       "DOGESTONIA_PAYLOAD_SCHEMA_PATH": "tests/fixtures/content/pack/payload.schema.json",
       "DOGESTONIA_INSTRUCTIONS_DIR": "/nonexistent/instructions",
-      "DOGESTONIA_INSTRUCTIONS_MANIFEST": "/nonexistent/manifest.json"
+      "DOGESTONIA_INSTRUCTIONS_MANIFEST": "/nonexistent/manifest.json",
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
     },
     "expect_readyz": {
       "http_status": 503
