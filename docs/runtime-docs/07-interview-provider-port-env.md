@@ -46,7 +46,10 @@ Channel Bearer / telegram must **not** carry model vendor keys. Auth path: `auth
 | `interview_provider_unknown` | not deepseek\|openai |
 | `interview_provider_incomplete` | nest incomplete |
 
+## Related
+
+- AC-04 stub/live evidence: [`08-ac04-interview-stub-live-evidence-gates.md`](./08-ac04-interview-stub-live-evidence-gates.md) (STORY-61 · Explicit Partial without ops window)
+
 ## OOS
 
-- Stub/live evidence matrix → STORY-61
-- Live Pass / model freeze beyond L12-2 orient
+- Live Pass / model freeze beyond L12-2 orient (ops window + STORY-61 live side)
