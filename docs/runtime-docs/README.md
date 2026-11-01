@@ -9,6 +9,7 @@
 | [03-provider-verify-matrix.md](./03-provider-verify-matrix.md) | Verify surfaces → pytest map (STORY-55) |
 | [04-confirm-gateway-keep-pipe.md](./04-confirm-gateway-keep-pipe.md) | Dual-confirm + stash + SPA Keep pipe (STORY-56 / REQ-11) |
 | [05-l11-invalidation-seam.md](./05-l11-invalidation-seam.md) | L11-1 invalidate_send_permission seam · AC-02 Partial vs Done (STORY-57) |
+| [06-ac07-stub-live-evidence-gates.md](./06-ac07-stub-live-evidence-gates.md) | AC-07 stub matrix + live Explicit Partial (STORY-58) · no invent live SUCCESS |
 
 ## Related
 
