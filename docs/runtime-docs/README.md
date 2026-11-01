@@ -10,11 +10,12 @@
 | [04-confirm-gateway-keep-pipe.md](./04-confirm-gateway-keep-pipe.md) | Dual-confirm + stash + SPA Keep pipe (STORY-56 / REQ-11) |
 | [05-l11-invalidation-seam.md](./05-l11-invalidation-seam.md) | L11-1 invalidate_send_permission seam · AC-02 Partial vs Done (STORY-57) |
 | [06-ac07-stub-live-evidence-gates.md](./06-ac07-stub-live-evidence-gates.md) | AC-07 stub matrix + live Explicit Partial (STORY-58) · no invent live SUCCESS |
+| [07-interview-provider-port-env.md](./07-interview-provider-port-env.md) | Interview port + env fail-closed (STORY-59 / REQ-12) · D4 wire · OOS 60/61 |
 
 ## Related
 
-- REQ: [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md)
-- Architecture: [runtime/00-overview.md](../architecture/runtime/00-overview.md) · [01-channel-facade](../architecture/runtime/01-channel-facade.md) · [sense-brief-poster-worker](../architecture/sense-brief-poster-worker/00-overview.md) · [ai-provider-selection](../architecture/ai-provider-selection/00-overview.md) · [req15-dual-confirm-handoff](../architecture/req15-dual-confirm-handoff/00-overview.md)
+- REQ: [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) · [REQ-12](../requirements/REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md)
+- Architecture: [runtime/00-overview.md](../architecture/runtime/00-overview.md) · [01-channel-facade](../architecture/runtime/01-channel-facade.md) · [sense-brief-poster-worker](../architecture/sense-brief-poster-worker/00-overview.md) · [ai-provider-selection](../architecture/ai-provider-selection/00-overview.md) · [req15-dual-confirm-handoff](../architecture/req15-dual-confirm-handoff/00-overview.md) · [req15-interview-providers](../architecture/req15-interview-providers/00-overview.md)
 - Gateway sibling (cite): [REQ-58 backfill](../../../doge-complaints-gateway/docs/requirements/58-req13-existing-issues-sense-brief-backfill-via-regenerate.md)
 - OpenAPI channel: [aibridge-channel-v1.openapi.yaml](../openapi/aibridge-channel-v1.openapi.yaml)
 - OpenAPI worker: [aibridge-worker-sense-brief-v1.openapi.yaml](../openapi/aibridge-worker-sense-brief-v1.openapi.yaml)
