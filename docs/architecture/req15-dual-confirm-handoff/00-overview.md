@@ -54,7 +54,7 @@ Resident ↔ Telegram transport (peer; no model keys, no gateway write)
 | Stash | Code only; success = factual gateway success | AC-03/04 · `gateway.py` `execute_stash` |
 | SPA URL | Present hash + `draft_id` | AC-05 · `gateway.py:118` `build_continuation_url` |
 | Confirm storage | Reuse ActionToken + revision/`draft_hash` | Interview D3 · `action_tokens.py` |
-| L11-1 | Named seam; transition C = EDIT path | AC-02 · `confirm.py:407–425` `apply_edit` |
+| L11-1 | Named seam; transition C = EDIT path | AC-02 · `confirm.py:441–445` `apply_edit` → `407–439` `invalidate_send_permission` |
 | Tool loop | Keep internal as transition | Interview D4 · `runtime/03` tool≠permission |
 | Evidence | Stub required; live Pass only with window | AC-07 · Interview D5 |
 

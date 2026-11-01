@@ -8,6 +8,7 @@
 | [02-ai-provider-selection.md](./02-ai-provider-selection.md) | Worker provider list + mock-first ops (AC-10-07 / REQ-10) |
 | [03-provider-verify-matrix.md](./03-provider-verify-matrix.md) | Verify surfaces → pytest map (STORY-55) |
 | [04-confirm-gateway-keep-pipe.md](./04-confirm-gateway-keep-pipe.md) | Dual-confirm + stash + SPA Keep pipe (STORY-56 / REQ-11) |
+| [05-l11-invalidation-seam.md](./05-l11-invalidation-seam.md) | L11-1 invalidate_send_permission seam · AC-02 Partial vs Done (STORY-57) |
 
 ## Related
 

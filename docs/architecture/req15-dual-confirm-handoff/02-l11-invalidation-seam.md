@@ -27,7 +27,7 @@
          Present ConfirmationGuard / ActionToken path
 ```
 
-**Today (transition C):** the only enforce point is Present EDIT (and related revision flows), e.g. `confirm.py:407–425` `apply_edit`.
+**Today (transition C):** the only enforce point is Present EDIT (and related revision flows): `confirm.py:441–445` `apply_edit` → `confirm.py:407–439` `invalidate_send_permission`.
 
 **This arch does not** invent:
 

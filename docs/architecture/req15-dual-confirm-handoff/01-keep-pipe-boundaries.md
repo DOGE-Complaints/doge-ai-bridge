@@ -36,7 +36,7 @@
 **Reuse Present:** ActionToken store + session `revision` / `draft_hash` / EDIT invalidation.  
 Do **not** invent a parallel confirm schema in this arch. Revisit only if REQ-13 proves a versioning gap.
 
-EDIT path (transition C enforce today): `confirm.py:407–425` `apply_edit` — bumps revision, invalidates tokens, clears gateway authorization and continuation fields.
+EDIT path (transition C enforce today): `confirm.py:441–445` `apply_edit` → `confirm.py:407–439` `invalidate_send_permission` — bumps revision, invalidates tokens, clears gateway authorization and continuation fields.
 
 ---
 
