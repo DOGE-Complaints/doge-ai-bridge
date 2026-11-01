@@ -1,10 +1,10 @@
-# Interview provider port + env fail-closed (STORY-59 / REQ-12)
+# Interview provider port + env fail-closed (STORY-59 / adapters STORY-60 / REQ-12)
 
 | Field | Value |
 |-------|--------|
-| **Story** | STORY-AIBRIDGE-59 |
-| **AC** | AC-AIB-12-01 · AC-AIB-12-02 · AC-AIB-12-05 |
-| **Arch** | [`req15-interview-providers/01-…`](../architecture/req15-interview-providers/01-interview-port-env-fail-closed.md) |
+| **Story** | STORY-AIBRIDGE-59 · STORY-AIBRIDGE-60 |
+| **AC** | AC-AIB-12-01 · AC-AIB-12-02 · AC-AIB-12-03 · AC-AIB-12-05 |
+| **Arch** | [`req15-interview-providers/01-…`](../architecture/req15-interview-providers/01-interview-port-env-fail-closed.md) · [`02-adapters…`](../architecture/req15-interview-providers/02-adapters-openai-deepseek.md) |
 | **Code** | `src/aibridge/interview_providers/` · `config.py` · `app.py` wire · `readiness.py` |
 
 ## Selector (L12-1)
@@ -29,10 +29,10 @@
 
 Provider id is resolved **once** at `create_app` wire via `bind_interview_engine_at_wire` — **before** any Responses/recording fallback. No in-session flip API in v1.
 
-| Id | Bind result (STORY-59) |
-|----|------------------------|
-| `openai` | Keep `ProductionResponsesClient` |
-| `deepseek` | Nest-validated deferred client — HTTP adapter body **OOS STORY-60** |
+| Id | Bind result |
+|----|-------------|
+| `openai` | Keep `ProductionResponsesClient` behind interview port |
+| `deepseek` | `DeepSeekChatCompletionsClient` — Chat Completions + L12-3 nest (no silent OpenAI) |
 
 ## Trust
 
@@ -48,5 +48,5 @@ Channel Bearer / telegram must **not** carry model vendor keys. Auth path: `auth
 
 ## OOS
 
-- DeepSeek/OpenAI adapter bodies → STORY-60
 - Stub/live evidence matrix → STORY-61
+- Live Pass / model freeze beyond L12-2 orient
