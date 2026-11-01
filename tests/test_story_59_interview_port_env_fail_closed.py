@@ -22,8 +22,8 @@ from aibridge.interview_providers import (
     registry_from_settings,
 )
 from aibridge.interview_providers.deepseek_slot import (
+    DeepSeekChatCompletionsClient,
     DeepSeekInterviewProvider,
-    DeferredDeepSeekInterviewClient,
 )
 from aibridge.interview_providers.openai_slot import OpenAIInterviewProvider
 from aibridge.readiness import evaluate_readiness
@@ -107,10 +107,46 @@ def test_l12_3_deepseek_nest_required() -> None:
     assert isinstance(port, DeepSeekInterviewProvider)
     assert port.provider_id is InterviewProviderId.DEEPSEEK
     client = port.build_client(timeout_ms=1000, connect_timeout_ms=500)
-    assert isinstance(client, DeferredDeepSeekInterviewClient)
-    with pytest.raises(InterviewProviderConfigError) as ei:
-        client.create(ResponsesRequest(payload={"store": False}))
-    assert ei.value.failure_class is InterviewProviderFailureClass.ADAPTER_DEFERRED
+    assert isinstance(client, DeepSeekChatCompletionsClient)
+    assert client.base_url == "https://api.deepseek.com"
+    assert client.model == "deepseek-v4-pro"
+    from aibridge.responses_client import RecordingResponsesTransport
+
+    client.transport = RecordingResponsesTransport(
+        scripted=[
+            (
+                200,
+                {
+                    "id": "chatcmpl_ds",
+                    "choices": [
+                        {
+                            "message": {
+                                "role": "assistant",
+                                "content": "ok-deepseek",
+                            }
+                        }
+                    ],
+                    "usage": {
+                        "prompt_tokens": 1,
+                        "completion_tokens": 1,
+                        "total_tokens": 2,
+                    },
+                },
+                "",
+            )
+        ]
+    )
+    out = client.create(
+        ResponsesRequest(
+            payload={
+                "model": "deepseek-v4-pro",
+                "input": [{"type": "message", "role": "user", "content": "hi"}],
+                "store": False,
+            }
+        )
+    )
+    assert out["aibridge_parsed"]["reply_text"] == "ok-deepseek"
+    assert client.transport.calls[0]["url"].endswith("/chat/completions")
 
 
 def test_ac_12_02_worker_env_cannot_select_interview() -> None:
