@@ -13,9 +13,17 @@
 | 06 | [REQ-06-CONTENT-PHASE-B-SCALABLE-PACKAGING.md](./REQ-06-CONTENT-PHASE-B-SCALABLE-PACKAGING.md) — content Phase B scalable packaging (v0.1.1 · Draft after REQ-05) |
 | 07 | [REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md](./REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md) — OpenAI strict-schema compat projection |
 | 08 | [REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md](./REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md) — REQ9 ops parity + gateway naming hard cut (**Draft — awaiting PA.2**) |
-| 09 | [REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md](./REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) — REQ13 sense brief + civic poster worker (**Draft — awaiting PA.2**) · siblings gateway `57`, spa `23` |
+| 09 | [REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md](./REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) — REQ13 sense brief + civic poster worker · siblings gateway `57`, spa `23` |
+| 10 | [REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md](./REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) — AI provider selection + mock mode (**Draft · locks 2026-10-16**) · worker-only; text+image ports; OpenAI text live / image mock; sibling gateway `58` |
+| 11 | [REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md](./REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) — REQ15 dual confirm / gateway stash / SPA (**Draft · T1 · tech-arch · backlog 56…58 Todo** → [`../architecture/req15-dual-confirm-handoff/00-overview.md`](../architecture/req15-dual-confirm-handoff/00-overview.md) · [`../tasks/backlog-stories/req-11-req15-dual-confirm-gateway-submit-spa-handoff/INDEX.md`](../tasks/backlog-stories/req-11-req15-dual-confirm-gateway-submit-spa-handoff/INDEX.md)) |
+| 12 | [REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md](./REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md) — REQ15 interview DeepSeek \| OpenAI (**Draft · T1 Present · ready for Architect Studio**) |
+| 13 | [REQ-13-REQ15-SEMANTIC-STATE-ROLES-INSTRUCTION-ASSEMBLY.md](./REQ-13-REQ15-SEMANTIC-STATE-ROLES-INSTRUCTION-ASSEMBLY.md) — REQ15 semantic state / roles / hybrid C (**Draft · T1 Present · ready for Architect Studio**; ≠ product REQ13 sense-brief) |
 
-**Architecture:** [runtime/00-overview.md](../architecture/runtime/00-overview.md) · platform [req9-ops-naming](../../../docs/architecture/req9-ops-naming/00-overview.md)  
+**Parent product (REQ15):** [REQ15-DOGEstonia-Interview-DeepSeek-And-Telegram-Channel.md](../../../docs/requirements%20backlog/REQ15-DOGEstonia-Interview-DeepSeek-And-Telegram-Channel.md)  
+**REQ15 T1:** [req15-t1-keep-adapt-replace-2026-11-01.md](../../../docs/analysis/req15-t1-keep-adapt-replace-2026-11-01.md)  
+**REQ15 aibridge wave readiness:** [req15-aibridge-wave-readiness-2026-11-01.md](../../../docs/analysis/req15-aibridge-wave-readiness-2026-11-01.md) — Architect Studio order **11 → 12 → 13**; stories only after each arch
+
+**Architecture:** [runtime/00-overview.md](../architecture/runtime/00-overview.md) · [sense-brief-poster-worker](../architecture/sense-brief-poster-worker/00-overview.md) · [ai-provider-selection](../architecture/ai-provider-selection/00-overview.md) · platform [req9-ops-naming](../../../docs/architecture/req9-ops-naming/00-overview.md)  
 **Runtime API (code):** [runtime-docs/01-api.md](../runtime-docs/01-api.md)  
 **OpenAPI:** [channel v1](../openapi/aibridge-channel-v1.openapi.yaml) · [Story Intake wire](../openapi/story-intake-actions.openapi.yaml)  
 **Tech-arch interview:** [zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md](../analysis/zeya888.req-tech-arch-interview-REQ-01-doge-ai-bridge-runtime-2026-09-12.md)  
@@ -23,4 +31,4 @@
 **Code gap vs REQ-01:** [req-01-runtime-code-gap-2026-09-13.md](../analysis/req-01-runtime-code-gap-2026-09-13.md) (analysis zone)  
 **Module-1 → aibridge content options:** [module1-instructions-custom-gpt-to-aibridge-organization-2026-09-16.md](../analysis/module1-instructions-custom-gpt-to-aibridge-organization-2026-09-16.md)
 
-**Версия index:** 2026-10-13 (+ REQ-09 REQ13 sense brief + civic poster worker).
+**Версия index:** 2026-11-01 (+ REQ-11/12/13 renumber for exec order 11→12→13 · T1 · wave readiness).
