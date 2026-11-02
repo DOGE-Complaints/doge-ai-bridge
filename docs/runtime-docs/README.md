@@ -12,10 +12,11 @@
 | [06-ac07-stub-live-evidence-gates.md](./06-ac07-stub-live-evidence-gates.md) | AC-07 stub matrix + live Explicit Partial (STORY-58) · no invent live SUCCESS |
 | [07-interview-provider-port-env.md](./07-interview-provider-port-env.md) | Interview port + env fail-closed (STORY-59 / REQ-12) · D4 wire |
 | [08-ac04-interview-stub-live-evidence-gates.md](./08-ac04-interview-stub-live-evidence-gates.md) | AC-04 stub matrix + live Explicit Partial (STORY-61) · no invent live SUCCESS |
+| [09-semantic-state-store-invalidation.md](./09-semantic-state-store-invalidation.md) | Semantic store ≠ History · L13-3 Target A + Transition C (STORY-62 / REQ-13) |
 
 ## Related
 
-- REQ: [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) · [REQ-12](../requirements/REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md)
+- REQ: [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) · [REQ-12](../requirements/REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md) · [REQ-13](../requirements/REQ-13-REQ15-SEMANTIC-STATE-ROLES-INSTRUCTION-ASSEMBLY.md)
 - Architecture: [runtime/00-overview.md](../architecture/runtime/00-overview.md) · [01-channel-facade](../architecture/runtime/01-channel-facade.md) · [sense-brief-poster-worker](../architecture/sense-brief-poster-worker/00-overview.md) · [ai-provider-selection](../architecture/ai-provider-selection/00-overview.md) · [req15-dual-confirm-handoff](../architecture/req15-dual-confirm-handoff/00-overview.md) · [req15-interview-providers](../architecture/req15-interview-providers/00-overview.md)
 - Gateway sibling (cite): [REQ-58 backfill](../../../doge-complaints-gateway/docs/requirements/58-req13-existing-issues-sense-brief-backfill-via-regenerate.md)
 - OpenAPI channel: [aibridge-channel-v1.openapi.yaml](../openapi/aibridge-channel-v1.openapi.yaml)
