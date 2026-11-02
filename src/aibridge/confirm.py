@@ -415,9 +415,11 @@ class ConfirmationGuard:
         Same clearance effects as historical ``apply_edit`` body: invalidate
         tokens for current revision, bump revision, clear gateway auth,
         frozen intent, draft/continuation fields. No second permission store,
-        no HTTP, no REQ-13 semantic taxonomy.
+        no HTTP. REQ-13 meaning taxonomy lives in ``semantic_state`` service;
+        this seam only applies clearance (reason is a caller tag).
 
-        Callers: ``apply_edit`` (transition C); future meaning-change (target A).
+        Callers: ``apply_edit`` (transition C); ``SemanticStateService`` meaning
+        writes (L13-3 target A — without Telegram EDIT).
         """
         _ = reason  # documented caller tag; no taxonomy branching
         sess = self._sessions[session_id]
