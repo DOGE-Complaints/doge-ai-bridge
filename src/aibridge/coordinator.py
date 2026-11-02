@@ -1,4 +1,9 @@
-"""Turn coordinator — Responses → validate/freeze → confirm actions (story 11)."""
+"""Turn coordinator — Responses → validate/freeze → confirm actions (story 11).
+
+STORY-63 / REQ-13: role selection via ``select_next_role`` (policy table, no LLM-router).
+L13-1 / AC-08: ordinary (FC-less) reply may soft-offer understanding confirm;
+send-permission is never automatic from ordinary reply — only after frozen FC.
+"""
 
 from __future__ import annotations
 
@@ -13,9 +18,28 @@ from aibridge.request_assembly import (
     ValidationGateError,
     run_three_gates,
 )
+from aibridge.roles.policy import (
+    PolicySelectionError,
+    select_next_role,
+)
+from aibridge.roles.registry import RoleSpec
 from aibridge.tool_gen import CANONICAL_OPERATION_ID
 
 ALLOWLISTED_TOOL_NAMES = frozenset({CANONICAL_OPERATION_ID})
+
+__all__ = [
+    "ALLOWLISTED_TOOL_NAMES",
+    "PolicySelectionError",
+    "RoleSpec",
+    "ToolValidationError",
+    "ValidationContext",
+    "build_turn_from_engine",
+    "build_validation_context",
+    "persist_pending_tool",
+    "select_next_role",
+    "validate_function_calls",
+    "validation_context_is_bound",
+]
 
 
 @dataclass
@@ -199,7 +223,7 @@ def build_turn_from_engine(
     fcs = list(engine_result.get("function_calls") or [])
     replay = list(engine_result.get("replay_items") or [])
 
-    # Ordinary interview — offer interpretation once while interviewing (AIB-RSP-03).
+    # Ordinary interview — soft understanding offer OK (L13-1); never send here (AC-08).
     if not fcs:
         actions: list[dict[str, str]] = []
         if sess.state is SessionState.INTERVIEWING:

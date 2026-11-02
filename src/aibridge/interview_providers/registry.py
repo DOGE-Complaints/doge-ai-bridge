@@ -46,7 +46,7 @@ def normalize_interview_provider_id(raw: str | None) -> InterviewProviderId:
 
 @dataclass(frozen=True)
 class InterviewProviderRegistry:
-    """Map interview provider id → port (channel wire today; future REQ-13 roles)."""
+    """Map interview provider id → port (channel + REQ-13 role model path Keep)."""
 
     provider_id: InterviewProviderId
     port: InterviewProviderPort
