@@ -11,7 +11,7 @@ Siblings:
 - [`REQ-11`](./REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) (submit/handoff **code**; not in role prompts)
 - [doge-telegram REQ-01](../../../doge-telegram/docs/requirements/REQ-01-REQ15-TELEGRAM-CHANNEL-TRANSPORT.md) (transport only)
 Status: Draft — **T1 Present** · **target tech-arch Present** · **backlog STORY-62…64 Todo** · product locks Q3–Q5 2026-11-01 · AC-05 Partial (Q1)  
-Дата: 2026-10-31 · T1/hygiene: 2026-11-01 · Locks: 2026-11-01 · Renumber: 2026-11-01 · Arch: 2026-11-02 · Backlog: 2026-11-02  
+Дата: 2026-10-31 · T1/hygiene: 2026-11-02 (roles Present · STORY-63 t09) · Locks: 2026-11-01 · Renumber: 2026-11-01 · Arch: 2026-11-02 · Backlog: 2026-11-02  
 
 **Architecture:** [`../architecture/req15-semantic-state-roles/00-overview.md`](../architecture/req15-semantic-state-roles/00-overview.md)  
 **Tech-arch interview:** [`../analysis/zeya888.target-tech-arch-interview-req15-semantic-state-roles-2026-11-02.md`](../analysis/zeya888.target-tech-arch-interview-req15-semantic-state-roles-2026-11-02.md)  
@@ -71,9 +71,9 @@ Application-owned semantic interview state; versioned roles; code-driven instruc
 | Manifest often subset | e.g. Module-1 chain — not full Custom GPT Knowledge set |
 | InterviewEngine instructions | [`interview.py`](../../src/aibridge/interview.py) — assembled string into Responses |
 | Full semantic state store (phase/facts/hypotheses as app SSOT) | **Present** (STORY-62) — [`semantic_state/`](../../src/aibridge/semantic_state/) · migration [`0002_semantic_state.sql`](../../migrations/0002_semantic_state.sql); ≠ HistoryStore / ≠ `last_confirmed_state` SSOT; ASGI/channel bind residual OOS (Transition C) |
-| Role registry as parent §6 | **Absent** as first-class REQ15 roles (T1) |
-| Coordinator auto-offer interpret | [`coordinator.py`](../../src/aibridge/coordinator.py) — FC-less interviewing → interpret offer (T1 Adapt) |
-| T1 verdict | content load **Keep**/Adapt; semantic state **Present** (62) · roles still **Replace**/Absent; mega-prompt **Adapt** |
+| Role registry as parent §6 | **Present** (STORY-63) — [`roles/`](../../src/aibridge/roles/) · five v1 + pins · policy `select_next_role` · assembly+fixtures; ASGI/channel bind residual OOS (G-02 WAIVED) |
+| Coordinator auto-offer interpret | [`coordinator.py`](../../src/aibridge/coordinator.py) — FC-less interviewing → interpret offer (T1 Adapt) · `select_next_role` re-export |
+| T1 verdict | content load **Keep**/Adapt; semantic state **Present** (62) · roles **Present** (63 harness; ASGI wire residual WAIVED) · mega-prompt **Adapt** |
 
 ## 4) Target behavior
 

@@ -13,6 +13,7 @@
 | [07-interview-provider-port-env.md](./07-interview-provider-port-env.md) | Interview port + env fail-closed (STORY-59 / REQ-12) · D4 wire |
 | [08-ac04-interview-stub-live-evidence-gates.md](./08-ac04-interview-stub-live-evidence-gates.md) | AC-04 stub matrix + live Explicit Partial (STORY-61) · no invent live SUCCESS |
 | [09-semantic-state-store-invalidation.md](./09-semantic-state-store-invalidation.md) | Semantic store ≠ History · L13-3 Target A + Transition C (STORY-62 / REQ-13) |
+| [10-roles-coordinator-assembly.md](./10-roles-coordinator-assembly.md) | Five roles + policy + assembly fixtures · L13-1 / AC-07 (STORY-63 / REQ-13) |
 
 ## Related
 
