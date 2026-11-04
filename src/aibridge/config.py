@@ -96,7 +96,8 @@ class Settings(BaseSettings):
         default="",
         validation_alias="DOGESTONIA_INSTRUCTIONS_MANIFEST",
     )
-    # STORY-65 optional roles assembly paths (STORY-66 cutover details OOS).
+    # STORY-65/66 roles assembly paths. Prefer explicit ROLES_*; when empty,
+    # app bind falls back to INSTRUCTIONS_* if that manifest is roles-schema.
     dogestonia_roles_instructions_dir: str = Field(
         default="",
         validation_alias="DOGESTONIA_ROLES_INSTRUCTIONS_DIR",

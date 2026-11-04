@@ -492,6 +492,7 @@ def create_app(
     app.state.budget_guard = budget_guard
 
     # STORY-65 — lift G-02: SemanticStateService + roles wire on channel turns.
+    # STORY-66 — unify: when ROLES_* unset but INSTRUCTIONS_* is roles-schema, use it.
     if use_pg_runtime:
         _sem_store: Any = PostgresSemanticStateStore(cfg0.database_url)
     else:
@@ -507,6 +508,21 @@ def create_app(
         if cfg0.dogestonia_roles_manifest
         else None
     )
+    if (
+        (_roles_dir is None or _roles_man is None)
+        and cfg0.dogestonia_instructions_dir
+        and cfg0.dogestonia_instructions_manifest
+    ):
+        try:
+            from aibridge.content import ContentLoadError, peek_manifest_schema
+
+            _instr_man = Path(cfg0.dogestonia_instructions_manifest)
+            if peek_manifest_schema(_instr_man) == "roles":
+                _roles_dir = Path(cfg0.dogestonia_instructions_dir)
+                _roles_man = _instr_man
+        except ContentLoadError:
+            # Incomplete/invalid instructions manifest — readiness owns fail-closed.
+            pass
     app.state.semantic_state_service = _semantic
     app.state.channel_wire = ChannelWireContext(
         semantic=_semantic,

@@ -1,6 +1,8 @@
-"""STORY-65 — bind semantic state + roles into channel turns (lift G-02).
+"""STORY-65/66 — bind semantic state + roles into channel turns (lift G-02).
 
-No new HTTP surface. Keep InterviewEngine / dual-confirm. STORY-66 cutover OOS.
+No new HTTP surface. Keep InterviewEngine / dual-confirm.
+STORY-66: when roles-schema paths Present (ROLES_* or INSTRUCTIONS_* cutover),
+assemble per turn; ADR-1 mega-string is legacy/dev-only under cutover.
 """
 
 from __future__ import annotations
@@ -34,12 +36,13 @@ def apply_before_engine_turn(
     """Invoke select_next_role (+ assemble when roles paths Present) and semantic get.
 
     When roles dir/manifest absent: selection still runs; keep existing
-    ``engine.instructions`` (ADR-1 mega-string) until STORY-66 cutover.
+    ``engine.instructions`` (ADR-1 mega-string — legacy/dev-only after cutover).
     """
     evidence: dict[str, Any] = {
         "wired": False,
         "role_id": None,
         "assembled": False,
+        "cutover": False,
         "semantic_get": False,
         "phase": None,
         "session_pin": None,
@@ -73,6 +76,7 @@ def apply_before_engine_turn(
         )
         engine.instructions = prompt.assembled
         evidence["assembled"] = True
+        evidence["cutover"] = True
         evidence["session_pin"] = prompt.session_pin
 
     ctx.last_evidence = dict(evidence)
