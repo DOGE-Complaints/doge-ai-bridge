@@ -16,6 +16,7 @@
 | [10-roles-coordinator-assembly.md](./10-roles-coordinator-assembly.md) | Five roles + policy + assembly fixtures · L13-1 / AC-07 (STORY-63 / REQ-13) |
 | [11-content-volume-parity-stub-live-evidence.md](./11-content-volume-parity-stub-live-evidence.md) | Volume path · AC-06 fail-closed · AC-05 Explicit Partial · stub matrix 62/63 (STORY-64) |
 | [12-asgi-channel-semantic-roles-wire.md](./12-asgi-channel-semantic-roles-wire.md) | Channel turns bind SemanticStateService + select/assemble · G-02 Lifted (STORY-65) |
+| [13-roles-schema-channel-cutover.md](./13-roles-schema-channel-cutover.md) | Roles-schema live SSOT · Phase-A `files[]` legacy/dev · local GPT-48 consume light (STORY-66) · OOS Railway-67 |
 
 ## Related
 
