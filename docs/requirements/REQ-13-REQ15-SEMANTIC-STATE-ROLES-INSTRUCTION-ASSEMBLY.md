@@ -10,14 +10,15 @@ Siblings:
 - [`REQ-12`](./REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md) (model port)
 - [`REQ-11`](./REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) (submit/handoff **code**; not in role prompts)
 - [doge-telegram REQ-01](../../../doge-telegram/docs/requirements/REQ-01-REQ15-TELEGRAM-CHANNEL-TRANSPORT.md) (transport only)
-Status: Draft — **T1 Present** · **target tech-arch Present** · **backlog STORY-62…64 Todo** · product locks Q3–Q5 2026-11-01 · AC-05 Partial (Q1)  
-Дата: 2026-10-31 · T1/hygiene: 2026-11-02 (roles Present · STORY-63 t09) · Locks: 2026-11-01 · Renumber: 2026-11-01 · Arch: 2026-11-02 · Backlog: 2026-11-02  
+Status: Draft — **T1 Present** · **target tech-arch Present** · **STORY-62…64 Product Done** · **STORY-65 ASGI wire Present (G-02 Lifted)** · residuals: **AC-05 Explicit Partial** · STORY-66/67 · product locks Q3–Q5 2026-11-01  
+Дата: 2026-10-31 · T1/hygiene: 2026-11-02 · Locks: 2026-11-01 · Renumber: 2026-11-01 · Arch: 2026-11-02 · Backlog Done: 2026-11-02 · Cascade prep: 2026-11-02 · STORY-65 wire: 2026-11-04  
 
 **Architecture:** [`../architecture/req15-semantic-state-roles/00-overview.md`](../architecture/req15-semantic-state-roles/00-overview.md)  
 **Tech-arch interview:** [`../analysis/zeya888.target-tech-arch-interview-req15-semantic-state-roles-2026-11-02.md`](../analysis/zeya888.target-tech-arch-interview-req15-semantic-state-roles-2026-11-02.md)  
-**Backlog:** [`../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md`](../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md)  
+**Backlog:** [`../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md`](../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md) · active 65→66→67 · G-02 **Lifted** (STORY-65)  
+**Runtime evidence:** [`../runtime-docs/09-semantic-state-store-invalidation.md`](../runtime-docs/09-semantic-state-store-invalidation.md) · [`10`](../runtime-docs/10-roles-coordinator-assembly.md) · [`11`](../runtime-docs/11-content-volume-parity-stub-live-evidence.md) · [`12`](../runtime-docs/12-asgi-channel-semantic-roles-wire.md)  
 
-Locks: delivery **C**; **consume parity Pass** on this side; instructions lose model-owned gateway/redirect (server REQ-11)
+Locks: delivery **C**; **consume parity Pass** on this side (live Explicit Partial until GPT-48 export + ops); instructions lose model-owned gateway/redirect (server REQ-11)
 
 > **Naming note:** This child is **aibridge REQ-13** (REQ15 semantic state / roles / assembly). It is **not** product backlog [REQ13 sense-brief/poster](../../../docs/requirements%20backlog/REQ13-DOGEstonia-Issue-Sense-Brief-And-Civic-Poster.md) (that worker line is aibridge [REQ-09](./REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md)).
 
@@ -62,18 +63,37 @@ Application-owned semantic interview state; versioned roles; code-driven instruc
 - Product REQ13/14 worker pipelines (aibridge REQ-09).  
 - Inventing DB table schemas as SSOT in this REQ (Architect Studio / PA.2).
 
-## 3) Verified current state (T1)
+## 3) Verified current state (T1 + post STORY-62…64)
 
 | Fact | Path / note |
 |------|-------------|
-| Content load from dir + manifest | [`content.py`](../../src/aibridge/content.py) · env [`config.py`](../../src/aibridge/config.py) `DOGESTONIA_INSTRUCTIONS_*` |
-| Physical copy in image | `src/instructions/` + Dockerfile COPY; sync from GPT UI **not found** |
-| Manifest often subset | e.g. Module-1 chain — not full Custom GPT Knowledge set |
-| InterviewEngine instructions | [`interview.py`](../../src/aibridge/interview.py) — assembled string into Responses |
-| Full semantic state store (phase/facts/hypotheses as app SSOT) | **Present** (STORY-62) — [`semantic_state/`](../../src/aibridge/semantic_state/) · migration [`0002_semantic_state.sql`](../../migrations/0002_semantic_state.sql); ≠ HistoryStore / ≠ `last_confirmed_state` SSOT; ASGI/channel bind residual OOS (Transition C) |
-| Role registry as parent §6 | **Present** (STORY-63) — [`roles/`](../../src/aibridge/roles/) · five v1 + pins · policy `select_next_role` · assembly+fixtures; ASGI/channel bind residual OOS (G-02 WAIVED) |
-| Coordinator auto-offer interpret | [`coordinator.py`](../../src/aibridge/coordinator.py) — FC-less interviewing → interpret offer (T1 Adapt) · `select_next_role` re-export |
-| T1 verdict | content load **Keep**/Adapt; semantic state **Present** (62) · roles **Present** (63 harness; ASGI wire residual WAIVED) · mega-prompt **Adapt** |
+| Content load from dir + manifest (Phase-A `files[]`) | [`content.py`](../../src/aibridge/content.py) · env [`config.py`](../../src/aibridge/config.py) `DOGESTONIA_INSTRUCTIONS_*` — **legacy/transitional** readiness path |
+| Roles manifest + assembly (REQ15 line) | [`roles/assembly.py`](../../src/aibridge/roles/assembly.py) · fixture [`tests/fixtures/content/roles.manifest.json`](../../tests/fixtures/content/roles.manifest.json) — **GPT-48 export target** (§3b) |
+| Physical copy in image | `src/instructions/` + Dockerfile COPY = fixture/dev (L13-2); sync script from GPT UI **not found** |
+| InterviewEngine instructions | [`interview.py`](../../src/aibridge/interview.py) — assembled string; per-role ASGI bind **Absent** |
+| Semantic state store | **Present as module+harness** (STORY-62) — [`semantic_state/`](../../src/aibridge/semantic_state/) · migration [`0002_semantic_state.sql`](../../migrations/0002_semantic_state.sql); ≠ HistoryStore; **ASGI/channel bind Present** (STORY-65 · G-02 Lifted) — Transition C EDIT path remains enforce in channel |
+| Role registry / policy / assembly | **Present as module+harness** (STORY-63) — [`roles/`](../../src/aibridge/roles/); `select_next_role` / `assemble_role_prompt` **wired** on `/v1/channel/turns` (STORY-65 · G-02 Lifted; roles paths optional until STORY-66) |
+| Coordinator auto-offer interpret | [`coordinator.py`](../../src/aibridge/coordinator.py) — FC-less → interpret offer (L13-1); send only after FC; `select_next_role` re-export |
+| AC validation (2026-11-02 code audit) | See §5 wave column — harness Confirmed; runtime Partial; AC-05 live Explicit Partial |
+| T1/post-story verdict | content load **Keep**/Adapt; semantic/roles **Present harness+channel wire** (STORY-65); mega-prompt **Adapt** via GPT-48 / STORY-66 cutover |
+
+### 3b) GPT-48 export consumer contract (locked · cascade input)
+
+Copy into GPT UI REQ-48 export/authoring. **Do not invent** alternate layout.
+
+| Contract | Value |
+|----------|--------|
+| Env root | `DOGESTONIA_INSTRUCTIONS_DIR` |
+| Manifest env | `DOGESTONIA_INSTRUCTIONS_MANIFEST` — after REQ15 cutover points at **roles-schema** manifest (not Phase-A `files[]` alone) |
+| Roles schema | JSON object: `bundle_version` (string) · `core` (filename) · `roles` (object) |
+| Role ids (exact) | `communication_setup` · `interviewer` · `extractor` · `normalizer` · `checker` |
+| Per role | `{ "file": "<root-child.md>", "version": "<pin>" }` — both required strings |
+| Path rule | `core` and every `roles.*.file` = **non-empty root children** of the instructions dir — no `/`, `\`, `.`, `..`, absolute paths (enforced in `roles/assembly.py` and Phase-A `content.py`) |
+| Phase-A `files[]` | `bundle_version` + `files[]` loader remains for **legacy/transitional** readiness until ASGI role wire; **not** SSOT of the new GPT-48 line |
+| Dual schema | Concurrent `files[]` vs roles-schema on one env = **wire residual** (blocking live channel orchestration), **not** authoring ambiguity if export follows this table |
+| Forbidden in new texts | Gateway stash URL choice, `POST /story-drafts`, SPA redirect procedure (AC-AIB-13-07 · peer REQ-11) — Checker **prose** only; submit stays code |
+| Parity | **Export Pass** (GPT-48) ≠ **Consume Pass** (this REQ AC-05); inventory/hash wire format = joint Open — do not invent here |
+| Cascade note | On GPT UI cascade: refresh REQ-48 §3 Verified state (role registry Present in aibridge harness; ASGI wire Absent) — **not** done in this wave |
 
 ## 4) Target behavior
 
@@ -86,16 +106,18 @@ Application-owned semantic interview state; versioned roles; code-driven instruc
 
 ## 5) Acceptance criteria
 
-| ID | Criterion | Parent map |
-|----|-----------|------------|
-| **AC-AIB-13-01** | Semantic state fields (phase/facts/hypotheses/gaps/corrections + utterance grounds) persist across turns | AC-REQ15-06 |
-| **AC-AIB-13-02** | Five v1 roles callable via coordinator with version pins | O5 · §6 |
-| **AC-AIB-13-03** | Instructions assembled only from configured dir + manifest | AC-REQ15-09 |
-| **AC-AIB-13-04** | Prod path documented for Railway volume mount (ops may upload manually v1) | AC-REQ15-14 |
-| **AC-AIB-13-05** | **Consume parity Pass** evidence vs GPT UI export inventory | AC-REQ15-13 |
-| **AC-AIB-13-06** | Incomplete/mismatched content → readiness fail-closed | AC-REQ15-13 spirit |
-| **AC-AIB-13-07** | Role instruction text does not own gateway submit or SPA redirect (REQ-11) | AC-REQ15-12 |
-| **AC-AIB-13-08** | Resume / confirm-offer policy: ordinary reply does not equal send-permission offer without process gate | O5 · T1 Adapt |
+| ID | Criterion | Parent map | Wave status (2026-11-02 code audit) |
+|----|-----------|------------|-------------------------------------|
+| **AC-AIB-13-01** | Semantic state fields (phase/facts/hypotheses/gaps/corrections + utterance grounds) persist across turns | AC-REQ15-06 | **Harness Confirmed** (`test_story_62_*`); channel ASGI persist **Present** (STORY-65 · `test_story_65_*`) |
+| **AC-AIB-13-02** | Five v1 roles callable via coordinator with version pins | O5 · §6 | **Harness Confirmed** (`test_story_63_*`); channel orchestration **Present** (STORY-65 · `select_next_role` on turns); roles-schema cutover residual → **STORY-66** |
+| **AC-AIB-13-03** | Instructions assembled only from configured dir + manifest | AC-REQ15-09 | **Harness Confirmed** (roles-schema); channel assemble **Present** when `DOGESTONIA_ROLES_*` set (STORY-65); full cutover residual → **STORY-66** |
+| **AC-AIB-13-04** | Prod path documented for Railway volume mount (ops may upload manually v1) | AC-REQ15-14 | **Confirmed** (docs) — runtime-docs `11` |
+| **AC-AIB-13-05** | **Consume parity Pass** evidence vs GPT UI export inventory | AC-REQ15-13 | **Explicit Partial** — gate/docs+stub Done; live needs GPT-48 export Pass + ops window |
+| **AC-AIB-13-06** | Incomplete/mismatched content → readiness fail-closed | AC-REQ15-13 spirit | **Partial Confirmed** — local incomplete/file miss fail-closed Present; export-inventory **mismatch** comparator Absent (joint Open) |
+| **AC-AIB-13-07** | Role instruction text does not own gateway submit or SPA redirect (REQ-11) | AC-REQ15-12 | **Confirmed** (fixtures + harness) |
+| **AC-AIB-13-08** | Resume / confirm-offer policy: ordinary reply does not equal send-permission offer without process gate | O5 · T1 Adapt | **Confirmed** (`coordinator.py` L13-1) |
+
+**Parent AC-REQ15-11 (methodology):** preserved via GPT-48 **mapping** deliverable + this consume contract; aibridge does not re-author Module-1 — enforcement is export→consume without silent drop.
 
 ## 6) Interview locks (operator 2026-11-01)
 
@@ -109,9 +131,10 @@ Application-owned semantic interview state; versioned roles; code-driven instruc
 
 | Item | Class | Next |
 |------|-------|------|
-| Exact DB/table shape for semantic state | **Open (implement / PA.2)** | Arch D1 = separate Postgres store; DDL not SSOT here |
-| Consume parity hash/inventory format | **Product** (joint GPT-48) + **Arch** enforce gate | Align with GPT UI export Pass |
-| Hard gate on understanding-offer (Q3 option A as later goal) | **Product later** | After roles land |
+| Exact DB/table shape for semantic state | **Closed for v1** | Migration `0002` Present; further DDL = implement residual |
+| Consume parity hash/inventory format | **Product** (joint GPT-48) + **Arch** enforce gate | Align with GPT UI export Pass — **blocking live AC-05**, not blocking GPT-48 **authoring** if §3b followed |
+| Dual manifest schema (`files[]` vs roles) / ASGI role+semantic wire | **Wire residual** | **Blocking live channel** orchestration; **not** blocking GPT-48 authoring under §3b |
+| Hard gate on understanding-offer (Q3 option A as later goal) | **Product later** | After roles land in channel |
 | Role merge/split after latency measurement | **Product later** | Parent allows after quality data |
 | Which state field updates count as “meaning change” (sensitivity) | **Locked arch D2** | Confirmed facts / corrections / (phase if rights change) |
 | Coordinator selection model | **Locked arch D3** | Policy table → one next role |
@@ -124,6 +147,7 @@ Application-owned semantic interview state; versioned roles; code-driven instruc
 |-------|----------|
 | Product / AC | This REQ + parent REQ15 |
 | Target tech | [`../architecture/req15-semantic-state-roles/00-overview.md`](../architecture/req15-semantic-state-roles/00-overview.md) |
-| Work items | [`STORY-AIBRIDGE-62…64`](../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md) Present |
+| Work items | [`STORY-AIBRIDGE-62…64`](../tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/INDEX.md) **Product Done** · residuals above |
+| GPT-48 export contract | §3b this file — input to sibling cascade |
 
-**Next process step (operator):** backlog STORY-62…64 Present → optional PA.3 refine → P1.3 per story · peer GPT UI REQ-48 for live AC-05 Pass. No second architecture prompt. No P3.
+**Next process step (operator):** peer **GPT UI REQ-48** cascade (use §3b); residual ASGI wire / live AC-05 when ops+export ready. No second architecture prompt. No invent hash SSOT.
