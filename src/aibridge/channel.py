@@ -6,6 +6,7 @@ import uuid
 from typing import Any
 
 from aibridge.audit import audit_event
+from aibridge.channel_wire import ChannelWireContext, apply_before_engine_turn
 from aibridge.confirm import ConfirmationGuard, get_confirmation_guard
 from aibridge.coordinator import build_turn_from_engine
 from aibridge.dedupe import EventDedupeStore
@@ -82,6 +83,7 @@ def process_turn(
     guard: ConfirmationGuard | None = None,
     turn_lock: Any | None = None,
     interview_engine: Any | None = None,
+    channel_wire: ChannelWireContext | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Process turn with dedupe + InterviewEngine coordinator (no Received stub)."""
     g = guard or get_confirmation_guard()
@@ -108,6 +110,11 @@ def process_turn(
                     state=sess.state.value,
                     reply_text="Interview engine not configured.",
                 ).model_dump()
+            apply_before_engine_turn(
+                channel_wire,
+                session_id=sess.session_id,
+                engine=engine,
+            )
             result = _run_engine_turn(
                 engine,
                 session_id=sess.session_id,
@@ -139,6 +146,7 @@ async def process_turn_async(
     guard: ConfirmationGuard | None = None,
     turn_lock: Any | None = None,
     interview_engine: Any | None = None,
+    channel_wire: ChannelWireContext | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """ASGI path — claim dedupe **before** engine (G-03); await arun_turn."""
     g = guard or get_confirmation_guard()
@@ -198,6 +206,11 @@ async def process_turn_async(
                 state=sess.state.value,
                 reply_text="Interview engine not configured.",
             ).model_dump()
+        apply_before_engine_turn(
+            channel_wire,
+            session_id=sess.session_id,
+            engine=engine,
+        )
         result = await _arun_engine_turn(
             engine,
             session_id=sess.session_id,

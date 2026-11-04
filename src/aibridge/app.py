@@ -6,6 +6,7 @@ import json
 import uuid
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any, overload
 
 from fastapi import FastAPI, Request, Response
@@ -21,6 +22,7 @@ from aibridge.budgets import (
     budget_limits_from_settings,
 )
 from aibridge.channel import process_action, process_turn_async
+from aibridge.channel_wire import ChannelWireContext
 from aibridge.config import Settings, get_settings, reset_settings_cache
 from aibridge.confirm import ConfirmationGuard, reset_confirmation_guard
 from aibridge.coordinator import build_validation_context
@@ -31,6 +33,11 @@ from aibridge.interview import InterviewEngine
 from aibridge.interview_providers import (
     InterviewProviderConfigError,
     bind_interview_engine_at_wire,
+)
+from aibridge.semantic_state import (
+    MemorySemanticStateStore,
+    PostgresSemanticStateStore,
+    SemanticStateService,
 )
 from aibridge.metrics import get_metrics
 from aibridge.rate_limit import RateLimiter, hash_principal_key
@@ -484,6 +491,29 @@ def create_app(
     app.state.history_store = history_store
     app.state.budget_guard = budget_guard
 
+    # STORY-65 — lift G-02: SemanticStateService + roles wire on channel turns.
+    if use_pg_runtime:
+        _sem_store: Any = PostgresSemanticStateStore(cfg0.database_url)
+    else:
+        _sem_store = MemorySemanticStateStore()
+    _semantic = SemanticStateService(_sem_store, confirm_guard=guard)
+    _roles_dir = (
+        Path(cfg0.dogestonia_roles_instructions_dir)
+        if cfg0.dogestonia_roles_instructions_dir
+        else None
+    )
+    _roles_man = (
+        Path(cfg0.dogestonia_roles_manifest)
+        if cfg0.dogestonia_roles_manifest
+        else None
+    )
+    app.state.semantic_state_service = _semantic
+    app.state.channel_wire = ChannelWireContext(
+        semantic=_semantic,
+        roles_instructions_dir=_roles_dir,
+        roles_manifest_path=_roles_man,
+    )
+
     # Attach history for idle expiry minimize (G-01).
     if history_store is not None:
         guard.history = history_store
@@ -928,6 +958,7 @@ def create_app(
             guard=app.state.confirmation_guard,
             turn_lock=getattr(app.state, "turn_lock", None),
             interview_engine=getattr(app.state, "interview_engine", None),
+            channel_wire=getattr(app.state, "channel_wire", None),
         )
         status_code = 200
         if not created:

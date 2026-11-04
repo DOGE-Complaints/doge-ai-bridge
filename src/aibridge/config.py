@@ -96,6 +96,15 @@ class Settings(BaseSettings):
         default="",
         validation_alias="DOGESTONIA_INSTRUCTIONS_MANIFEST",
     )
+    # STORY-65 optional roles assembly paths (STORY-66 cutover details OOS).
+    dogestonia_roles_instructions_dir: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_ROLES_INSTRUCTIONS_DIR",
+    )
+    dogestonia_roles_manifest: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_ROLES_MANIFEST",
+    )
     dogestonia_content_source_commit: str = Field(
         default="",
         validation_alias="DOGESTONIA_CONTENT_SOURCE_COMMIT",
@@ -269,6 +278,8 @@ class Settings(BaseSettings):
         "database_url",
         "dogestonia_instructions_dir",
         "dogestonia_instructions_manifest",
+        "dogestonia_roles_instructions_dir",
+        "dogestonia_roles_manifest",
         "dogestonia_content_source_commit",
         "dogestonia_openapi_path",
         "dogestonia_payload_schema_path",
