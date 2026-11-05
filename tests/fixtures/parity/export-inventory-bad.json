@@ -1,0 +1,8 @@
+{
+  "wire": "not-e1",
+  "bundle_version": "x",
+  "hash_method": "md5",
+  "files": {
+    "core.md": "deadbeef"
+  }
+}

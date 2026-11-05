@@ -1,0 +1,14 @@
+{
+  "wire": "e1",
+  "bundle_version": "roles-fixture-DRIFT",
+  "hash_method": "normalize_text+sha256_hex",
+  "files": {
+    "checker.md": "4a57d892af4cbb2edd6a071a3f503051a91d69448baf5f93dd0a01861f398b47",
+    "communication_setup.md": "994d2fad8f1c2ff78c72ed84462c1d0d15c73ec41b1ef5a148a12c34fa8216f6",
+    "core.md": "e1d74192acaa3792ebd9848b6715594e5f0431fdfbb5180596512875e87de217",
+    "extractor.md": "4a74aa41e55a0f858c8db296bfae2240ff0e6f21be4e9f98ad9b1bbcc3740e7a",
+    "interviewer.md": "fee70c2ad339e935051c272908d5f6ecebf5562b7cd7fca5c021b74d85cfe057",
+    "normalizer.md": "b21c080a103b2a9dcdfa671702b69d2934c0817d40c26b192c508304f0a54b49",
+    "roles.manifest.json": "bcc89a6113bfe2d7bfbbf49b304dca93a89f1714ddd99018438414463e6f4c23"
+  }
+}
