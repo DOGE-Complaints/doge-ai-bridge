@@ -17,6 +17,7 @@
 | [11-content-volume-parity-stub-live-evidence.md](./11-content-volume-parity-stub-live-evidence.md) | Volume path · AC-06 fail-closed · AC-05 Explicit Partial · stub matrix 62/63 (STORY-64) |
 | [12-asgi-channel-semantic-roles-wire.md](./12-asgi-channel-semantic-roles-wire.md) | Channel turns bind SemanticStateService + select/assemble · G-02 Lifted (STORY-65) |
 | [13-roles-schema-channel-cutover.md](./13-roles-schema-channel-cutover.md) | Roles-schema live SSOT · Phase-A `files[]` legacy/dev · local GPT-48 consume light (STORY-66) · OOS Railway-67 |
+| [14-hybrid-c-volume-consume-parity-runbook.md](./14-hybrid-c-volume-consume-parity-runbook.md) | Hybrid-C volume/env · E1 inventory · manual publish · AC-04 (STORY-67) · live Explicit Partial (t07) |
 
 ## Related
 

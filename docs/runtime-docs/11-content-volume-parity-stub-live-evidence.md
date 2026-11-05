@@ -2,7 +2,9 @@
 
 Thin runtime note. Arch SSOT: [`../architecture/req15-semantic-state-roles/03-content-volume-parity-verify.md`](../architecture/req15-semantic-state-roles/03-content-volume-parity-verify.md). Peer packaging: [`../architecture/runtime/02-content-packaging.md`](../architecture/runtime/02-content-packaging.md). Etalon honesty: [`08-ac04-interview-stub-live-evidence-gates.md`](./08-ac04-interview-stub-live-evidence-gates.md).
 
-**Honesty:** stub harness ≠ AC-AIB-13-05 **live/parity Done**. Live Pass only with GPT-48 **export** Pass + ops evidence window + recorded path. This wave: AC-05 live = **Explicit Partial**. Do **not** invent Railway / live SUCCESS. Do **not** invent inventory/hash SSOT format (joint Open with GPT-48).
+**Honesty:** stub harness ≠ AC-AIB-13-05 **live/parity Done**. Live Pass only with GPT-48 **export** Pass + ops evidence window + recorded path. AC-05 live = **Explicit Partial** until t07 window. Do **not** invent Railway / live SUCCESS.
+
+**Joint inventory/hash wire (STORY-67 t02):** **Locked = GPT E1** — roles-schema root children + SHA-256 after `normalize_text` / `sha256_hex`; artifact `wire: e1` · `hash_method: normalize_text+sha256_hex` (`export_parity.py`). **session_pin ≠ file inventory**. Do **not** invent alternate format. Hybrid-C runbook: [`14-hybrid-c-volume-consume-parity-runbook.md`](./14-hybrid-c-volume-consume-parity-runbook.md).
 
 ---
 
@@ -15,7 +17,9 @@ Thin runtime note. Arch SSOT: [`../architecture/req15-semantic-state-roles/03-co
 | **Local / CI** | Same env names; may point at export layout or GPT UI tree (intent ≠ consume Pass until manifest+layout match loader) |
 | **Forbidden** | Mutable GitHub fetch at request time (`content.py`) |
 
-Env names Present: `DOGESTONIA_INSTRUCTIONS_DIR` · `DOGESTONIA_INSTRUCTIONS_MANIFEST` · `DOGESTONIA_CONTENT_SOURCE_COMMIT` · OAS / pack schema (existing `content_configured` gates).
+**REQ15 cutover manifest:** after role line, `DOGESTONIA_INSTRUCTIONS_MANIFEST` points at **roles-schema** (`bundle_version` + `core` + `roles.*`) — see REQ-13 §3b and fixture `tests/fixtures/content/roles.manifest.json`. Phase-A `files[]` loader in `content.py` remains **transitional** readiness until ASGI role wire; not SSOT of the new GPT-48 export.
+
+Env names Present: `DOGESTONIA_INSTRUCTIONS_DIR` · `DOGESTONIA_INSTRUCTIONS_MANIFEST` · `DOGESTONIA_EXPORT_INVENTORY_PATH` (E1 artifact · STORY-67) · `DOGESTONIA_CONTENT_SOURCE_COMMIT` · OAS / pack schema (existing `content_configured` gates). Optional `DOGESTONIA_ROLES_*` must resolve equal to INSTRUCTIONS when set (seam).
 
 ---
 
@@ -55,7 +59,7 @@ No claim of live volume mount / Railway Pass / GPT-48 export Pass from this matr
 |------|----------|
 | **Pass (live)** | Mounted/dir inventory matches GPT UI **export** Pass **and** ops window open **and** evidence recorded |
 | **Fail** | Incomplete or mismatched content → `/readyz`-class **fail-closed** — no silent subset |
-| **Hash/inventory wire format** | **Open** (joint GPT-48) — **not invented** here |
+| **Hash/inventory wire format** | **Locked = GPT E1** (STORY-67) — see §intro · runbook [`14`](./14-hybrid-c-volume-consume-parity-runbook.md) |
 
 ### Wave status (STORY-64 / this implement)
 

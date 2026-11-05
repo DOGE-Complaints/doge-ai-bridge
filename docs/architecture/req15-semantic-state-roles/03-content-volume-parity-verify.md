@@ -28,10 +28,10 @@ Operator sets aibridge `.env` `DOGESTONIA_INSTRUCTIONS_*` to the GPT UI `instruc
 
 | Gate | Behavior |
 |------|----------|
-| Pass | Mounted/dir inventory+hashes match GPT UI **export** Pass (format joint Open) |
+| Pass | Mounted/dir inventory+hashes match GPT UI **export** Pass (**GPT E1** locked — STORY-67) |
 | Fail | Incomplete or mismatched content → `/ready`-class **fail-closed** — no silent subset |
 
-Exact hash/inventory wire format = Open (product joint GPT-48); this arch locks **gate behavior**.
+Exact hash/inventory wire format = **Locked GPT E1** (roles-schema root children + `normalize_text`+`sha256_hex`; `session_pin` ≠ file inventory). Arch locks **gate behavior**; product implement = `export_parity.py` + `DOGESTONIA_EXPORT_INVENTORY_PATH`.
 
 ---
 
@@ -54,5 +54,6 @@ Honesty: Product Story Done ≠ Draft REQ ≠ green smoke without parity evidenc
 | `DOGESTONIA_INSTRUCTIONS_DIR` | Directory root for instruction files |
 | `DOGESTONIA_INSTRUCTIONS_MANIFEST` | Manifest path (Present content load) |
 | Related Present | `DOGESTONIA_CONTENT_SOURCE_COMMIT` · OAS · pack schema (existing content_configured gates) |
+| `DOGESTONIA_EXPORT_INVENTORY_PATH` | Locked E1 JSON artifact (STORY-67) — when set, consume parity fail-closed on `/readyz` |
 
-No invent of new env name SSOT beyond Present + L13 locks.
+No invent alternate hash beyond E1. `DOGESTONIA_EXPORT_INVENTORY_PATH` is the consume gate path for the locked wire.
