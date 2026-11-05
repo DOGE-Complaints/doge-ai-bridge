@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hmac
 from functools import lru_cache
+from pathlib import Path
 from urllib.parse import urlparse
 
 from pydantic import Field, field_validator
@@ -105,6 +106,12 @@ class Settings(BaseSettings):
     dogestonia_roles_manifest: str = Field(
         default="",
         validation_alias="DOGESTONIA_ROLES_MANIFEST",
+    )
+    # STORY-67 — locked GPT E1 export inventory JSON (optional until ops sets it).
+    # When set with content configured → /readyz fail-closed on consume mismatch.
+    dogestonia_export_inventory_path: str = Field(
+        default="",
+        validation_alias="DOGESTONIA_EXPORT_INVENTORY_PATH",
     )
     dogestonia_content_source_commit: str = Field(
         default="",
@@ -281,6 +288,7 @@ class Settings(BaseSettings):
         "dogestonia_instructions_manifest",
         "dogestonia_roles_instructions_dir",
         "dogestonia_roles_manifest",
+        "dogestonia_export_inventory_path",
         "dogestonia_content_source_commit",
         "dogestonia_openapi_path",
         "dogestonia_payload_schema_path",
@@ -505,6 +513,24 @@ class Settings(BaseSettings):
             and self.dogestonia_openapi_path
             and self.dogestonia_payload_schema_path
         )
+
+    def export_parity_configured(self) -> bool:
+        """True when locked E1 export inventory path is set (STORY-67)."""
+        return bool(self.dogestonia_export_inventory_path.strip())
+
+    def roles_instructions_seam_mismatch(self) -> bool:
+        """True when explicit ROLES_* dir disagrees with INSTRUCTIONS_* dir.
+
+        STORY-67: channel must not ready-pass on one tree while verifying another.
+        """
+        roles_dir = (self.dogestonia_roles_instructions_dir or "").strip()
+        instr_dir = (self.dogestonia_instructions_dir or "").strip()
+        if not roles_dir or not instr_dir:
+            return False
+        try:
+            return Path(roles_dir).resolve() != Path(instr_dir).resolve()
+        except OSError:
+            return roles_dir != instr_dir
 
 
 @lru_cache

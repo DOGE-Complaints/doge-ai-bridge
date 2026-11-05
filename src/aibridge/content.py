@@ -157,7 +157,7 @@ def _read_instruction_file(instructions_dir: Path, name: str) -> tuple[str, str]
     return text, sha256_hex(text.encode("utf-8"))
 
 
-def _roles_file_list(manifest: dict[str, Any]) -> list[str]:
+def roles_file_list(manifest: dict[str, Any]) -> list[str]:
     """Ordered unique root children: core then role files (stable sort by role id)."""
     core = str(manifest["core"])
     roles: dict[str, Any] = dict(manifest["roles"])
@@ -167,6 +167,10 @@ def _roles_file_list(manifest: dict[str, Any]) -> list[str]:
         if fname not in names:
             names.append(fname)
     return names
+
+
+# Back-compat private alias (STORY-66 call sites / internal).
+_roles_file_list = roles_file_list
 
 
 def load_content_bundle(

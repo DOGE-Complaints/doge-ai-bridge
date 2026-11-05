@@ -162,6 +162,10 @@ def evaluate_readiness(
         if not schema_validation_complete():
             return ReadinessResult(False, "schema_validation_incomplete")
 
+    # STORY-67 — ROLES_* vs INSTRUCTIONS_* seam (channel must match verified tree).
+    if settings.roles_instructions_seam_mismatch():
+        return ReadinessResult(False, "roles_instructions_seam_mismatch")
+
     if settings.content_configured():
         if deployment is None or not deployment.ready:
             reason = "content_bundle_not_ready"
@@ -173,6 +177,19 @@ def evaluate_readiness(
 
         if not validation_context_is_bound(validation_context):
             return ReadinessResult(False, "validation_context_not_bound")
+        # STORY-67 — consume parity vs locked E1 export inventory (when configured).
+        if settings.export_parity_configured():
+            from aibridge.export_parity import compare_mount_to_export
+
+            parity = compare_mount_to_export(
+                instructions_dir=Path(settings.dogestonia_instructions_dir),
+                manifest_path=Path(settings.dogestonia_instructions_manifest),
+                export_inventory_path=Path(
+                    settings.dogestonia_export_inventory_path
+                ),
+            )
+            if not parity.ok:
+                return ReadinessResult(False, parity.ready_reason)
     elif deployment is not None and deployment.error:
         return ReadinessResult(False, deployment.error)
 
