@@ -1,4 +1,8 @@
-"""Channel turn/action processing — coordinator + dual-confirm (story 11)."""
+"""Channel turn/action processing — coordinator + dual-confirm (story 11).
+
+STORY-69: first-turn language-pick gate before interview engine when locale
+unbound and text is unclear; clear-text may soft-bind and skip picker.
+"""
 
 from __future__ import annotations
 
@@ -7,9 +11,14 @@ from typing import Any
 
 from aibridge.audit import audit_event
 from aibridge.channel_wire import ChannelWireContext, apply_before_engine_turn
-from aibridge.confirm import ConfirmationGuard, get_confirmation_guard
+from aibridge.confirm import ConfirmationGuard, ConfirmSession, get_confirmation_guard
 from aibridge.coordinator import build_turn_from_engine
 from aibridge.dedupe import EventDedupeStore
+from aibridge.locale_policy import (
+    infer_locale_from_clear_text,
+    is_unclear_language,
+    locale_prompt_prefix,
+)
 from aibridge.metrics import get_metrics
 from aibridge.schemas import (
     ChannelAction,
@@ -76,6 +85,40 @@ async def _arun_engine_turn(
     return engine.run_turn(session_id=session_id, user_text=user_text)
 
 
+def _maybe_language_pick_gate(
+    guard: ConfirmationGuard,
+    sess: ConfirmSession,
+    *,
+    user_text: str,
+) -> dict[str, Any] | None:
+    """STORY-69 — until locale bound: unclear → pick CTAs; clear → soft-bind skip.
+
+    ``language_code`` is intentionally unused here (soft hint only — no silent lock).
+    Returns a success envelope dict when engine must not advance; else None.
+    """
+    if sess.locale is not None:
+        return None
+    if is_unclear_language(user_text):
+        actions = guard.offer_language_pick(sess.session_id)
+        guard._persist_session(sess)  # noqa: SLF001
+        return build_success(
+            session_id=sess.session_id,
+            state=sess.state.value,
+            reply_text="Please choose your language.",
+            actions=actions,
+        ).model_dump()
+    # Clear-text skip (AC-69-04) — soft-bind when detectable; never invent catalog.
+    inferred = infer_locale_from_clear_text(user_text)
+    if inferred is not None:
+        guard.bind_locale(sess.session_id, inferred)
+    return None
+
+
+def _engine_user_text(sess: ConfirmSession, raw_text: str) -> str:
+    """Apply bound locale as thin prompt prefix (not full i18n)."""
+    return f"{locale_prompt_prefix(sess.locale)}{raw_text}"
+
+
 def process_turn(
     body: ChannelTurnRequest,
     store: EventDedupeStore,
@@ -103,6 +146,9 @@ def process_turn(
                 detail=f"channel={body.channel} text_len={len(body.message.text)}",
             )
             get_metrics().inc_turns()
+            gated = _maybe_language_pick_gate(g, sess, user_text=body.message.text)
+            if gated is not None:
+                return gated
             if engine is None:
                 # Fail closed — product path requires an engine (tests inject one).
                 return build_success(
@@ -118,7 +164,7 @@ def process_turn(
             result = _run_engine_turn(
                 engine,
                 session_id=sess.session_id,
-                user_text=body.message.text,
+                user_text=_engine_user_text(sess, body.message.text),
             )
             mapped = build_turn_from_engine(g, sess, result)
             return build_success(
@@ -200,6 +246,9 @@ async def process_turn_async(
             detail=f"channel={body.channel} text_len={len(body.message.text)}",
         )
         get_metrics().inc_turns()
+        gated = _maybe_language_pick_gate(g, sess, user_text=body.message.text)
+        if gated is not None:
+            return gated
         if engine is None:
             return build_success(
                 session_id=sess.session_id,
@@ -214,7 +263,7 @@ async def process_turn_async(
         result = await _arun_engine_turn(
             engine,
             session_id=sess.session_id,
-            user_text=body.message.text,
+            user_text=_engine_user_text(sess, body.message.text),
         )
         mapped = build_turn_from_engine(g, sess, result)
         return build_success(

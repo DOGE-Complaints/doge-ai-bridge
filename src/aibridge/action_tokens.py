@@ -17,6 +17,10 @@ class TokenActionKind(StrEnum):
     CANCEL = "cancel"
     # STORY-68 — resume interview; never stash / never gateway (≠ interpret, ≠ send).
     CONTINUE = "continue"
+    # STORY-69 — bind ConfirmSession.locale; never stash / never gateway.
+    PICK_LOCALE_ET = "pick_locale_et"
+    PICK_LOCALE_RU = "pick_locale_ru"
+    PICK_LOCALE_EN = "pick_locale_en"
 
 
 class TokenRecordState(StrEnum):

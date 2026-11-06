@@ -23,6 +23,20 @@ from aibridge.confirm_fsm import (
     next_state,
 )
 from aibridge.gateway import GatewayExecutor, GatewayOutcome, GatewayResult
+from aibridge.locale_policy import (
+    LANG_PICK_LABELS,
+    SUPPORTED_LOCALES,
+    is_supported_locale,
+    lang_pick_label,
+)
+
+# STORY-69 — action kind → ConfirmSession.locale (SSOT; not semantic_state).
+_LOCALE_PICK_KIND_TO_LOCALE: dict[TokenActionKind, str] = {
+    TokenActionKind.PICK_LOCALE_ET: "et",
+    TokenActionKind.PICK_LOCALE_RU: "ru",
+    TokenActionKind.PICK_LOCALE_EN: "en",
+}
+_LOCALE_PICK_KINDS = frozenset(_LOCALE_PICK_KIND_TO_LOCALE)
 
 
 @dataclass
@@ -44,6 +58,8 @@ class ConfirmSession:
     # REQ-03 §5.2 — persisted before /turns returns actions.
     pending_call_id: str | None = None
     pending_replay_items: list[dict[str, Any]] | None = None
+    # STORY-69 — session locale SSOT ∈ {et,ru,en}; persisted in state_json.
+    locale: str | None = None
 
 
 @dataclass
@@ -193,11 +209,14 @@ class ConfirmationGuard:
                 "unknown_outcome_revision": sess.unknown_outcome_revision,
                 "pending_call_id": sess.pending_call_id,
                 "pending_replay_items": sess.pending_replay_items,
+                "locale": sess.locale,
             },
         )
 
     def _hydrate_from_row(self, row: dict[str, Any]) -> ConfirmSession:
         st = dict(row.get("state") or {})
+        raw_locale = st.get("locale")
+        locale = str(raw_locale) if is_supported_locale(str(raw_locale) if raw_locale else None) else None
         sess = ConfirmSession(
             session_id=str(row["session_id"]),
             user_id=str(row["user_id"]),
@@ -215,6 +234,7 @@ class ConfirmationGuard:
             unknown_outcome_revision=st.get("unknown_outcome_revision"),
             pending_call_id=st.get("pending_call_id"),
             pending_replay_items=st.get("pending_replay_items"),
+            locale=locale,
         )
         self._sessions[sess.session_id] = sess
         self._by_principal[(sess.user_id, sess.chat_id)] = sess.session_id
@@ -400,6 +420,40 @@ class ConfirmationGuard:
                 TokenActionKind.EDIT: ("Edit", "default"),
             },
         )
+
+    def offer_language_pick(self, session_id: str) -> list[dict[str, str]]:
+        """STORY-69 — mint et/ru/en pick actions (EN label uses 🇺🇸).
+
+        No FSM transition. Never authorizes gateway. Locale SSOT = ConfirmSession.
+        """
+        sess = self._sessions[session_id]
+        assert sess.gateway_authorized is False
+        # Product lock: English MUST use US flag — assert label contract.
+        assert "🇺🇸" in LANG_PICK_LABELS["en"]
+        assert SUPPORTED_LOCALES == frozenset({"et", "ru", "en"})
+        return self._mint_bundle(
+            sess,
+            kinds=(
+                TokenActionKind.PICK_LOCALE_ET,
+                TokenActionKind.PICK_LOCALE_RU,
+                TokenActionKind.PICK_LOCALE_EN,
+            ),
+            labels={
+                TokenActionKind.PICK_LOCALE_ET: (lang_pick_label("et"), "default"),
+                TokenActionKind.PICK_LOCALE_RU: (lang_pick_label("ru"), "default"),
+                TokenActionKind.PICK_LOCALE_EN: (lang_pick_label("en"), "primary"),
+            },
+        )
+
+    def bind_locale(self, session_id: str, locale: str) -> ConfirmSession:
+        """Set ConfirmSession.locale SSOT and persist (memory / PG via state_json)."""
+        if not is_supported_locale(locale):
+            raise ValueError(f"unsupported locale: {locale}")
+        sess = self._sessions[session_id]
+        sess.locale = locale
+        sess.gateway_authorized = False
+        self._persist_session(sess)
+        return sess
 
     def _mint_bundle(
         self,
@@ -587,6 +641,19 @@ class ConfirmationGuard:
                 )
                 assert sess.gateway_authorized is False
                 reply = "Continuing interview."
+                actions = []
+            elif rec.action in _LOCALE_PICK_KINDS:
+                # STORY-69 — bind locale SSOT; NEVER stash / NEVER gateway.
+                locale = _LOCALE_PICK_KIND_TO_LOCALE[rec.action]
+                sess.locale = locale
+                sess.gateway_authorized = False
+                self.tokens.consume(raw_token)
+                self.tokens.invalidate_session_revision(
+                    sess.session_id, revision=sess.revision
+                )
+                assert sess.gateway_authorized is False
+                assert is_supported_locale(sess.locale)
+                reply = f"Language set to {locale}."
                 actions = []
             elif rec.action is TokenActionKind.CONFIRM_SEND:
                 if self.send_blocked_for_revision(sess):
