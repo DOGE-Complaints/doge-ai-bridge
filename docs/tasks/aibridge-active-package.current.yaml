@@ -1,7 +1,7 @@
-# Active: pkg-000071 STORY-AIBRIDGE-68 channel seam + Send actions. Product Done · Code Done 2026-11-06T12:23:51Z · next DONE
-# (pkg-000070 superseded — STORY-67 Done; 031/032 grandfather skip)
-# Honesty: Code Done ≠ invent Railway/live TG SUCCESS · live smoke residual separate
+# Active: pkg-000072 STORY-AIBRIDGE-69 session language pick. Product Done · Code Done · P8 2026-11-06T12:47:50Z · G-01 CLOSED · next DONE
+# (pkg-000071 superseded — STORY-68 Product/Code Done)
+# Honesty: locale ConfirmSession · EN=🇺🇸 · no invent full i18n / live TG SUCCESS · 68 OOS · Code Done ≠ live smoke
 schema_version: 1
-package_file: aibridge-active-packages/pkg-000071-20261106-epic-aibridge-12-story-68-channel-seam-send-actions-always.yaml
-updated_at: "2026-11-06T12:23:51Z"
+package_file: aibridge-active-packages/pkg-000072-20261106-epic-aibridge-12-story-69-session-language-pick-actions.yaml
+updated_at: "2026-11-06T12:47:50Z"
 activation: active

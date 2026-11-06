@@ -2,7 +2,7 @@
 
 **Профиль:** `aibridge` · **Focus:** `doge-ai-bridge/` · **Стек:** Python (Responses → Story Intake bridge)  
 **Pipeline:** [aibridge-story-execution-pipeline.md](./aibridge-story-execution-pipeline.md)  
-**Active pkg:** [aibridge-active-package.current.yaml](./aibridge-active-package.current.yaml) · **pkg-000071** STORY-AIBRIDGE-68 (**Product Done · Code Done** · next DONE) · EPIC-12  
+**Active pkg:** [aibridge-active-package.current.yaml](./aibridge-active-package.current.yaml) · **pkg-000072** STORY-AIBRIDGE-69 (**Product Done · Code Done** · P8 · next DONE) · EPIC-12 exhausted  
 **Requirement:** [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-03](../requirements/REQ-03-RUNTIME-REMEDIATION-AGREED.md) · [REQ-05](../requirements/REQ-05-CONTENT-PHASE-A-FLAT-LAUNCH.md) · [REQ-07](../requirements/REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md) · [REQ-08](../requirements/REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) · [REQ-12](../requirements/REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md) · [REQ-13](../requirements/REQ-13-REQ15-SEMANTIC-STATE-ROLES-INSTRUCTION-ASSEMBLY.md) · QA [inbound/outbound guide](./qa-requirements/AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md) · Parent protocol [GPT UI REQ-47](../../../GPT%20UI/docs/requirements/REQ-47-responses-api-https-bearer-bridge.md)  
 **Remote:** https://github.com/DOGE-Complaints/doge-ai-bridge (`dev`)  
 **Runtime plan:** [aibridge_builder.plan.md](../../../.cursor/plans/aibridge_builder.plan.md)  
@@ -12,21 +12,52 @@
 
 | Поле | Значение |
 |------|----------|
-| **Active pkg** | `pkg-000071-20261106-epic-aibridge-12-story-68-channel-seam-send-actions-always.yaml` (8 paths default) |
-| **Status** | STORY-AIBRIDGE-68 🟢 **Product Done · Code Done** · pkg-000071 · P8 · 2026-11-06T12:23:51Z |
-| **Epic** | [EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md) 🟡 tip drained 68 · 69 open |
-| **Story** | [STORY-AIBRIDGE-68](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/STORY-AIBRIDGE-68-channel-seam-send-actions-always.md) |
-| **Next default** | **DONE** · next intake STORY-69 (separate pkg) |
+| **Active pkg** | `pkg-000072-20261106-epic-aibridge-12-story-69-session-language-pick-actions.yaml` (8 paths) |
+| **Status** | STORY-AIBRIDGE-69 🟢 **Product Done · Code Done** · pkg-000072 · P8 · next **DONE** · 2026-11-06T12:47:50Z |
+| **Epic** | [EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md) 🟢 **exhausted** · 68+69 Done |
+| **Story** | [STORY-AIBRIDGE-69](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/STORY-AIBRIDGE-69-session-language-pick-actions.md) |
+| **Next default** | **DONE** (queue exhausted · no invent live SUCCESS) |
 | **Verify** | `--project aibridge --verify` |
-| **Updated** | 2026-11-06T12:23:51Z |
-| **Evidence** | [p7](../analysis/p7-reaudit-STORY-AIBRIDGE-68-channel-seam-send-actions-always-20261106.md) · G-01 CLOSED · Code Done ≠ invent live SUCCESS · Keep REQ-11 · CONTINUE≠stash |
+| **Updated** | 2026-11-06T12:47:50Z |
+| **Evidence** | P8 · [p7](../analysis/p7-reaudit-STORY-AIBRIDGE-69-session-language-pick-actions-20261106.md) · locale_policy · ConfirmSession.locale · EN=🇺🇸 |
 | **Skill** | `python-pro` |
-| **activation** | `active` (pkg-000071) · audit wave closed |
-| **OOS** | invent live SUCCESS · CONTINUE→stash · GPT ROL-05/06 · STORY-69 |
+| **activation** | `active` (pkg-000072 tip) · story **DONE** |
+| **OOS** | invent full i18n · invent live TG SUCCESS · locale in semantic_state · live smoke residual separate |
 
 ## EPIC-AIBRIDGE-12 — REQ15 TG channel interviewer UX (active)
 
-#### STORY-AIBRIDGE-68-channel-seam-send-actions-always
+#### STORY-AIBRIDGE-69-session-language-pick-actions
+
+| Field | Value |
+|-------|-------|
+| Pipeline | [STORY-….md](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/STORY-AIBRIDGE-69-session-language-pick-actions.md) |
+| Backlog source | [STORY-AIBRIDGE-69-….md](./backlog-stories/req15-tg-channel-interviewer-ux/STORY-AIBRIDGE-69-session-language-pick-actions.md) |
+| Status | 🟢 **Product Done · Code Done** · pkg-000072 · P8 · 2026-11-06T12:47:50Z · next **DONE** |
+| Gate | t01–t09 Done · G-01 CLOSED · WAVE_COMPLETE |
+| Pkg | pkg-000072 · activation **active** (tip) |
+| P1 | 2026-11-06T12:29:18Z · [plan](../../../.cursor/plans/p1_aibridge_69_scaffold_20261106T122734Z.plan.md) |
+| P3 | 2026-11-06T12:32:14Z · locale_policy · ConfirmSession.locale · gate · harness |
+| P5 | 2026-11-06T12:42:33Z · [disposition](../analysis/p5-disposition-STORY-AIBRIDGE-69-session-language-pick-actions-20261106.md) · tip refresh |
+| P6 | 2026-11-06T12:45:15Z · [p6](./run-reports/run-summary-20261106-1245-story-aibridge-69-p6-t09.md) · G-01 CLOSED |
+| P7 | 2026-11-06T12:47:50Z · [p7](../analysis/p7-reaudit-STORY-AIBRIDGE-69-session-language-pick-actions-20261106.md) · WAVE_COMPLETE |
+| P8 | 2026-11-06T12:47:50Z · feat→test→docs · **no push** |
+| Depends | soft independent of 68 · telegram ChannelAction Present |
+| Implement | t01–t09 **Done** |
+| Open | invent full i18n / live SUCCESS forbidden · live smoke residual separate |
+
+| Task | Path | Status | Note |
+|------|------|--------|------|
+| t01 | [task-aibridge-69-t01-unclear-language-detector-policy](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t01-unclear-language-detector-policy/README.md) | Done | unclear detector |
+| t02 | [task-aibridge-69-t02-confirm-session-locale-field](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t02-confirm-session-locale-field/README.md) | Done | ConfirmSession.locale |
+| t03 | [task-aibridge-69-t03-locale-memory-postgres-roundtrip](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t03-locale-memory-postgres-roundtrip/README.md) | Done | memory+PG |
+| t04 | [task-aibridge-69-t04-lang-pick-token-kinds-labels](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t04-lang-pick-token-kinds-labels/README.md) | Done | pick labels +🇺🇸 |
+| t05 | [task-aibridge-69-t05-first-turn-picker-gate](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t05-first-turn-picker-gate/README.md) | Done | first-turn gate |
+| t06 | [task-aibridge-69-t06-bind-locale-on-consume](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t06-bind-locale-on-consume/README.md) | Done | bind consume |
+| t07 | [task-aibridge-69-t07-harness-lang-pick-persist](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t07-harness-lang-pick-persist/README.md) | Done | harness |
+| t08 | [task-aibridge-69-t08-story-gate-runtime-docs](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t08-story-gate-runtime-docs/README.md) | Done | gate · runtime 16 |
+| t09 | [task-aibridge-69-t09-audit-g01-active-package-tip-sync](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t09-audit-g01-active-package-tip-sync/README.md) | Done | G-01 tip sync CLOSED |
+
+#### STORY-AIBRIDGE-68-channel-seam-send-actions-always (closed tip)
 
 | Field | Value |
 |-------|-------|
@@ -34,7 +65,7 @@
 | Backlog source | [STORY-AIBRIDGE-68-….md](./backlog-stories/req15-tg-channel-interviewer-ux/STORY-AIBRIDGE-68-channel-seam-send-actions-always.md) |
 | Status | 🟢 **Product Done · Code Done** · pkg-000071 · P8 · 2026-11-06T12:23:51Z |
 | Gate | t01–t09 Done · G-01 CLOSED · live smoke residual separate |
-| Pkg | pkg-000071 · activation **active** (tip drained → DONE) |
+| Pkg | pkg-000071 · activation **none** (superseded by 072) |
 | P1 | 2026-11-06T12:01:54Z · [plan](../../../.cursor/plans/p1_aibridge_68_scaffold_20261106T115910Z.plan.md) |
 | P3 | 2026-11-06T12:08:29Z · seam_policy · CONTINUE · coordinator · harness 8 passed |
 | P5 | 2026-11-06T12:17:14Z · [p5](../../../.cursor/plans/p5_aibridge_68_gap_20261106T121458Z.plan.md) · [disposition](../analysis/p5-disposition-STORY-AIBRIDGE-68-channel-seam-send-actions-always-20261106.md) |
@@ -43,7 +74,7 @@
 | P8 | 2026-11-06T12:23:51Z · feat→test→docs local · no push |
 | Depends | hard REQ-11 Keep 56–58 Done · soft GPT ROL-05 · soft 69 |
 | Implement | t01–t09 **Done** |
-| Open | invent live SUCCESS forbidden · CONTINUE→stash forbidden · OOS 69 / ROL-05/06 · next **DONE** |
+| Open | invent live SUCCESS forbidden · CONTINUE→stash forbidden · residual live smoke |
 
 | Task | Path | Status | Note |
 |------|------|--------|------|

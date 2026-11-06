@@ -11,10 +11,10 @@
 | Piece | Status | Path |
 |-------|--------|------|
 | Inbound `language_code` on channel message | **Present** (telegram mapper → bridge schema) | doge-telegram `mapper.py` · aibridge `schemas.py` |
-| Engine use of `language_code` | **Absent** — turn passes `message.text` only | `channel.py` |
-| Session locale field | **Absent** on `ConfirmSession` / `state_json` | `confirm.py` |
-| Lang-pick actions | **Absent** | — |
-| Action label flags | Producer **Absent**; telegram will render any Present label | `outbound.py` Keep |
+| Engine use of `language_code` | Soft hint only — unclear gate ignores silent lock (STORY-69 P3) | `channel.py` |
+| Session locale field | **Present** `ConfirmSession.locale` / `state_json` (STORY-69 P3) | `confirm.py` |
+| Lang-pick actions | **Present** `offer_language_pick` · EN=🇺🇸 (STORY-69 P3) | `confirm.py` · `action_tokens.py` |
+| Action label flags | Producer **Present**; telegram renders Present labels | `outbound.py` Keep |
 
 ---
 

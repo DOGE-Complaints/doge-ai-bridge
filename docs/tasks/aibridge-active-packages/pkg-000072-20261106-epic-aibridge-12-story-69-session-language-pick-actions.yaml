@@ -1,0 +1,33 @@
+schema_version: 1
+package_sequence: 72
+created_at: "2026-11-06T12:29:18Z"
+label: epic-aibridge-12-story-69-session-language-pick-actions
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md
+story_groups:
+- story_key: STORY-AIBRIDGE-69-session-language-pick-actions
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t01-unclear-language-detector-policy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t02-confirm-session-locale-field/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t03-locale-memory-postgres-roundtrip/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t04-lang-pick-token-kinds-labels/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t05-first-turn-picker-gate/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t06-bind-locale-on-consume/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t07-harness-lang-pick-persist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-69-session-language-pick-actions/task-aibridge-69-t08-story-gate-runtime-docs/README.md
+activation: active
+task_status:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Done
+  t08: Done
+  t09: Done
+p3_completed_at: "2026-11-06T12:32:14Z"
+p8_completed_at: "2026-11-06T12:47:50Z"
+note: "P8 Product/Code Done 2026-11-06T12:47:50Z. t01–t08 pkg paths + t09 audit tip Done. locale ConfirmSession. EN=🇺🇸. No invent full i18n / live SUCCESS. 68 OOS. next=DONE."
+
