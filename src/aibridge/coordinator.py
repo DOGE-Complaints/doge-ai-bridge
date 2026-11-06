@@ -3,6 +3,10 @@
 STORY-63 / REQ-13: role selection via ``select_next_role`` (policy table, no LLM-router).
 L13-1 / AC-08: ordinary (FC-less) reply may soft-offer understanding confirm;
 send-permission is never automatic from ordinary reply — only after frozen FC.
+
+STORY-68: non-seamless seams mint CONTINUE/Edit; send-ready always
+``offer_send_confirm``; ban vague «интерфейс» without actions or post-stash URL.
+CONTINUE consume ≠ stash (REQ-11 Keep).
 """
 
 from __future__ import annotations
@@ -12,7 +16,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from aibridge.confirm import ConfirmationGuard, ConfirmSession
-from aibridge.confirm_fsm import SessionState
+from aibridge.confirm_fsm import IllegalTransitionError, SessionState
 from aibridge.request_assembly import (
     ServerConstants,
     ValidationGateError,
@@ -23,6 +27,12 @@ from aibridge.roles.policy import (
     select_next_role,
 )
 from aibridge.roles.registry import RoleSpec
+from aibridge.seam_policy import (
+    SeamKind,
+    classify_fcless_seam,
+    needs_control_surface,
+    requires_fcless_actions,
+)
 from aibridge.tool_gen import CANONICAL_OPERATION_ID
 
 ALLOWLISTED_TOOL_NAMES = frozenset({CANONICAL_OPERATION_ID})
@@ -194,6 +204,50 @@ def persist_pending_tool(
         raise
 
 
+def _mint_fcless_seam_actions(
+    guard: ConfirmationGuard,
+    sess: ConfirmSession,
+) -> list[dict[str, str]]:
+    """Emit Telegram-renderable CTAs for non-seamless FC-less seams (STORY-68)."""
+    kind = classify_fcless_seam(sess.state)
+    if kind is SeamKind.INTERPRETATION:
+        return guard.offer_interpretation_confirm(sess.session_id)
+    if kind is SeamKind.CONTINUE_EDIT:
+        return guard.offer_continue_seam(sess.session_id)
+    return []
+
+
+def _ensure_control_surface(
+    guard: ConfirmationGuard,
+    sess: ConfirmSession,
+    *,
+    reply_text: str,
+    actions: list[dict[str, str]],
+    continuation_url: str | None,
+) -> list[dict[str, str]]:
+    """AC-68-03 — vague «интерфейс» without actions/URL → mint seam CTAs."""
+    if not needs_control_surface(
+        reply_text=reply_text,
+        actions=actions,
+        continuation_url=continuation_url,
+    ):
+        return actions
+    if actions:
+        return actions
+    if (
+        sess.state is SessionState.AWAITING_SEND_CONFIRM
+        and sess.frozen_tool_intent is not None
+        and not guard.send_blocked_for_revision(sess)
+    ):
+        try:
+            return guard.offer_send_confirm(sess.session_id)
+        except IllegalTransitionError:
+            pass
+    if requires_fcless_actions(sess.state):
+        return _mint_fcless_seam_actions(guard, sess)
+    return actions
+
+
 def build_turn_from_engine(
     guard: ConfirmationGuard,
     sess: ConfirmSession,
@@ -201,15 +255,27 @@ def build_turn_from_engine(
 ) -> dict[str, Any]:
     """Map InterviewEngine result → channel success fields (no Received stub)."""
     if not engine_result.get("ok", True):
+        reply = str(
+            engine_result.get("message")
+            or engine_result.get("reply_text")
+            or "Turn rejected."
+        )
+        actions: list[dict[str, str]] = []
+        if requires_fcless_actions(sess.state):
+            actions = _mint_fcless_seam_actions(guard, sess)
+            guard._persist_session(sess)  # noqa: SLF001
+        actions = _ensure_control_surface(
+            guard,
+            sess,
+            reply_text=reply,
+            actions=actions,
+            continuation_url=None,
+        )
         return {
             "session_id": sess.session_id,
             "state": sess.state.value,
-            "reply_text": str(
-                engine_result.get("message")
-                or engine_result.get("reply_text")
-                or "Turn rejected."
-            ),
-            "actions": [],
+            "reply_text": reply,
+            "actions": actions,
             "outcome": None,
             "draft_id": None,
             "continuation_url": None,
@@ -223,13 +289,20 @@ def build_turn_from_engine(
     fcs = list(engine_result.get("function_calls") or [])
     replay = list(engine_result.get("replay_items") or [])
 
-    # Ordinary interview — soft understanding offer OK (L13-1); never send here (AC-08).
+    # Ordinary interview — soft understanding / CONTINUE seam (STORY-68); never send (AC-08).
     if not fcs:
-        actions: list[dict[str, str]] = []
-        if sess.state is SessionState.INTERVIEWING:
-            actions = guard.offer_interpretation_confirm(sess.session_id)
+        actions = []
+        if requires_fcless_actions(sess.state):
+            actions = _mint_fcless_seam_actions(guard, sess)
             guard._persist_session(sess)  # noqa: SLF001
-        # If already awaiting/confirmed, do not re-mint; wait for /actions or FC.
+        # AWAITING_* — do not re-mint; wait for /actions or FC.
+        actions = _ensure_control_surface(
+            guard,
+            sess,
+            reply_text=reply,
+            actions=actions,
+            continuation_url=None,
+        )
         return {
             "session_id": sess.session_id,
             "state": sess.state.value,
@@ -247,24 +320,47 @@ def build_turn_from_engine(
             validation=getattr(guard, "validation_context", None),
         )
     except ToolValidationError as exc:
+        actions = []
+        if requires_fcless_actions(sess.state):
+            actions = _mint_fcless_seam_actions(guard, sess)
+            guard._persist_session(sess)  # noqa: SLF001
+        actions = _ensure_control_surface(
+            guard,
+            sess,
+            reply_text=exc.message,
+            actions=actions,
+            continuation_url=None,
+        )
         return {
             "session_id": sess.session_id,
             "state": sess.state.value,
             "reply_text": exc.message,
-            "actions": [],
+            "actions": actions,
             "outcome": None,
             "draft_id": None,
             "continuation_url": None,
         }
 
-    # Persist BEFORE minting actions (REQ-03 §5.2).
+    # Persist BEFORE minting actions (REQ-03 §5.2). Send-ready → always offer (AC-68-02).
     persist_pending_tool(guard, sess, frozen=frozen, replay_items=replay)
-    actions = guard.offer_send_confirm(sess.session_id)
+    try:
+        actions = guard.offer_send_confirm(sess.session_id)
+    except IllegalTransitionError:
+        # Fail closed on send block — still expose Edit/Continue, never invent stash.
+        actions = guard.offer_continue_seam(sess.session_id)
     guard._persist_session(sess)  # noqa: SLF001
+    reply_out = reply or "Ready to send — confirm below."
+    actions = _ensure_control_surface(
+        guard,
+        sess,
+        reply_text=reply_out,
+        actions=actions,
+        continuation_url=None,
+    )
     return {
         "session_id": sess.session_id,
         "state": sess.state.value,
-        "reply_text": reply or "Ready to send — confirm below.",
+        "reply_text": reply_out,
         "actions": actions,
         "outcome": None,
         "draft_id": None,

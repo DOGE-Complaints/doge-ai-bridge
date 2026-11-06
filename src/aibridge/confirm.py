@@ -381,6 +381,26 @@ class ConfirmationGuard:
             },
         )
 
+    def offer_continue_seam(self, session_id: str) -> list[dict[str, str]]:
+        """STORY-68 — mint CONTINUE + EDIT on non-seamless seam (no FSM offer transition).
+
+        Does **not** overload interpretation confirm. Does **not** authorize gateway.
+        Consume path resumes interview without stash (AC-68-01 · AC-68-04).
+        """
+        sess = self._sessions[session_id]
+        assert sess.gateway_authorized is False
+        return self._mint_bundle(
+            sess,
+            kinds=(
+                TokenActionKind.CONTINUE,
+                TokenActionKind.EDIT,
+            ),
+            labels={
+                TokenActionKind.CONTINUE: ("Continue", "primary"),
+                TokenActionKind.EDIT: ("Edit", "default"),
+            },
+        )
+
     def _mint_bundle(
         self,
         sess: ConfirmSession,
@@ -558,6 +578,16 @@ class ConfirmationGuard:
                 assert sess.gateway_authorized is False
                 reply = "Interpretation confirmed."
                 actions: list[dict[str, str]] = []
+            elif rec.action is TokenActionKind.CONTINUE:
+                # STORY-68 — resume interview; NEVER stash / NEVER gateway.
+                sess.gateway_authorized = False
+                self.tokens.consume(raw_token)
+                self.tokens.invalidate_session_revision(
+                    sess.session_id, revision=sess.revision
+                )
+                assert sess.gateway_authorized is False
+                reply = "Continuing interview."
+                actions = []
             elif rec.action is TokenActionKind.CONFIRM_SEND:
                 if self.send_blocked_for_revision(sess):
                     return {

@@ -15,6 +15,8 @@ class TokenActionKind(StrEnum):
     CONFIRM_SEND = "confirm_send"
     EDIT = "edit"
     CANCEL = "cancel"
+    # STORY-68 — resume interview; never stash / never gateway (≠ interpret, ≠ send).
+    CONTINUE = "continue"
 
 
 class TokenRecordState(StrEnum):
