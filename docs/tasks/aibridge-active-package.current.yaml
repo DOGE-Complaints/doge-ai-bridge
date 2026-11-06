@@ -1,6 +1,7 @@
-# aibridge-active-package.current.yaml
-# Active: pkg-000000 bootstrap (profile SSOT marker). 2026-09-10T12:21:02Z
+# Active: pkg-000071 STORY-AIBRIDGE-68 channel seam + Send actions. Product Done · Code Done 2026-11-06T12:23:51Z · next DONE
+# (pkg-000070 superseded — STORY-67 Done; 031/032 grandfather skip)
+# Honesty: Code Done ≠ invent Railway/live TG SUCCESS · live smoke residual separate
 schema_version: 1
-package_file: aibridge-active-packages/pkg-000000-20260910-bootstrap.yaml
-updated_at: "2026-09-10T12:21:02Z"
+package_file: aibridge-active-packages/pkg-000071-20261106-epic-aibridge-12-story-68-channel-seam-send-actions-always.yaml
+updated_at: "2026-11-06T12:23:51Z"
 activation: active

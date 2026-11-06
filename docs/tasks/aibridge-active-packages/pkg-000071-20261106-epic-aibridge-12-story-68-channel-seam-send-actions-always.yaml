@@ -1,0 +1,32 @@
+schema_version: 1
+package_sequence: 71
+created_at: "2026-11-06T12:01:54Z"
+label: epic-aibridge-12-story-68-channel-seam-send-actions-always
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md
+story_groups:
+- story_key: STORY-AIBRIDGE-68-channel-seam-send-actions-always
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t01-lock-seam-policy-invariants/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t02-continue-token-kind/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t03-coordinator-emit-seam-actions/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t04-continue-consume-resume/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t05-send-ready-offer-always/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t06-ban-vague-interface-without-control/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t07-harness-seam-send-stash-keep/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-68-channel-seam-send-actions-always/task-aibridge-68-t08-story-gate-runtime-docs/README.md
+activation: active
+task_status:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Done
+  t08: Done
+  t09: Done
+p3_completed_at: "2026-11-06T12:08:29Z"
+p8_completed_at: "2026-11-06T12:23:51Z"
+note: "P8 Product Done · Code Done 2026-11-06T12:23:51Z. t01–t09 Done. G-01 CLOSED. Keep REQ-11. CONTINUE≠stash. No invent Railway/live SUCCESS. Live smoke residual separate. next=DONE."

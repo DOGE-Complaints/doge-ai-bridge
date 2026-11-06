@@ -18,6 +18,7 @@
 | [12-asgi-channel-semantic-roles-wire.md](./12-asgi-channel-semantic-roles-wire.md) | Channel turns bind SemanticStateService + select/assemble · G-02 Lifted (STORY-65) |
 | [13-roles-schema-channel-cutover.md](./13-roles-schema-channel-cutover.md) | Roles-schema live SSOT · Phase-A `files[]` legacy/dev · local GPT-48 consume light (STORY-66) · OOS Railway-67 |
 | [14-hybrid-c-volume-consume-parity-runbook.md](./14-hybrid-c-volume-consume-parity-runbook.md) | Hybrid-C volume/env · E1 inventory · manual publish · AC-04 (STORY-67) · live Explicit Partial (t07) |
+| [15-channel-seam-send-actions.md](./15-channel-seam-send-actions.md) | Seam CONTINUE/Edit · Send always · vague UI ban · Keep stash (STORY-68) · no invent live SUCCESS |
 
 ## Related
 
