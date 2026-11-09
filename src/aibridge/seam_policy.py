@@ -1,8 +1,11 @@
-"""STORY-68 — seam policy invariants (non-seamless stages → actions).
+"""STORY-68/70 — seam policy + control-surface gate.
 
-Arch: docs/architecture/req15-tg-channel-interviewer-ux/01-channel-seam-send-actions.md §2–§4.
+Arch: docs/architecture/req15-tg-channel-interviewer-ux/01-channel-seam-send-actions.md
+      docs/architecture/req15-tg-channel-interviewer-ux/03-send-claim-control-surface.md
+
 Free-text «дальше» / «отправляй» is never the sole advance path when a seam is non-seamless.
 CONTINUE ≠ interpretation confirm ≠ Send (REQ-11 Keep stash only via CONFIRM_SEND).
+Send-claim prose without actions/URL → remint CTAs (no invent stash · no NL rewrite v1).
 """
 
 from __future__ import annotations
@@ -39,6 +42,21 @@ VAGUE_INTERFACE_MARKERS: tuple[str, ...] = (
     "in the ui",
 )
 
+# STORY-70 — phrases that assert an in-chat Send/submit control is available.
+# Literal lock: do NOT treat bare «отправ» / «отправка» as a claim (false-positive fence).
+# Matching runs on markdown-stripped casefold text (see _normalize_claim_text).
+SEND_CLAIM_MARKERS: tuple[str, ...] = (
+    "действие send",
+    "действию send",
+    "действием send",
+    "действия send",
+    "action send",
+    "send button",
+    "send-кнопк",  # send-кнопка / send-кнопку (prefix)
+    "кнопку send",
+    "кнопка send",
+)
+
 
 def classify_fcless_seam(state: SessionState) -> SeamKind:
     """Map confirm FSM state → seam class for FC-less engine replies."""
@@ -67,10 +85,22 @@ def requires_fcless_actions(state: SessionState) -> bool:
     return state in NON_SEAMLESS_FCLESS_STATES
 
 
+def _normalize_claim_text(reply_text: str) -> str:
+    """Casefold + strip markdown emphasis so «**Send**» matches marker «send»."""
+    raw = (reply_text or "").casefold().replace("*", "").replace("_", " ")
+    return " ".join(raw.split())
+
+
 def reply_claims_vague_interface(reply_text: str) -> bool:
     """True when assistant copy points at vague UI without a concrete control."""
-    low = (reply_text or "").casefold()
+    low = _normalize_claim_text(reply_text)
     return any(marker in low for marker in VAGUE_INTERFACE_MARKERS)
+
+
+def reply_claims_send_control(reply_text: str) -> bool:
+    """STORY-70 — True when copy asserts an in-chat Send/submit control is available."""
+    low = _normalize_claim_text(reply_text)
+    return any(marker in low for marker in SEND_CLAIM_MARKERS)
 
 
 def needs_control_surface(
@@ -79,8 +109,11 @@ def needs_control_surface(
     actions: list[dict[str, str]] | None,
     continuation_url: str | None,
 ) -> bool:
-    """AC-68-03: vague «интерфейс» claim requires actions or post-stash URL."""
-    if not reply_claims_vague_interface(reply_text):
+    """AC-68-03 / AC-70-01: vague or Send-claim requires actions or post-stash URL."""
+    claimed = reply_claims_vague_interface(reply_text) or reply_claims_send_control(
+        reply_text
+    )
+    if not claimed:
         return False
     if actions:
         return False

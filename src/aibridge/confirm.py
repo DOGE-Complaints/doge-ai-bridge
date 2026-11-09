@@ -363,7 +363,9 @@ class ConfirmationGuard:
 
     def offer_interpretation_confirm(self, session_id: str) -> list[dict[str, str]]:
         sess = self._sessions[session_id]
-        sess.state = next_state(sess.state, ConfirmAction.OFFER_INTERPRETATION)
+        # STORY-70 remint: already awaiting → mint fresh tokens without FSM hop.
+        if sess.state is not SessionState.AWAITING_INTERPRETATION_CONFIRM:
+            sess.state = next_state(sess.state, ConfirmAction.OFFER_INTERPRETATION)
         return self._mint_bundle(
             sess,
             kinds=(
@@ -386,7 +388,9 @@ class ConfirmationGuard:
             raise IllegalTransitionError(sess.state, ConfirmAction.OFFER_SEND)
         # Tool intent alone must not authorize gateway.
         assert self.authorize_from_tool_intent_alone(sess.frozen_tool_intent) is False
-        sess.state = next_state(sess.state, ConfirmAction.OFFER_SEND)
+        # STORY-70 remint: already awaiting send → mint without FSM hop.
+        if sess.state is not SessionState.AWAITING_SEND_CONFIRM:
+            sess.state = next_state(sess.state, ConfirmAction.OFFER_SEND)
         return self._mint_bundle(
             sess,
             kinds=(

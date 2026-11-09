@@ -5,7 +5,7 @@ L13-1 / AC-08: ordinary (FC-less) reply may soft-offer understanding confirm;
 send-permission is never automatic from ordinary reply — only after frozen FC.
 
 STORY-68: non-seamless seams mint CONTINUE/Edit; send-ready always
-``offer_send_confirm``; ban vague «интерфейс» without actions or post-stash URL.
+``offer_send_confirm``; ban vague «интерфейс» / Send-claim without actions or post-stash URL.
 CONTINUE consume ≠ stash (REQ-11 Keep).
 """
 
@@ -225,7 +225,11 @@ def _ensure_control_surface(
     actions: list[dict[str, str]],
     continuation_url: str | None,
 ) -> list[dict[str, str]]:
-    """AC-68-03 — vague «интерфейс» without actions/URL → mint seam CTAs."""
+    """AC-68-03 / AC-70 — vague or Send-claim without actions/URL → remint CTAs.
+
+    Remint order (arch 03 §3): send-ready → re-offer interpret → FC-less seam → else leave.
+    Never invent stash / CONFIRM_SEND without freeze; never NL-rewrite reply_text.
+    """
     if not needs_control_surface(
         reply_text=reply_text,
         actions=actions,
@@ -234,6 +238,7 @@ def _ensure_control_surface(
         return actions
     if actions:
         return actions
+    # 1) Keep send-ready path
     if (
         sess.state is SessionState.AWAITING_SEND_CONFIRM
         and sess.frozen_tool_intent is not None
@@ -243,8 +248,16 @@ def _ensure_control_surface(
             return guard.offer_send_confirm(sess.session_id)
         except IllegalTransitionError:
             pass
+    # 2) Re-offer interpretation confirm on same-turn keyboard (STORY-70)
+    if sess.state is SessionState.AWAITING_INTERPRETATION_CONFIRM:
+        try:
+            return guard.offer_interpretation_confirm(sess.session_id)
+        except IllegalTransitionError:
+            pass
+    # 3) FC-less non-seamless seams
     if requires_fcless_actions(sess.state):
         return _mint_fcless_seam_actions(guard, sess)
+    # 4) Terminal / cannot mint — leave empty (no invent Send/stash)
     return actions
 
 
