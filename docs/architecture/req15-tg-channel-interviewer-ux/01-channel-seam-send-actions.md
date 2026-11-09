@@ -52,6 +52,8 @@ Concrete stage→action matrix rows = Open at implement (product thin); this arc
 
 Enforcement = coordinator/channel policy (stage invariant + post-stash URL Keep), not model-owned HTTP.
 
+**Residual (STORY-70):** named **Send/submit claims** without actions/URL — detection + remint FSM → [`03-send-claim-control-surface.md`](./03-send-claim-control-surface.md) (extends this §4; Keep vague markers).
+
 ---
 
 ## 5) Trust / coexistence

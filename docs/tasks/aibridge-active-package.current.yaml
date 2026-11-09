@@ -1,7 +1,7 @@
-# Active: pkg-000072 STORY-AIBRIDGE-69 session language pick. Product Done · Code Done · P8 2026-11-06T12:47:50Z · G-01 CLOSED · next DONE
-# (pkg-000071 superseded — STORY-68 Product/Code Done)
-# Honesty: locale ConfirmSession · EN=🇺🇸 · no invent full i18n / live TG SUCCESS · 68 OOS · Code Done ≠ live smoke
+# Active: pkg-000073 STORY-AIBRIDGE-70 send-claim requires actions. Product Done · Code Done · P8 2026-11-09T11:46:08Z · H-01 WAIVE · next DONE
+# (pkg-000072 superseded — STORY-69 Product/Code Done)
+# Honesty: Send-claim remint · Keep REQ-11 · no invent stash/NL · no invent Railway/live TG SUCCESS · GPT invent-named-CTA OOS · Code Done ≠ live Pass
 schema_version: 1
-package_file: aibridge-active-packages/pkg-000072-20261106-epic-aibridge-12-story-69-session-language-pick-actions.yaml
-updated_at: "2026-11-06T12:47:50Z"
+package_file: aibridge-active-packages/pkg-000073-20261109-epic-aibridge-12-story-70-send-claim-requires-actions.yaml
+updated_at: "2026-11-09T11:46:08Z"
 activation: active

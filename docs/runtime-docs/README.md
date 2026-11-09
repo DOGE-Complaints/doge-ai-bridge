@@ -20,6 +20,7 @@
 | [14-hybrid-c-volume-consume-parity-runbook.md](./14-hybrid-c-volume-consume-parity-runbook.md) | Hybrid-C volume/env · E1 inventory · manual publish · AC-04 (STORY-67) · live Explicit Partial (t07) |
 | [15-channel-seam-send-actions.md](./15-channel-seam-send-actions.md) | Seam CONTINUE/Edit · Send always · vague UI ban · Keep stash (STORY-68) · no invent live SUCCESS |
 | [16-session-language-pick-locale.md](./16-session-language-pick-locale.md) | Lang-pick · ConfirmSession.locale · EN=🇺🇸 · unclear gate (STORY-69) · no invent full i18n / live SUCCESS |
+| [17-send-claim-control-surface.md](./17-send-claim-control-surface.md) | Send-claim remint CTAs · no invent stash/NL · Keep REQ-11 (STORY-70) · no invent live SUCCESS |
 
 ## Related
 

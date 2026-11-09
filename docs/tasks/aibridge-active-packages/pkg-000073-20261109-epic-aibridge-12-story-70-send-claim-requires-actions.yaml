@@ -1,0 +1,31 @@
+schema_version: 1
+package_sequence: 73
+created_at: "2026-11-09T11:33:00Z"
+label: epic-aibridge-12-story-70-send-claim-requires-actions
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md
+story_groups:
+- story_key: STORY-AIBRIDGE-70-send-claim-requires-actions
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t01-send-claim-marker-lock/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t02-seam-policy-send-claim-gate/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t03-coordinator-remint-interpret-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t04-build-turn-ensure-invariant/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t05-harness-send-claim-remint/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t06-regression-story-68-suite/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t07-runtime-docs-send-claim/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-70-send-claim-requires-actions/task-aibridge-70-t08-story-gate-index-arch/README.md
+activation: active
+task_status:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Done
+  t08: Done
+p3_completed_at: "2026-11-09T11:36:43Z"
+p8_completed_at: "2026-11-09T11:46:08Z"
+note: "P8 Product/Code Done 2026-11-09T11:46:08Z. t01–t08 Done. Send-claim remint. Keep REQ-11. H-01 live smoke WAIVE. No invent stash/NL/live SUCCESS. GPT invent-named-CTA OOS. next=DONE."

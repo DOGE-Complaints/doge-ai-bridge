@@ -7,15 +7,15 @@
 | **Peers Keep** | [`../req15-dual-confirm-handoff/00-overview.md`](../req15-dual-confirm-handoff/00-overview.md) · [`../runtime/03-confirm-gateway.md`](../runtime/03-confirm-gateway.md) · [`../runtime/01-channel-facade.md`](../runtime/01-channel-facade.md) |
 | **Soft peers** | GPT UI ROL-05/06 (instruction prose) · doge-telegram ChannelAction render Keep |
 | **UX evidence** | [`../../../../docs/analysis/req15-tg-interviewer-target-ux-2026-11-06.md`](../../../../docs/analysis/req15-tg-interviewer-target-ux-2026-11-06.md) · [triage](../../../../docs/analysis/req15-tg-interviewer-ux-gap-triage-2026-11-06.md) |
-| **Story scope** | [`STORY-AIBRIDGE-68…69`](../../tasks/backlog-stories/req15-tg-channel-interviewer-ux/INDEX.md) |
-| **Recorded** | 2026-11-06 |
+| **Story scope** | [`STORY-AIBRIDGE-68…70`](../../tasks/backlog-stories/req15-tg-channel-interviewer-ux/INDEX.md) |
+| **Recorded** | 2026-11-06 · residual Send-claim: 2026-11-09 |
 | **Mode** | Target technical architecture — not implementation tasks |
 | **Slug** | `req15-tg-channel-interviewer-ux` |
 | **Layout** | system (`00` + concern docs) |
 
-**Levels:** product AC in STORYs 68/69 · this folder = how coordinator/tokens/session locale coexist with Keep pipe · work items = backlog tech subtasks (not invent code here).
+**Levels:** product AC in STORYs 68/69/70 · this folder = how coordinator/tokens/session locale coexist with Keep pipe · work items = backlog tech subtasks (not invent code here).
 
-**Siblings:** [`01-channel-seam-send-actions.md`](./01-channel-seam-send-actions.md) · [`02-session-language-locale.md`](./02-session-language-locale.md)
+**Siblings:** [`01-channel-seam-send-actions.md`](./01-channel-seam-send-actions.md) · [`02-session-language-locale.md`](./02-session-language-locale.md) · [`03-send-claim-control-surface.md`](./03-send-claim-control-surface.md)
 
 ---
 
@@ -23,10 +23,10 @@
 
 | Layer | Lives in | Content |
 |-------|----------|---------|
-| Product / AC | STORY-68 · STORY-69 · parent REQ15 UX notes | Goals 2/3/4 · AC-68-* · AC-69-* |
+| Product / AC | STORY-68 · STORY-69 · STORY-70 · parent REQ15 UX notes | Goals 2/3/4 · AC-68-* · AC-69-* · AC-70-* |
 | Keep pilot tech | `runtime/03-confirm-gateway` · `req15-dual-confirm-handoff` | Dual-confirm · stash · SPA URL |
 | Channel contract | OpenAPI channel v1 · `schemas.ChannelAction` | label · opaque token · style |
-| Target tech (this package) | `docs/architecture/req15-tg-channel-interviewer-ux/` | Seam CONTINUE · send-ready CTA invariant · locale picker + ConfirmSession locale |
+| Target tech (this package) | `docs/architecture/req15-tg-channel-interviewer-ux/` | Seam CONTINUE · send-ready CTA · locale · Send-claim remint |
 | Work items | backlog STORY tech subtasks | **Not here** |
 
 **Use case:** Telegram user advances interview via **buttons** at seams and send; language is locked for the session when start text is opaque — without model-owned gateway HTTP.
@@ -43,6 +43,7 @@
   → coordinator / interview engine
   → [68] seam: non-seamless → CONTINUE and/or EDIT actions
   → send-ready freeze → offer_send_confirm (Keep)
+  → [70] if reply claims Send/интерфейс and actions empty → remint by FSM
   → CONFIRM_SEND consume → execute_stash → continuation_url (Keep)
 ```
 
@@ -50,6 +51,7 @@
 |---------|-----|
 | Seam + Send CTAs | [`01`](./01-channel-seam-send-actions.md) |
 | Language pick + session locale | [`02`](./02-session-language-locale.md) |
+| Send-claim control surface | [`03`](./03-send-claim-control-surface.md) |
 
 ---
 
@@ -62,7 +64,7 @@
 | Telegram label→keyboard passthrough | Separate telegram STORY for flag strings |
 | Interpretation / Send / Edit / Cancel offers Present | Claim stage-invariant CTAs already Done |
 
-**Verified gap (analysis.mdc):** generic CONTINUE kind **Absent**; late turns may return `actions=[]` while prose coaches «дальше» / «интерфейс»; session locale picker **Absent** (`language_code` mapped inbound, unused in engine).
+**Verified (2026-11-09):** STORY-68/69 Code Done (CONTINUE + locale Present). Residual: Send-claim prose without actions — see [`03`](./03-send-claim-control-surface.md) / STORY-70.
 
 ---
 
@@ -72,3 +74,4 @@
 |-------|------|-----|
 | STORY-68 | [`01`](./01-channel-seam-send-actions.md) | AC-68-01…04 |
 | STORY-69 | [`02`](./02-session-language-locale.md) | AC-69-01…04 |
+| STORY-70 | [`03`](./03-send-claim-control-surface.md) | AC-70-01…04 |
