@@ -109,7 +109,11 @@ def needs_control_surface(
     actions: list[dict[str, str]] | None,
     continuation_url: str | None,
 ) -> bool:
-    """AC-68-03 / AC-70-01: vague or Send-claim requires actions or post-stash URL."""
+    """AC-68-03 / AC-70-01: vague or Send-claim requires actions or post-stash URL.
+
+    STORY-71 note: AWAITING_INTERPRETATION_CONFIRM + empty actions remints in
+    ``coordinator._ensure_control_surface`` *before* this gate (state-invariant).
+    """
     claimed = reply_claims_vague_interface(reply_text) or reply_claims_send_control(
         reply_text
     )

@@ -225,11 +225,22 @@ def _ensure_control_surface(
     actions: list[dict[str, str]],
     continuation_url: str | None,
 ) -> list[dict[str, str]]:
-    """AC-68-03 / AC-70 — vague or Send-claim without actions/URL → remint CTAs.
+    """AC-68-03 / AC-70 / AC-71 — remint CTAs when control surface missing.
 
-    Remint order (arch 03 §3): send-ready → re-offer interpret → FC-less seam → else leave.
+    Remint order (arch 04 §3 + 03 §3):
+      0) AWAITING_INTERPRETATION_CONFIRM ∧ empty actions → unconditional interpret remint
+         (BEFORE Send-claim / vague marker gate — AC-71-01/02)
+      then needs_control_surface gate for claim/vague paths
+      1) send-ready → 2) interpret-under-claim → 3) FC-less seam → 4) else leave
     Never invent stash / CONFIRM_SEND without freeze; never NL-rewrite reply_text.
     """
+    # 0) STORY-71 — state-invariant remint before marker gate (no invent Send)
+    if not actions and sess.state is SessionState.AWAITING_INTERPRETATION_CONFIRM:
+        try:
+            return guard.offer_interpretation_confirm(sess.session_id)
+        except IllegalTransitionError:
+            pass
+
     if not needs_control_surface(
         reply_text=reply_text,
         actions=actions,
@@ -248,7 +259,7 @@ def _ensure_control_surface(
             return guard.offer_send_confirm(sess.session_id)
         except IllegalTransitionError:
             pass
-    # 2) Re-offer interpretation confirm on same-turn keyboard (STORY-70)
+    # 2) Re-offer interpretation under claim gate (STORY-70; fallback if early remint failed)
     if sess.state is SessionState.AWAITING_INTERPRETATION_CONFIRM:
         try:
             return guard.offer_interpretation_confirm(sess.session_id)
@@ -308,7 +319,8 @@ def build_turn_from_engine(
         if requires_fcless_actions(sess.state):
             actions = _mint_fcless_seam_actions(guard, sess)
             guard._persist_session(sess)  # noqa: SLF001
-        # AWAITING_* — do not re-mint; wait for /actions or FC.
+        # STORY-71: AWAITING_INTERPRETATION_CONFIRM remints via _ensure (state-invariant).
+        # Other AWAITING_* still use ensure claim/send-ready paths — never invent Send.
         actions = _ensure_control_surface(
             guard,
             sess,
