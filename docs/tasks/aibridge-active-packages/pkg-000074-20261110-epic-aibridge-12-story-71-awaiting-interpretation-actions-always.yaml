@@ -1,0 +1,32 @@
+schema_version: 1
+package_sequence: 74
+created_at: "2026-11-10T12:41:54Z"
+label: epic-aibridge-12-story-71-awaiting-interpretation-actions-always
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md
+story_groups:
+- story_key: STORY-AIBRIDGE-71-awaiting-interpretation-actions-always
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t01-arch04-policy-state-invariant-remint/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t02-ensure-early-remint-awaiting-interpret/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t03-flip-awaiting-do-not-remint-comment/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t04-build-turn-ensure-coverage/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t05-harness-awaiting-plain-reply-remint/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t06-regression-story-68-70-suites/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t07-runtime-docs-awaiting-interpret/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/task-aibridge-71-t08-story-gate-index-arch/README.md
+activation: active
+p3_completed_at: "2026-11-10T12:54:14Z"
+p8_completed_at: "2026-11-10T14:34:54Z"
+task_status:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Done
+  t08: Done
+  t09: Done
+note: "P8 Product/Code Done 2026-11-10T14:34:54Z. t01–t09 Done. G-01 CLOSED. H-01 WAIVE. State-invariant remint. Keep REQ-11. No invent Send/stash/NL/live SUCCESS. GPT ROL-07 OOS. STORY-72 OOS. next=DONE."

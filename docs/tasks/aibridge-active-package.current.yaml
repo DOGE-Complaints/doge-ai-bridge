@@ -1,7 +1,7 @@
-# Active: pkg-000073 STORY-AIBRIDGE-70 send-claim requires actions. Product Done · Code Done · P8 2026-11-09T11:46:08Z · H-01 WAIVE · next DONE
-# (pkg-000072 superseded — STORY-69 Product/Code Done)
-# Honesty: Send-claim remint · Keep REQ-11 · no invent stash/NL · no invent Railway/live TG SUCCESS · GPT invent-named-CTA OOS · Code Done ≠ live Pass
+# Active: pkg-000074 STORY-AIBRIDGE-71 awaiting-interpretation actions always. Product Done · Code Done · P8 2026-11-10T14:34:54Z · H-01 WAIVE · next DONE
+# (pkg-000073 superseded tip — STORY-70 Product/Code Done)
+# Honesty: state-invariant remint · Keep REQ-11 · no invent Send/stash/NL · no invent Railway/live TG SUCCESS · GPT ROL-07 / invent-named-CTA OOS · STORY-72 OOS · Code Done ≠ live Pass
 schema_version: 1
-package_file: aibridge-active-packages/pkg-000073-20261109-epic-aibridge-12-story-70-send-claim-requires-actions.yaml
-updated_at: "2026-11-09T11:46:08Z"
+package_file: aibridge-active-packages/pkg-000074-20261110-epic-aibridge-12-story-71-awaiting-interpretation-actions-always.yaml
+updated_at: "2026-11-10T14:34:54Z"
 activation: active

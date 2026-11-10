@@ -46,6 +46,8 @@ When gate fires:
 
 Prefer remint CTAs on **this** turn response (Telegram keyboard on latest message). Prose rewrite of `reply_text` = **v1 Absent**.
 
+**Peer (STORY-71 Present):** while FSM is already `AWAITING_INTERPRETATION_CONFIRM`, remint Confirm/Edit runs **before** this claim/vague gate — see [`04-awaiting-interpretation-always-actions.md`](./04-awaiting-interpretation-always-actions.md) (state-invariant; stricter than §3 priority 2 under `needs_control_surface`).
+
 ---
 
 ## 4) Trust / coexistence
