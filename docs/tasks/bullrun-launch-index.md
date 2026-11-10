@@ -2,7 +2,7 @@
 
 **Профиль:** `aibridge` · **Focus:** `doge-ai-bridge/` · **Стек:** Python (Responses → Story Intake bridge)  
 **Pipeline:** [aibridge-story-execution-pipeline.md](./aibridge-story-execution-pipeline.md)  
-**Active pkg:** [aibridge-active-package.current.yaml](./aibridge-active-package.current.yaml) · **pkg-000074** STORY-AIBRIDGE-71 (**Product Done · Code Done** · P8 · H-01 WAIVE · next **DONE**) · EPIC-12 residual (72 OOS)  
+**Active pkg:** [aibridge-active-package.current.yaml](./aibridge-active-package.current.yaml) · **pkg-000075** STORY-AIBRIDGE-72 (**Product/Code Done** · P8 · H-01 WAIVE · next **DONE**) · EPIC-12 residual reopen  
 **Requirement:** [REQ-01](../requirements/REQ-01-doge-ai-bridge-runtime.md) · [REQ-03](../requirements/REQ-03-RUNTIME-REMEDIATION-AGREED.md) · [REQ-05](../requirements/REQ-05-CONTENT-PHASE-A-FLAT-LAUNCH.md) · [REQ-07](../requirements/REQ-07-OPENAI-STRICT-SCHEMA-COMPATIBILITY-PROJECTION.md) · [REQ-08](../requirements/REQ-08-REQ9-OPS-PARITY-AND-GATEWAY-NAMING.md) · [REQ-09](../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) · [REQ-10](../requirements/REQ-10-AI-PROVIDER-SELECTION-AND-MOCK-MODE.md) · [REQ-11](../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md) · [REQ-12](../requirements/REQ-12-REQ15-INTERVIEW-DEEPSEEK-OPENAI-PROVIDERS.md) · [REQ-13](../requirements/REQ-13-REQ15-SEMANTIC-STATE-ROLES-INSTRUCTION-ASSEMBLY.md) · QA [inbound/outbound guide](./qa-requirements/AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md) · Parent protocol [GPT UI REQ-47](../../../GPT%20UI/docs/requirements/REQ-47-responses-api-https-bearer-bridge.md)  
 **Remote:** https://github.com/DOGE-Complaints/doge-ai-bridge (`dev`)  
 **Runtime plan:** [aibridge_builder.plan.md](../../../.cursor/plans/aibridge_builder.plan.md)  
@@ -12,21 +12,51 @@
 
 | Поле | Значение |
 |------|----------|
-| **Active pkg** | `pkg-000074-20261110-epic-aibridge-12-story-71-awaiting-interpretation-actions-always.yaml` (8 paths) |
-| **Status** | STORY-AIBRIDGE-71 🟢 **Product Done · Code Done** · pkg-000074 · P8 · H-01 WAIVE · next **DONE** · 2026-11-10T14:34:54Z |
-| **Epic** | [EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md) 🟡 **residual** · 68–71 Done · 72 OOS |
-| **Story** | [STORY-AIBRIDGE-71](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always.md) |
-| **Next default** | **DONE** (71 closed · H-01 WAIVE · STORY-72 OOS until next wave · no invent live SUCCESS) |
+| **Active pkg** | `pkg-000075-20261110-epic-aibridge-12-story-72-send-after-draft-confirm-and-validation.yaml` (8 paths) |
+| **Status** | STORY-AIBRIDGE-72 🟢 **Product Done · Code Done** · pkg-000075 · P8 · H-01 WAIVE · next **DONE** · 2026-11-10T16:23:38Z |
+| **Epic** | [EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md) 🟢 **68–72 Done** · residual live smoke / GPT ROL-07 OOS |
+| **Story** | [STORY-AIBRIDGE-72](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation.md) |
+| **Next default** | **DONE** · no invent live SUCCESS · H-01 WAIVE |
 | **Verify** | `--project aibridge --verify` |
-| **Updated** | 2026-11-10T14:34:54Z |
-| **Evidence** | P8 · [p7](../analysis/p7-reaudit-STORY-AIBRIDGE-71-awaiting-interpretation-actions-always-20261110.md) · early remint · harness · G-01 CLOSED |
+| **Updated** | 2026-11-10T16:23:38Z |
+| **Evidence** | P8 · post-confirm chain Present · tip honest · G-01 CLOSED · H-01 WAIVE · [p5](../../../.cursor/plans/p5_aibridge_72_gap_20261110T160418Z.plan.md) |
 | **Skill** | `python-pro` |
-| **activation** | `active` (pkg-000074 tip) · story **DONE** |
-| **OOS** | invent Send/stash · NL rewrite v1 · invent live TG SUCCESS · GPT ROL-07 · STORY-72 this story |
+| **activation** | `active` (pkg-000075 tip) · story **Product/Code Done** |
+| **OOS** | invent stash on interpret · new TokenActionKind · invent live TG SUCCESS · GPT ROL-07 |
 
 ## EPIC-AIBRIDGE-12 — REQ15 TG channel interviewer UX (active)
 
-#### STORY-AIBRIDGE-71-awaiting-interpretation-actions-always
+#### STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation
+
+| Field | Value |
+|-------|-------|
+| Pipeline | [STORY-….md](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation.md) |
+| Backlog source | [STORY-AIBRIDGE-72-….md](./backlog-stories/req15-tg-channel-interviewer-ux/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation.md) |
+| Status | 🟢 **Product Done · Code Done** · pkg-000075 · P8 · H-01 WAIVE · next **DONE** · 2026-11-10T16:23:38Z |
+| Gate | t01–t09 Done · tip honest · Code Done ≠ invent live Pass |
+| Pkg | pkg-000075 · activation **active** (tip) |
+| P1 | 2026-11-10T14:53:18Z · [plan](../../../.cursor/plans/p1_aibridge_72_scaffold_20261110T144725Z.plan.md) |
+| P3 | 2026-11-10T15:01:32Z · `tests/test_story_72_*` · runtime-docs `19` |
+| P5 | 2026-11-10T16:11:43Z · [p5](../../../.cursor/plans/p5_aibridge_72_gap_20261110T160418Z.plan.md) · [disposition](../analysis/p5-disposition-STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation-20261110.md) |
+| P6 | 2026-11-10T16:17:31Z · [p6](./run-reports/run-summary-20261110-1617-story-aibridge-72-p6-t09.md) · tip-sync |
+| P8 | 2026-11-10T16:23:38Z · feat→test→docs local · no push |
+| Depends | Hard: STORY-71 Done · arch `05` |
+| Implement | t01–t09 **Done** |
+| Open | invent stash/TokenActionKind/live SUCCESS forbidden · GPT ROL-07 OOS · Keep REQ-11 · H-01 WAIVE |
+
+| Task | Path | Status | Note |
+|------|------|--------|------|
+| t01 | [task-aibridge-72-t01-arch05-policy-post-confirm-sequence](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t01-arch05-policy-post-confirm-sequence/README.md) | Done | arch05 policy |
+| t02 | [task-aibridge-72-t02-hook-confirm-interpretation-engine-turn](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t02-hook-confirm-interpretation-engine-turn/README.md) | Done | confirm→engine hook |
+| t03 | [task-aibridge-72-t03-success-validate-persist-offer-send](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t03-success-validate-persist-offer-send/README.md) | Done | validate→Send |
+| t04 | [task-aibridge-72-t04-fail-nofc-continue-seam-no-send](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t04-fail-nofc-continue-seam-no-send/README.md) | Done | fail CONTINUE |
+| t05 | [task-aibridge-72-t05-harness-confirm-then-send-after-validate](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t05-harness-confirm-then-send-after-validate/README.md) | Done | harness |
+| t06 | [task-aibridge-72-t06-regression-story-56-68-70-71](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t06-regression-story-56-68-70-71/README.md) | Done | 56/68/70/71 regress |
+| t07 | [task-aibridge-72-t07-runtime-docs-post-confirm-send](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t07-runtime-docs-post-confirm-send/README.md) | Done | runtime-docs |
+| t08 | [task-aibridge-72-t08-story-gate-index-arch](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t08-story-gate-index-arch/README.md) | Done | story gate |
+| t09 | [task-aibridge-72-t09-audit-g01-tip-refresh](./epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t09-audit-g01-tip-refresh/README.md) | Done | G-01 tip-refresh CLOSED |
+
+#### STORY-AIBRIDGE-71-awaiting-interpretation-actions-always (closed tip)
 
 | Field | Value |
 |-------|-------|
@@ -34,7 +64,7 @@
 | Backlog source | [STORY-AIBRIDGE-71-….md](./backlog-stories/req15-tg-channel-interviewer-ux/STORY-AIBRIDGE-71-awaiting-interpretation-actions-always.md) |
 | Status | 🟢 **Product Done · Code Done** · pkg-000074 · P8 · 2026-11-10T14:34:54Z · next **DONE** · H-01 WAIVE |
 | Gate | t01–t09 Done · G-01 CLOSED · WAVE_COMPLETE · H-01 WAIVE |
-| Pkg | pkg-000074 · activation **active** (tip) |
+| Pkg | pkg-000074 · activation **none** (superseded by 075) |
 | P1 | 2026-11-10T12:41:54Z · [plan](../../../.cursor/plans/p1_aibridge_71_scaffold_20261110T123821Z.plan.md) |
 | P3 | 2026-11-10T12:54:14Z · early remint · flip comment · harness · runtime 18 |
 | P5 | 2026-11-10T13:40:11Z · [disposition](../analysis/p5-disposition-STORY-AIBRIDGE-71-awaiting-interpretation-actions-always-20261110.md) · [p5](../../../.cursor/plans/p5_aibridge_71_gap_20261110T131453Z.plan.md) |
@@ -43,7 +73,7 @@
 | P8 | 2026-11-10T14:34:54Z · feat→test→docs · **no push** |
 | Depends | Soft: 68/70 Done · arch `04` |
 | Implement | t01–t09 **Done** |
-| Open | invent Send/stash/NL/live SUCCESS forbidden · GPT ROL-07 OOS · STORY-72 OOS · Code Done ≠ live Pass |
+| Open | invent Send/stash/NL/live SUCCESS forbidden · GPT ROL-07 OOS · Code Done ≠ live Pass |
 
 | Task | Path | Status | Note |
 |------|------|--------|------|

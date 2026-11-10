@@ -1,0 +1,29 @@
+schema_version: 1
+package_sequence: 75
+created_at: "2026-11-10T14:53:18Z"
+label: epic-aibridge-12-story-72-send-after-draft-confirm-and-validation
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux.md
+story_groups:
+- story_key: STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t01-arch05-policy-post-confirm-sequence/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t02-hook-confirm-interpretation-engine-turn/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t03-success-validate-persist-offer-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t04-fail-nofc-continue-seam-no-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t05-harness-confirm-then-send-after-validate/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t06-regression-story-56-68-70-71/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t07-runtime-docs-post-confirm-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/task-aibridge-72-t08-story-gate-index-arch/README.md
+activation: active
+task_status:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Done
+  t08: Done
+note: "P8 Product/Code Done 2026-11-10T16:23:38Z. t01–t09 Done. G-01 CLOSED. H-01 WAIVE live smoke. Keep REQ-11. No invent stash/TokenActionKind/live SUCCESS. GPT ROL-07 OOS. next=DONE."

@@ -2,7 +2,7 @@
 
 ## Meta
 - **Key:** `STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation`
-- **Status:** 🟡 **Tech-arch + subtasks Present** · implement out (no Code Done this wave) · **hard-dep STORY-71**
+- **Status:** 🟢 **Product Done · Code Done** · pkg-000075 · P8 · H-01 WAIVE · next **DONE** · 2026-11-10T16:23:38Z · hard-dep STORY-71 **Done** · [pipeline](../../epics/EPIC-AIBRIDGE-12-req15-tg-channel-interviewer-ux/stories/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation/STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation.md)
 - **Package:** [`INDEX.md`](INDEX.md) · `req15-tg-channel-interviewer-ux` (residual reopen)
 - **Tech-arch:** [`05-send-after-draft-confirm-validate.md`](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) · [`00-overview`](../../../architecture/req15-tg-channel-interviewer-ux/00-overview.md) · hard-dep [`04`](../../../architecture/req15-tg-channel-interviewer-ux/04-awaiting-interpretation-always-actions.md)
 - **Parent product:** REQ15 channel interview UX · peer Keep [`REQ-11`](../../../requirements/REQ-11-REQ15-DUAL-CONFIRM-GATEWAY-SUBMIT-SPA-HANDOFF.md)
@@ -45,10 +45,10 @@
 |------|--------|------|
 | Send after validated FC freeze on `/turns` | **Present** | `coordinator.build_turn_from_engine` · STORY-68 Keep |
 | FC blocked until `INTERPRETATION_CONFIRMED` | **Present** | `validate_function_calls` |
-| `CONFIRM_INTERPRETATION` → state only, `actions=[]` | **Present** | `confirm.consume_action_token` |
-| Post-confirm auto engine / validate / Send on `/actions` | **Absent** (target) | arch [`05`](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) |
-| Live handoff-chain window | Never left `awaiting_interpretation_confirm`; `fc_count=0`; no Send CTA | gap 2026-11-10 |
-| North-star order approve → validate → Send | **Desired**; not Observed | north star §3 |
+| `CONFIRM_INTERPRETATION` → state only, `actions=[]`, `post_confirm_engine` | **Present** | `confirm.consume_action_token` |
+| Post-confirm auto engine / validate / Send on `/actions` | **Present** (P3 harness) | `channel.run_post_interpretation_confirm_chain` · arch [`05`](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) |
+| Live handoff-chain window | Never invent live SUCCESS this wave | gap 2026-11-10 residual deploy |
+| North-star order approve → validate → Send | **Present** in harness · ≠ live Pass | north star §3 · tests/story_72 |
 
 ## Desired
 
@@ -76,14 +76,14 @@ Order mirrors arch [`05`](../../../architecture/req15-tg-channel-interviewer-ux/
 
 | ID | Subtask | Arch cite | AC / DoD | Touch (as-is) | OOS | Status |
 |----|---------|-----------|----------|---------------|-----|--------|
-| **t01** | Arch `05`: post-confirm sequence + fail-closed; cite Present empty `/actions` | [`05` §1–2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01…02 policy | arch `05` · story Implementation | Soften interpret≠gateway | Present (docs) |
-| **t02** | Hook после `CONFIRM_INTERPRETATION`: server-owned engine turn → `build_turn_from_engine` | [`05` §2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-02 | `confirm.py` · `channel.process_action` | New TokenActionKind | Open (implement) |
-| **t03** | Success path: validate→persist→`offer_send_confirm` в том же actions payload | [`05` §2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-02 | `coordinator.py` · `confirm.offer_send_confirm` | Invent stash on interpret | Open (implement) |
-| **t04** | Fail/no-FC path: CONTINUE/Edit; assert no `CONFIRM_SEND`; no gateway | [`05` §2–3](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01 · AC-72-04 | `offer_continue_seam` | Premature Send invent | Open (implement) |
-| **t05** | Harness: Confirm → Send only after validate; Confirm alone never Send; FC before confirm blocked; free-text send ≠ stash | [`05` §4](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01…04 | `tests/` | Live TG invent | Open (implement) |
-| **t06** | Regression: dual-confirm / STORY-56/68/70 Keep | [`01`](../../../architecture/req15-tg-channel-interviewer-ux/01-channel-seam-send-actions.md) · Keep dual-confirm | AC Keep | `tests/` | — | Open (implement) |
-| **t07** | Thin runtime-docs note (sequence honesty) | [`05`](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) · [`00`](../../../architecture/req15-tg-channel-interviewer-ux/00-overview.md) | honesty | `docs/runtime-docs/` path at implement | Invent live SUCCESS | Open (implement) |
-| **t08** | Story gate · package INDEX · hard-dep 71 honesty | [`00`](../../../architecture/req15-tg-channel-interviewer-ux/00-overview.md) | Package gate for 72 | [`INDEX.md`](INDEX.md) · STORY-71 | Code Done invent before 71 | Present (docs) |
+| **t01** | Arch `05`: post-confirm sequence + fail-closed; cite Present empty `/actions` | [`05` §1–2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01…02 policy | arch `05` · story Implementation | Soften interpret≠gateway | **Done** |
+| **t02** | Hook после `CONFIRM_INTERPRETATION`: server-owned engine turn → `build_turn_from_engine` | [`05` §2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-02 | `confirm.py` · `channel.process_action` | New TokenActionKind | **Done** |
+| **t03** | Success path: validate→persist→`offer_send_confirm` в том же actions payload | [`05` §2](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-02 | `coordinator.py` · `confirm.offer_send_confirm` | Invent stash on interpret | **Done** |
+| **t04** | Fail/no-FC path: CONTINUE/Edit; assert no `CONFIRM_SEND`; no gateway | [`05` §2–3](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01 · AC-72-04 | `offer_continue_seam` | Premature Send invent | **Done** |
+| **t05** | Harness: Confirm → Send only after validate; Confirm alone never Send; FC before confirm blocked; free-text send ≠ stash | [`05` §4](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) | AC-72-01…04 | `tests/` | Live TG invent | **Done** |
+| **t06** | Regression: dual-confirm / STORY-56/68/70/71 Keep | [`01`](../../../architecture/req15-tg-channel-interviewer-ux/01-channel-seam-send-actions.md) · Keep dual-confirm | AC Keep | `tests/` | — | **Done** |
+| **t07** | Thin runtime-docs note (sequence honesty) | [`05`](../../../architecture/req15-tg-channel-interviewer-ux/05-send-after-draft-confirm-validate.md) · [`00`](../../../architecture/req15-tg-channel-interviewer-ux/00-overview.md) | honesty | `docs/runtime-docs/19-…` | Invent live SUCCESS | **Done** |
+| **t08** | Story gate · package INDEX · hard-dep 71 honesty | [`00`](../../../architecture/req15-tg-channel-interviewer-ux/00-overview.md) | Package gate for 72 | [`INDEX.md`](INDEX.md) · STORY-71 | Code Done invent before 71 | **Done** |
 
 ## Dependencies
 - **Hard:** STORY-71 **arch+subtasks Present**; **runtime of 71 before runtime of 72**.

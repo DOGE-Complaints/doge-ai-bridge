@@ -12,15 +12,15 @@
 
 | Piece | Status | Path |
 |-------|--------|------|
-| `CONFIRM_INTERPRETATION` consume → `interpretation_confirmed`, `actions=[]` | **Present** | `confirm.consume_action_token` |
-| No engine / validate / Send on interpret consume | **Present** (gap vs north star) | `channel.process_action` → consume only |
+| `CONFIRM_INTERPRETATION` consume → `interpretation_confirmed`, `actions=[]`, `post_confirm_engine=True` | **Present** | `confirm.consume_action_token` |
+| Post-confirm engine → validate → Send on `/actions` (same payload) | **Present** (P3 STORY-72) | `channel.process_action` → `run_post_interpretation_confirm_chain` → `build_turn_from_engine` |
 | FC blocked until `INTERPRETATION_CONFIRMED` (or awaiting send) | **Present** | `coordinator.validate_function_calls` |
 | Send after FC validate + freeze | **Present** | `build_turn_from_engine` → `persist_pending_tool` → `offer_send_confirm` |
 | FSM `OFFER_SEND` only from `INTERPRETATION_CONFIRMED` | **Present** | `confirm_fsm.py` |
 | FC-less after confirm → CONTINUE/Edit (not Send) | **Present** | `seam_policy` · `offer_continue_seam` |
 | Premature Send CTA before interpret confirm | **Blocked** Keep | FC gate + FSM |
 
-**Missing for north star:** approve → validate → Send on one control surface after Confirm — citizen must wait for a later `/turns` that happens to carry a validated FC.
+**North star order:** approve → validate → Send on one `/actions` control surface after Confirm — **Present** in harness (Code Done ≠ invent live TG SUCCESS).
 
 ---
 
@@ -76,4 +76,4 @@ Hard-dep: STORY-71 must land first so the citizen can reach Confirm without empt
 
 ## 5) Honesty
 
-Docs/arch Present ≠ Code Done ≠ live TG SUCCESS. Implement = separate dialog after STORY-71 runtime.
+Docs/arch Present · Code/harness Done (P3 · 2026-11-10T15:01:32Z) ≠ invent Railway / live TG SUCCESS. GPT ROL-07 OOS.

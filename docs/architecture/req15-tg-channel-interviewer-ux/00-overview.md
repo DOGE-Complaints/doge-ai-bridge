@@ -72,9 +72,9 @@
 | Present ChannelAction contract | Redesign OpenAPI token fields for this residual |
 | Telegram label→keyboard passthrough | Separate telegram STORY for flag strings |
 | Interpretation / Send / Edit / Cancel offers Present | Claim stage-invariant CTAs / post-confirm Send already Code Done |
-| STORY-71 early remint Present (P3) · 72 arch+subtasks | Invent live TG SUCCESS · invent STORY-72 Code Done |
+| STORY-71 early remint Present · STORY-72 post-confirm chain Present (P3 harness) | Invent live TG SUCCESS / Railway Pass |
 
-**Verified (2026-11-10):** STORY-68/69/70 Code Done · STORY-71 P3 early remint Present (harness). Residual deploy/live smoke · post-confirm validate→Send chain (72). Soft peer GPT ROL-07.
+**Verified (2026-11-10):** STORY-68/69/70/71 Code Done · STORY-72 P3 post-confirm validate→Send Present (harness). Residual deploy/live smoke. Soft peer GPT ROL-07 OOS.
 
 ---
 

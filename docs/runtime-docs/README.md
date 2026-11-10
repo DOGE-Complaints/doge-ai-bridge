@@ -22,6 +22,7 @@
 | [16-session-language-pick-locale.md](./16-session-language-pick-locale.md) | Lang-pick · ConfirmSession.locale · EN=🇺🇸 · unclear gate (STORY-69) · no invent full i18n / live SUCCESS |
 | [17-send-claim-control-surface.md](./17-send-claim-control-surface.md) | Send-claim remint CTAs · no invent stash/NL · Keep REQ-11 (STORY-70) · no invent live SUCCESS |
 | [18-awaiting-interpretation-always-actions.md](./18-awaiting-interpretation-always-actions.md) | State-invariant Confirm/Edit remint on interpret-await · no invent Send/stash (STORY-71) · no invent live SUCCESS |
+| [19-send-after-draft-confirm-validate.md](./19-send-after-draft-confirm-validate.md) | Post-confirm engine → validate → Send on `/actions` · CONTINUE on fail (STORY-72) · no invent live SUCCESS |
 
 ## Related
 
