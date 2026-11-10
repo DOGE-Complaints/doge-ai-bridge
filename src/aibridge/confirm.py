@@ -406,10 +406,11 @@ class ConfirmationGuard:
         )
 
     def offer_continue_seam(self, session_id: str) -> list[dict[str, str]]:
-        """STORY-68 — mint CONTINUE + EDIT on non-seamless seam (no FSM offer transition).
+        """STORY-68 / STORY-72 fail path — mint CONTINUE + EDIT (no FSM offer transition).
 
         Does **not** overload interpretation confirm. Does **not** authorize gateway.
         Consume path resumes interview without stash (AC-68-01 · AC-68-04).
+        STORY-72: also used after post-confirm engine fail / no-FC (no CONFIRM_SEND).
         """
         sess = self._sessions[session_id]
         assert sess.gateway_authorized is False
@@ -626,6 +627,8 @@ class ConfirmationGuard:
                     "message": "Draft hash mismatch",
                 }
 
+        # STORY-72 — flag for process_action post-confirm engine chain (never gateway here).
+        post_confirm_engine = False
         try:
             if rec.action is TokenActionKind.CONFIRM_INTERPRETATION:
                 sess.state = next_state(sess.state, ConfirmAction.CONFIRM_INTERPRETATION)
@@ -636,6 +639,8 @@ class ConfirmationGuard:
                 assert sess.gateway_authorized is False
                 reply = "Interpretation confirmed."
                 actions: list[dict[str, str]] = []
+                # Hook point only — engine/validate/Send run outside consume (arch 05 §2).
+                post_confirm_engine = True
             elif rec.action is TokenActionKind.CONTINUE:
                 # STORY-68 — resume interview; NEVER stash / NEVER gateway.
                 sess.gateway_authorized = False
@@ -743,6 +748,8 @@ class ConfirmationGuard:
             "outcome": sess.last_outcome,
             "draft_id": sess.draft_id,
             "continuation_url": sess.continuation_url,
+            # STORY-72: True only after CONFIRM_INTERPRETATION consume (actions still []).
+            "post_confirm_engine": post_confirm_engine,
         }
 
     def _complete_send_gateway(

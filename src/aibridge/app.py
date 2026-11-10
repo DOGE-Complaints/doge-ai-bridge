@@ -390,11 +390,34 @@ def create_app(
     def resolve_settings() -> Settings:
         return settings if settings is not None else get_settings()
 
-    # Log level when set (REQ-03 §5.6).
+    # Log level when set (REQ-03 §5.6). Ensure StreamHandler so ops_* INFO
+    # lands in uvicorn-redirected aibridge.log (setLevel alone is not enough).
     import logging
+    import sys
 
-    logging.getLogger("aibridge").setLevel(
-        getattr(logging, str(cfg0.aibridge_log_level or "INFO").upper(), logging.INFO)
+    _aibridge_log = logging.getLogger("aibridge")
+    _level = getattr(
+        logging, str(cfg0.aibridge_log_level or "INFO").upper(), logging.INFO
+    )
+    _aibridge_log.setLevel(_level)
+    if not any(
+        isinstance(h, logging.StreamHandler) and getattr(h, "stream", None) is sys.stderr
+        for h in _aibridge_log.handlers
+    ):
+        _handler = logging.StreamHandler(sys.stderr)
+        _handler.setLevel(_level)
+        _handler.setFormatter(
+            logging.Formatter(
+                "%(asctime)s %(levelname)s %(name)s %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S",
+            )
+        )
+        _aibridge_log.addHandler(_handler)
+    _aibridge_log.propagate = False
+    _aibridge_log.info(
+        "ops_runtime use_pg_runtime=%s allow_memory=%s",
+        use_pg_runtime,
+        bool(cfg0.aibridge_allow_memory_stores),
     )
 
     token_ttl = (
@@ -1004,6 +1027,7 @@ def create_app(
             store,
             guard=app.state.confirmation_guard,
             turn_lock=getattr(app.state, "turn_lock", None),
+            interview_engine=getattr(app.state, "interview_engine", None),
         )
         if err is not None:
             status = int(err["http_status"])

@@ -277,7 +277,12 @@ def build_turn_from_engine(
     sess: ConfirmSession,
     engine_result: dict[str, Any],
 ) -> dict[str, Any]:
-    """Map InterviewEngine result → channel success fields (no Received stub)."""
+    """Map InterviewEngine result → channel success fields (no Received stub).
+
+    STORY-72 reuse: after CONFIRM_INTERPRETATION, ``channel.process_action`` runs a
+    server-owned engine turn then this mapper — FC OK → validate → persist →
+    ``offer_send_confirm``; no-FC / validate fail → CONTINUE/Edit (no Send / no gateway).
+    """
     if not engine_result.get("ok", True):
         reply = str(
             engine_result.get("message")
