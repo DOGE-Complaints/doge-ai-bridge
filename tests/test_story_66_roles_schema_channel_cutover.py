@@ -40,7 +40,7 @@ _PHASE_A_MANIFEST = _FIXTURES / "instructions.manifest.json"
 _PHASE_A_DIR = _FIXTURES / "instructions"
 _OAS = _FIXTURES / "bad-tool-gen.openapi.yaml"
 _PACK = _FIXTURES / "pack" / "payload.schema.json"
-_EXPORT = _WORKSPACE / "GPT UI" / "instructions-roles-req15"
+_EXPORT = _WORKSPACE / "GPT UI" / "instructions-roles"
 _EXPORT_MANIFEST = _EXPORT / "roles.manifest.json"
 
 
