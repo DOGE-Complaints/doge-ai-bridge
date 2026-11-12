@@ -33,7 +33,7 @@
 | **t01** | Done · INSTRUCTIONS_* roles-schema unify | **Confirmed** `app.py` peek + wire paths · `test_t01_*` cutover evidence |
 | **t02** | Done · content/ready roles-schema loader | **Confirmed** `classify_manifest` · dual fail-closed · `test_t02_*` |
 | **t03** | Done · channel assemble default cutover | **Confirmed** `channel_wire` cutover=True · `test_t03_*` |
-| **t04** | Done · local GPT-48 consume light | **Confirmed** `GPT UI/instructions-roles-req15/` · `test_t04_*` |
+| **t04** | Done · local GPT-48 consume light | **Confirmed** `GPT UI/instructions-roles/` · `test_t04_*` |
 | **t05** | Done · Phase-A legacy/dev docs | **Confirmed** runtime `13` · REQ-13 §3b honesty |
 | **t08** | PASS · gate | **Confirmed** |
 | **OOS 67** | Preserved | **Confirmed** |
@@ -98,7 +98,7 @@
 - `src/aibridge/app.py` (ROLES_*/INSTRUCTIONS_* unify)
 - `docs/runtime-docs/13-roles-schema-channel-cutover.md`
 - `docs/runtime-docs/README.md`
-- `GPT UI/instructions-roles-req15/roles.manifest.json`
+- `GPT UI/instructions-roles/roles.manifest.json`
 - `tests/test_story_66_roles_schema_channel_cutover.py`
 - Pipeline / tasks under `…/STORY-AIBRIDGE-66-roles-schema-channel-cutover/`
 - P3: `docs/tasks/run-reports/run-summary-20261104-1351-story-aibridge-66-p3.md`
