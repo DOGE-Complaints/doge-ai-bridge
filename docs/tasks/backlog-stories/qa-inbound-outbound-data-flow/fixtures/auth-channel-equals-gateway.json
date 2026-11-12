@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.auth-channel-equals-gateway",
+  "matrix_ids": [
+    "AUTH-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-23-qa-auth-ops-boundaries"
+  ],
+  "notes": "synthetic; Channel Bearer equals Gateway Bearer \u2192 readyz reject",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
+      "AIBRIDGE_DRY_RUN": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "channel_gateway_bearer_equal"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.callback-owner",
+  "matrix_ids": [
+    "N8N-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; callback_query with opaque data ≤64 bytes",
+  "payload": {
+    "update_id": 848301570,
+    "callback_query": {
+      "id": "4242421001",
+      "data": "tok_syn_opaque_001",
+      "from": {
+        "id": 501122334,
+        "is_bot": false,
+        "first_name": "Resident"
+      },
+      "message": {
+        "message_id": 30,
+        "date": 1758099710,
+        "chat": {
+          "id": 501122334,
+          "type": "private"
+        },
+        "text": "Choose action"
+      }
+    }
+  }
+}

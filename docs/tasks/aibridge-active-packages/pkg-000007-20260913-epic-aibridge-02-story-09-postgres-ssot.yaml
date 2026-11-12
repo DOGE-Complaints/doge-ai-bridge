@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 7
+created_at: "2026-09-13T15:16:41Z"
+label: epic-aibridge-02-story-09-postgres-ssot
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-09-postgres-ssot-migrations
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t01-versioned-migrations-ssot/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t02-uniqueness-gateway-constraints/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t03-db-one-active-turn/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t04-transport-replay-store/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t05-prod-repos-no-memory-fallback/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t06-pg-ci-concurrency-races/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-09-postgres-ssot-migrations/task-aibridge-02-09-t07-story-acceptance-verification/README.md
+activation: active

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.val-invalid-utf8",
+  "matrix_ids": [
+    "VAL-004"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+  ],
+  "notes": "synthetic; invalid UTF-8 body bytes",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "auth_ref": "channel",
+    "send_mode": "raw_b64",
+    "raw_body_b64": "//4gbm90IHV0Zjggew==",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "expect": {
+      "http_status": 400,
+      "error_code": "bad_request"
+    }
+  }
+}

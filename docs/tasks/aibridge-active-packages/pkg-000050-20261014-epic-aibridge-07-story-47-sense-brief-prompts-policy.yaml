@@ -1,0 +1,19 @@
+schema_version: 1
+package_sequence: 50
+created_at: "2026-10-14T12:46:03Z"
+label: epic-aibridge-07-story-47-sense-brief-prompts-policy
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker.md
+story_groups:
+- story_key: STORY-AIBRIDGE-47-sense-brief-prompts-policy
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t01-logical-l2-brief-model/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t02-dedicated-prompt-module/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t03-text-brief-capability-slot/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t04-corpus-brief-no-invent-policy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t05-brief-failure-reason-classes/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t06-golden-l2-invent-refusal-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-47-sense-brief-prompts-policy/task-aibridge-47-t07-story-gate/README.md
+activation: active
+note: "REUSE EPIC-07. STORY-47 sense brief + prompts + policy. Open path/env/JSON/model — no invent SSOT. No product invent in P1."

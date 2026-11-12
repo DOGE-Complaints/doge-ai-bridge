@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-media-caption",
+  "matrix_ids": [
+    "N8N-011"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; characterization; caption-as-text only if workflow documents — capture-first current=undocumented",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-photo-with-caption",
+    "expected_channel_fixture_id": null,
+    "flow": "media_caption",
+    "characterization": true,
+    "workflow_documents_caption_as_text": false,
+    "captured_behavior": "do_not_invent_caption_as_text",
+    "outbound_telegram": {
+      "unsupported_or_deferred": true
+    }
+  }
+}

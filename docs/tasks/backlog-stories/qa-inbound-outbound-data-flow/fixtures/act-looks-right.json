@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-looks-right",
+  "matrix_ids": [
+    "ACT-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Looks right by owner \u2014 PLACEHOLDER swapped for minted token",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-001",
+      "callback_query_id": "cq-act-001",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "PLACEHOLDER_TOKEN"
+    },
+    "expect": {
+      "http_status": 200,
+      "state": "interpretation_confirmed",
+      "gateway_call_count": 0
+    }
+  }
+}

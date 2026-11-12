@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.map-outcome-non-stashed-no-link",
+  "matrix_ids": [
+    "N8N-018"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; non-stashed with accidental draft/URL → adapter must not present link",
+  "payload": {
+    "inbound_telegram_fixture_id": "telegram.message-private-ru-pothole",
+    "expected_channel_fixture_id": null,
+    "flow": "response_render",
+    "aibridge_response": {
+      "actions": [],
+      "reply_text": "Thanks",
+      "outcome": "continued",
+      "continuation_url": "https://spa.example.invalid/draft/accidental",
+      "draft_id": "accidental"
+    },
+    "outbound_telegram": {
+      "must_not_present_continuation_link": true,
+      "claim_published_forbidden": true
+    }
+  }
+}

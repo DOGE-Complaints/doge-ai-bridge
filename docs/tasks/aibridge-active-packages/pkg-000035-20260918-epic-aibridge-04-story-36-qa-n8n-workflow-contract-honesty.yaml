@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 35
+created_at: "2026-09-18T12:27:40Z"
+label: epic-aibridge-04-story-36-qa-n8n-workflow-contract-honesty
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty/task-aibridge-36-t01-relabel-layer-e-docs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty/task-aibridge-36-t02-pin-workflow-export/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty/task-aibridge-36-t03-optional-out-of-ci-smoke/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty/task-aibridge-36-t04-story-gate/README.md
+activation: superseded
+superseded_by: pkg-000036-20260918-epic-aibridge-04-story-37-qa-gate5-live-pilot-evidence.yaml
+note: "Superseded 2026-09-18T12:50:58Z — STORY-36 wave complete; active → pkg-000036 (STORY-37). Sequences 31/32 remain grandfather-reserved."

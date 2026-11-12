@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 15
+created_at: "2026-09-13T18:20:16Z"
+label: epic-aibridge-02-story-17-spa-https-continuation-e2e
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-17-spa-https-continuation-e2e
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-17-spa-https-continuation-e2e/task-aibridge-02-17-t01-r3-p1-08-checklist-ssot/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-17-spa-https-continuation-e2e/task-aibridge-02-17-t02-spa-owner-evidence-link-protocol/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-17-spa-https-continuation-e2e/task-aibridge-02-17-t03-dashboard-wave2-blocked-until-evidence/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-17-spa-https-continuation-e2e/task-aibridge-02-17-t04-evidence-pack-or-blocked-residual/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-17-spa-https-continuation-e2e/task-aibridge-02-17-t05-story-acceptance-verification/README.md
+activation: active

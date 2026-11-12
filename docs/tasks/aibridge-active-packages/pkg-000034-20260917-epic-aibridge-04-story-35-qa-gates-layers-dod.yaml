@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 34
+created_at: "2026-09-17T21:40:06Z"
+label: epic-aibridge-04-story-35-qa-gates-layers-dod
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-35-qa-gates-layers-dod
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-35-qa-gates-layers-dod/task-aibridge-35-t01-promote-meta-index/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-35-qa-gates-layers-dod/task-aibridge-35-t02-sync-fixture-index/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-35-qa-gates-layers-dod/task-aibridge-35-t03-gates-layers-checklist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-35-qa-gates-layers-dod/task-aibridge-35-t04-story-gate/README.md
+activation: superseded
+superseded_by: pkg-000035-20260918-epic-aibridge-04-story-36-qa-n8n-workflow-contract-honesty.yaml
+note: "Superseded 2026-09-18T12:27:40Z — STORY-35 wave complete; active → pkg-000035 (STORY-36). Sequences 31/32 remain grandfather-reserved."

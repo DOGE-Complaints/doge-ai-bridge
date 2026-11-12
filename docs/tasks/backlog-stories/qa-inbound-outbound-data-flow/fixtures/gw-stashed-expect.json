@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.gw-stashed-expect",
+  "matrix_ids": [
+    "GW-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; valid 201 → stashed + URL-encoded continuation; draft_id from seed",
+  "payload": {
+    "outcome": "stashed",
+    "state": "stashed",
+    "gateway_call_count": 1,
+    "draft_id": "draft_syn_001",
+    "trace_id": "trace_syn_001",
+    "redirect_base": "https://spa.example.invalid",
+    "claim_published_forbidden": true
+  }
+}

@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 36
+created_at: "2026-09-18T12:50:58Z"
+label: epic-aibridge-04-story-37-qa-gate5-live-pilot-evidence
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence/task-aibridge-37-t01-uc-vs-gate5-docs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence/task-aibridge-37-t02-pilot-checklist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence/task-aibridge-37-t03-evidence-pack/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence/task-aibridge-37-t04-story-gate/README.md
+activation: active
+note: "Sequences 31/32 reserved on date-gate-grandfather (gateway legacy); aibridge uses 036 after 035."

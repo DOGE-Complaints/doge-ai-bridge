@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-bundle-change",
+  "matrix_ids": [
+    "OAI-016"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "characterization; new pack_id → new prefix; active pinned session follows retention",
+  "payload": {
+    "kind": "bundle_change",
+    "pack_id_a": "uus_veerenni_civic/v3",
+    "pack_id_b": "uus_veerenni_civic/v4",
+    "instructions": "civic interview"
+  }
+}

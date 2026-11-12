@@ -1,0 +1,1 @@
+../run-reports/aibridge-build-windows/aibridge-cursor-build-window--STORY-AIBRIDGE-72-send-after-draft-confirm-and-validation.md

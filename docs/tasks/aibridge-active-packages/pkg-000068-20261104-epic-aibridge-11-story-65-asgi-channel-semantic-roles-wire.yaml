@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 68
+created_at: "2026-11-04T13:06:36Z"
+label: epic-aibridge-11-story-65-asgi-channel-semantic-roles-wire
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly.md
+story_groups:
+- story_key: STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t01-channel-semantic-state-service-bind/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t02-channel-select-assemble-role-wire/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t03-channel-meaning-invalidate-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t04-dual-confirm-stash-regression-smoke/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t05-g02-waiver-lift-or-rescope-note/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-65-asgi-channel-semantic-roles-wire/task-aibridge-65-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-11. STORY-65 ASGI channel semantic+roles wire (lift G-02). Keep dual-confirm. No invent HTTP. OOS 66/67/GPT-48. Skip grandfather 031/032. No product invent in P1."

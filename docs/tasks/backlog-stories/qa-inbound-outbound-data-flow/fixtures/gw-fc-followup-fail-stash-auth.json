@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.gw-fc-followup-fail-stash-auth",
+  "matrix_ids": [
+    "GW-020"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; FC follow-up fails after successful stash; stash outcome remains authoritative",
+  "payload": {
+    "outcome": "stashed",
+    "state": "stashed",
+    "draft_id": "draft_syn_001",
+    "followup_raises": true,
+    "gateway_call_count": 1
+  }
+}

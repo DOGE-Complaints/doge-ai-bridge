@@ -1,0 +1,15 @@
+schema_version: 1
+package_sequence: 20
+created_at: "2026-09-17T13:59:06Z"
+label: epic-aibridge-04-story-23-qa-auth-ops-boundaries
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-23-qa-auth-ops-boundaries
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-23-qa-auth-ops-boundaries/task-aibridge-23-t01-promote-seed-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-23-qa-auth-ops-boundaries/task-aibridge-23-t02-generate-auth-matrix-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-23-qa-auth-ops-boundaries/task-aibridge-23-t03-implement-contract-auth-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-23-qa-auth-ops-boundaries/task-aibridge-23-t04-story-gate/README.md
+activation: active

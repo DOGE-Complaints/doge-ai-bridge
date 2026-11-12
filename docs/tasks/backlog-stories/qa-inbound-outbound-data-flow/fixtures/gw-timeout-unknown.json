@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.gw-timeout-unknown",
+  "matrix_ids": [
+    "GW-011"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; TimeoutError after attempted post → unknown_outcome; blocks auto-resend same revision",
+  "payload": {
+    "outcome": "unknown_outcome",
+    "state": "unknown_outcome",
+    "transport_raise": "TimeoutError",
+    "gateway_call_count": 1,
+    "http_posted": true,
+    "send_blocked_same_revision": true
+  }
+}

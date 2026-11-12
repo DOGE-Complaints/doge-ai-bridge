@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 13
+created_at: "2026-09-13T17:28:28Z"
+label: epic-aibridge-02-story-15-n8n-telegram-gate
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-15-n8n-telegram-gate
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t01-r3-p1-09-checklist-ssot/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t02-turns-buttons-callback-order/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t03-secrets-no-story-drafts/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t04-event-id-retry-principal-session/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t05-live-evidence-or-recorded-test/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-15-n8n-telegram-gate/task-aibridge-02-15-t06-story-acceptance-verification/README.md
+activation: active

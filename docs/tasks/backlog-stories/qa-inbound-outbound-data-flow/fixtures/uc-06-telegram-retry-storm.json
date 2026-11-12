@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-06-telegram-retry-storm",
+  "matrix_ids": [
+    "UC-06"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "characterization capture-first — UC-06 same event_id retry storm; one OpenAI; deterministic replay. Adapter TG dedupe measured separately.",
+  "payload": {
+    "flow": [
+      "turn_retry_storm"
+    ],
+    "dry_run": true,
+    "retry_count": 8,
+    "expect": {
+      "openai_call_count": 1,
+      "gateway_call_count": 0,
+      "deterministic_replay": true
+    }
+  },
+  "characterization": true
+}

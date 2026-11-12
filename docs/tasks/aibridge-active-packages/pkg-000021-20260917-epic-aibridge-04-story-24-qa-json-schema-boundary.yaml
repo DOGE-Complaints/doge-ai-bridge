@@ -1,0 +1,15 @@
+schema_version: 1
+package_sequence: 21
+created_at: "2026-09-17T14:26:09Z"
+label: epic-aibridge-04-story-24-qa-json-schema-boundary
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-24-qa-json-schema-boundary
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-24-qa-json-schema-boundary/task-aibridge-24-t01-promote-seed-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-24-qa-json-schema-boundary/task-aibridge-24-t02-generate-val-matrix-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-24-qa-json-schema-boundary/task-aibridge-24-t03-implement-schema-boundary-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-24-qa-json-schema-boundary/task-aibridge-24-t04-story-gate/README.md
+activation: active

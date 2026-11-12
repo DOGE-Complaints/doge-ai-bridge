@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 64
+created_at: "2026-11-01T21:16:01Z"
+label: epic-aibridge-10-story-61-interview-provider-stub-live-evidence
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers.md
+story_groups:
+- story_key: STORY-AIBRIDGE-61-interview-provider-stub-live-evidence
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-61-interview-provider-stub-live-evidence/task-aibridge-61-t01-stub-evidence-matrix-59-60-harness/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-61-interview-provider-stub-live-evidence/task-aibridge-61-t02-live-pass-runbook-per-provider-partial/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-61-interview-provider-stub-live-evidence/task-aibridge-61-t03-peer-cite-table-worker-req11-req13/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-61-interview-provider-stub-live-evidence/task-aibridge-61-t04-package-index-honesty-stub-ne-ac04/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-61-interview-provider-stub-live-evidence/task-aibridge-61-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-10. STORY-61 stub+live evidence. Explicit Partial OK. No invent live SUCCESS/Railway. Cite 59/60. Skip grandfather 031/032. No product invent in P1."

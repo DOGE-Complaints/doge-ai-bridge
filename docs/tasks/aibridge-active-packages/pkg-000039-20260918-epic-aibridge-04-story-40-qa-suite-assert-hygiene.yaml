@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 39
+created_at: "2026-09-18T14:25:26Z"
+label: epic-aibridge-04-story-40-qa-suite-assert-hygiene
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-40-qa-suite-assert-hygiene
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-40-qa-suite-assert-hygiene/task-aibridge-40-t01-remove-val-tautology/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-40-qa-suite-assert-hygiene/task-aibridge-40-t02-hash-eq-integrity-policy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-40-qa-suite-assert-hygiene/task-aibridge-40-t03-optional-non-recording-probe/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-40-qa-suite-assert-hygiene/task-aibridge-40-t04-story-gate/README.md
+activation: active
+note: "Sequences 31/32 reserved on date-gate-grandfather (gateway legacy); aibridge uses 039 after 038."

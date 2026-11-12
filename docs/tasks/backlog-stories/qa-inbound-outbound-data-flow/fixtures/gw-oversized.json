@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-oversized",
+  "matrix_ids": [
+    "GW-014"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; oversized response body → contract_mismatch when max_response_bytes set",
+  "payload": {
+    "status_code": 201,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": {
+        "draft_id": "draft_big"
+      },
+      "trace_id": "trace_big",
+      "pad": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    },
+    "max_response_bytes": 64
+  }
+}

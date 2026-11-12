@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-migration-version-missing",
+  "matrix_ids": [
+    "READY-013"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "Preference A: schema_migrations empty/unreadable \u2192 migration_version_missing",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
+      "SPA_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "postgresql://fake/aibridge_mig_missing_ver",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": false,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "harness": "fake_pg_migration_version_missing",
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "migration_version_missing"
+    }
+  }
+}

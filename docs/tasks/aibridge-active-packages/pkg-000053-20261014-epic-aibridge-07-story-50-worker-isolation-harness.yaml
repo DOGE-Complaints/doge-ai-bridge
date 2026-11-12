@@ -1,0 +1,20 @@
+schema_version: 1
+package_sequence: 53
+created_at: "2026-10-14T14:33:55Z"
+label: epic-aibridge-07-story-50-worker-isolation-harness
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker.md
+story_groups:
+- story_key: STORY-AIBRIDGE-50-worker-isolation-harness
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t01-harness-skeleton-mocks/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t02-ac-09-01-channel-bearer-reject/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t03-ac-09-02-logical-l2-brief/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t04-ac-09-03-upload-https-mock/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t05-ac-09-04-fail-bind-reason-class/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t06-ac-09-05-prompt-isolation-invent-refusal/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t07-ac-09-06-idempotent-and-version-bump/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-50-worker-isolation-harness/task-aibridge-50-t08-package-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-07. STORY-50 isolation harness AC-09-01…06. Open harness module names / path SSOT — no invent. No product invent in P1."

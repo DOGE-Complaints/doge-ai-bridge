@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-restart-executing-unknown",
+  "matrix_ids": [
+    "LIFE-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; restart with open gateway attempt → unknown_outcome; no auto-resend",
+  "payload": {
+    "outcome": "unknown_outcome",
+    "state": "unknown_outcome",
+    "gateway_call_count": 0,
+    "send_blocked_same_revision": true
+  }
+}

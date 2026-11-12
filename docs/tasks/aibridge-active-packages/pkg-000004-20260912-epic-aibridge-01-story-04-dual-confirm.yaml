@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 4
+created_at: "2026-09-12T21:34:18Z"
+label: epic-aibridge-01-story-04-dual-confirm
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/EPIC-AIBRIDGE-01-req-01-runtime.md
+story_groups:
+- story_key: STORY-AIBRIDGE-04-dual-confirm-tokens
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t01-confirm-fsm-states/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t02-interpret-vs-send-gate/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t03-action-token-store/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t04-edit-cancel-ownership/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t05-actions-fail-closed-4xx/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-04-dual-confirm-tokens/task-aibridge-01-04-t06-story-acceptance-verification/README.md
+activation: active

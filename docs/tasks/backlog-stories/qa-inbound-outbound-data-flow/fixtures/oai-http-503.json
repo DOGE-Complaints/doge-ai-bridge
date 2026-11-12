@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-http-503",
+  "matrix_ids": [
+    "OAI-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "characterization; 5xx bounded failure; retry outside unsafe send",
+  "payload": {
+    "kind": "http_error",
+    "status": 503,
+    "body": {
+      "error": "upstream"
+    }
+  }
+}

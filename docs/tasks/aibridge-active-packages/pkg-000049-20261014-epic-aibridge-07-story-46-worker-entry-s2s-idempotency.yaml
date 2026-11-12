@@ -1,0 +1,19 @@
+schema_version: 1
+package_sequence: 49
+created_at: "2026-10-14T11:54:36Z"
+label: epic-aibridge-07-story-46-worker-entry-s2s-idempotency
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker.md
+story_groups:
+- story_key: STORY-AIBRIDGE-46-worker-entry-s2s-idempotency
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t01-worker-enable-settings-fail-closed/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t02-separate-accept-entry/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t03-worker-s2s-auth/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t04-accept-logical-inputs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t05-idempotency-issue-version/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t06-entry-auth-idempotency-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-07-req-09-req13-sense-brief-poster-worker/stories/STORY-AIBRIDGE-46-worker-entry-s2s-idempotency/task-aibridge-46-t07-story-gate/README.md
+activation: active
+note: "NEW EPIC-07 REQ-09/REQ13. Sequences 31/32 grandfather-reserved; aibridge uses 049 after 048. Open path/env/JSON — no invent SSOT. No product invent in P1."

@@ -1,0 +1,20 @@
+schema_version: 1
+package_sequence: 63
+created_at: "2026-11-01T20:51:31Z"
+label: epic-aibridge-10-story-60-openai-deepseek-interview-adapters
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers.md
+story_groups:
+- story_key: STORY-AIBRIDGE-60-openai-deepseek-interview-adapters
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t01-openai-adapter-keep-responses-port/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t02-deepseek-adapter-chat-completions-l12-3/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t03-narrow-client-turn-surface-keep-engine/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t04-no-silent-openai-when-deepseek/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t05-error-classes-config-vs-vendor-transport/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t06-module-home-ne-worker-providers/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t07-adapter-no-gateway-send-permission/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-60-openai-deepseek-interview-adapters/task-aibridge-60-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-10. STORY-60 OpenAI+DeepSeek interview adapters. No silent OpenAI on deepseek. Home ≠ providers/. OOS 59/61. Skip grandfather 031/032. No product invent in P1."

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-xor-both-channels",
+  "matrix_ids": [
+    "OAI-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; stable prefix XOR instructions= — both forbidden",
+  "payload": {
+    "kind": "prompt_xor",
+    "has_stable_prefix": true,
+    "instructions": "also-instructions"
+  }
+}

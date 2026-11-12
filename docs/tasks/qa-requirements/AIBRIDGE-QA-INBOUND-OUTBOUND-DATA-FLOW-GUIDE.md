@@ -398,7 +398,7 @@ Only a valid consumed `confirm_send` token may result in:
 
 ```http
 POST <DOGESTONIA_API_BASE_URL>/story-drafts
-Authorization: Bearer <DOGESTONIA_API_BEARER_TOKEN>
+Authorization: Bearer <GATEWAY_SERVICE_API_TOKEN>
 Content-Type: application/json
 Accept: application/json
 ```
@@ -481,7 +481,7 @@ The channel action request normally returns HTTP 200 after token consumption eve
 For `stashed`, continuation URL format is currently:
 
 ```text
-<DOGESTONIA_DRAFT_REDIRECT_BASE_URL>/#/story/submit?draft_id=<URL-encoded draft_id>
+<SPA_BASE_URL>/#/story/submit?draft_id=<URL-encoded draft_id>
 ```
 
 ---
@@ -525,9 +525,11 @@ Run migrations against disposable PostgreSQL. Cover durable dedupe, session/hist
 
 Build the real image with a pinned content bundle. Verify start command, `$PORT`, `/healthz`, `/readyz`, `/metrics`, environment fail-closed rules, and no accidental public dependencies.
 
-### Layer E — n8n contract tests
+### Layer E — n8n adapter-contract tests
 
-Use recorded Telegram updates and a test aibridge. Verify field expressions, fixed event IDs across retries, immediate callback acknowledgement, headers, routing, and response-to-keyboard mapping.
+`tests/n8n/` is an **adapter-contract** suite (fixtures + pure Python helpers such as keyboard/ack timeline simulation) — **not** live n8n workflow e2e and **not** Bot API. It verifies field mapping, fixed event IDs across retries, immediate callback acknowledgement order, headers/routing contracts, and response-to-keyboard mapping against recorded Telegram updates and a test aibridge.
+
+Runtime honesty for the production/staging n8n graph is owned by **STORY-AIBRIDGE-36** / matrix **N8N-WF-001**: pin a credential-stripped workflow export (or keep an explicit defer) and optional out-of-CI smoke via `docs/ops/n8n-channel-workflow/r3-p1-09-live-gate-checklist.md` (never default CI; no invent Railway SUCCESS / live Telegram PASS). See package TECH §5.1 Layer E.
 
 ### Layer F — live pilot smoke
 
@@ -628,8 +630,8 @@ The IDs below should be stable automation identifiers.
 | OAI-005 | `store` attempted true by config | Startup/settings or readiness fails closed. |
 | OAI-006 | Both stable prefix and `instructions` used | Fail test; mutually exclusive. |
 | OAI-007 | Parallel tool calls requested | Fail test; must be false. |
-| OAI-008 | OpenAI 429 | Bounded internal channel error under current implementation; no secret/raw response; no gateway. |
-| OAI-009 | OpenAI 5xx | Same bounded failure; retry policy belongs outside unsafe consequential send path. |
+| OAI-008 | OpenAI 429 | Channel **429** `rate_limited` retryable (CHAR-006 Option A · STORY-38); no secret/raw response; no gateway. Distinct from client middleware RL (same code/status; message `OpenAI rate limited`). |
+| OAI-009 | OpenAI 5xx | Channel **503** `transient_failure` retryable (CHAR-006 Option A · STORY-38); no gateway; retry policy outside unsafe consequential send path. |
 | OAI-010 | OpenAI timeout | Bounded 500 `internal_error`, `retryable=true`; dedupe claim aborted so message retry can run. |
 | OAI-011 | Invalid OpenAI JSON/body | Bounded error, no history corruption or gateway. |
 | OAI-012 | Input/output/call/turn budget breach | No gateway; last confirmed state preserved; resident-safe rejection. |

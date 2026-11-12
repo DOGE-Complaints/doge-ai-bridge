@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-no-side-effects",
+  "matrix_ids": [
+    "READY-015"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; /readyz must not call OpenAI or gateway",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
+      "SPA_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 200,
+      "status": "ready"
+    },
+    "expect": {
+      "openai_calls": 0,
+      "gateway_calls": 0
+    }
+  }
+}

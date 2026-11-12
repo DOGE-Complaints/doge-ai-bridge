@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-foreign-chat",
+  "matrix_ids": [
+    "ACT-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; same user, different chat \u2014 PLACEHOLDER",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-007",
+      "callback_query_id": "cq-act-007",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "888888002"
+      },
+      "action_token": "PLACEHOLDER_TOKEN"
+    },
+    "expect": {
+      "http_status": 403,
+      "error_code": "forbidden"
+    }
+  }
+}

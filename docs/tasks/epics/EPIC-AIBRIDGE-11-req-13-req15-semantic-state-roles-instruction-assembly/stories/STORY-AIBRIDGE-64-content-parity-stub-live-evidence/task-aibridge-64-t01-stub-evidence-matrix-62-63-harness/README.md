@@ -1,0 +1,27 @@
+# Task: Stub evidence matrix 62/63 harness
+
+**Status:** Done · P3 2026-11-02T10:32:29Z  
+**Skill declared:** python-pro  
+**Decision Ref:** `doge-ai-bridge/docs/tasks/backlog-stories/req-13-req15-semantic-state-roles-instruction-assembly/STORY-AIBRIDGE-64-content-parity-stub-live-evidence.md`  
+**Parent story:** [`STORY-AIBRIDGE-64-content-parity-stub-live-evidence.md`](../STORY-AIBRIDGE-64-content-parity-stub-live-evidence.md)  
+**P1 scaffold:** 2026-11-02T10:28:38Z · [p1 APPLIED](../../../../../../../../.cursor/plans/p1_aibridge_64_scaffold_20261102T102522Z.plan.md) · pkg-000067  
+**Maps:** t01 · STORY-64
+
+## Purpose
+
+Map STORY-62/63 harness evidence to AC-01/02/03/07/08 (+ AC-06 stub cite).
+
+## AC/DoD
+
+- [x] Stub matrix cites 62/63 tests for AC-01/02/03/07/08.
+- [x] AC-06 stub cite Present in matrix.
+- [x] Skill declared: python-pro present.
+- [x] No invent live SUCCESS.
+
+## Where changed (P3)
+
+- `docs/runtime-docs/11-… §2 stub matrix · tests cite 62/63`
+
+## Evidence
+
+- Acceptance: [`acceptance-verification-task-aibridge-64-t01-stub-evidence-matrix-62-63-harness.md`](./acceptance-verification-task-aibridge-64-t01-stub-evidence-matrix-62-63-harness.md)

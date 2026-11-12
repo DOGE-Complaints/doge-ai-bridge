@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-429",
+  "matrix_ids": [
+    "GW-009"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; gateway 429 → transient_failure",
+  "payload": {
+    "status_code": 429,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "error": {
+        "code": "rate_limit",
+        "message": "slow down"
+      }
+    }
+  }
+}

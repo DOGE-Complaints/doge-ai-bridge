@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-photo-with-caption",
+  "matrix_ids": [
+    "N8N-011"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; characterization; photo+caption; caption-as-text only if workflow documents — capture-first no invent",
+  "payload": {
+    "update_id": 848301568,
+    "message": {
+      "message_id": 28,
+      "date": 1758099708,
+      "caption": "Caption about pothole",
+      "photo": [
+        {
+          "file_id": "syn_photo_file2",
+          "width": 100,
+          "height": 100
+        }
+      ],
+      "from": {
+        "id": 501122334,
+        "is_bot": false,
+        "first_name": "Resident",
+        "language_code": "en"
+      },
+      "chat": {
+        "id": 501122334,
+        "type": "private"
+      }
+    }
+  }
+}

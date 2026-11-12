@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.tool-stash-201",
+  "matrix_ids": [
+    "TOOL-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-28-qa-tool-call-validation"
+  ],
+  "notes": "synthetic; 201 stash body for RecordingGatewayTransport — only after Send; not on TOOL reject",
+  "payload": {
+    "status_code": 201,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "data": {
+        "draft_id": "draft-tool-28"
+      },
+      "trace_id": "trace-tool-28"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-intake-not-https",
+  "matrix_ids": [
+    "READY-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; non-HTTPS intake base URL",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_BASE_URL": "http://insecure.example.invalid",
+      "SPA_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "intake_base_url_not_https"
+    }
+  }
+}

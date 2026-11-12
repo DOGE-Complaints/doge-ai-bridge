@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 9
+created_at: "2026-09-13T15:55:55Z"
+label: epic-aibridge-02-story-11-coordinator-pause-resume-send
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-11-coordinator-pause-resume-send
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t01-wire-turns-coordinator/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t02-pause-resume-persist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t03-interpretation-confirm/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t04-send-commit-before-https/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t05-wave1-stash-call-id/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t06-executing-unknown-outcome/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-11-coordinator-pause-resume-send/task-aibridge-02-11-t07-story-acceptance-verification/README.md
+activation: active

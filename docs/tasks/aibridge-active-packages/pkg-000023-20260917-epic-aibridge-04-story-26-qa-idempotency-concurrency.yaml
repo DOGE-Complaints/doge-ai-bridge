@@ -1,0 +1,15 @@
+schema_version: 1
+package_sequence: 23
+created_at: "2026-09-17T18:12:10Z"
+label: epic-aibridge-04-story-26-qa-idempotency-concurrency
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-26-qa-idempotency-concurrency
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-26-qa-idempotency-concurrency/task-aibridge-26-t01-promote-seed-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-26-qa-idempotency-concurrency/task-aibridge-26-t02-generate-idem-matrix-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-26-qa-idempotency-concurrency/task-aibridge-26-t03-implement-idempotency-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-26-qa-idempotency-concurrency/task-aibridge-26-t04-story-gate/README.md
+activation: active

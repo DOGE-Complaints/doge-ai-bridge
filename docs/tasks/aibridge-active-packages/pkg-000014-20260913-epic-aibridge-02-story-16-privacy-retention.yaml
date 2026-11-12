@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 14
+created_at: "2026-09-13T17:43:00Z"
+label: epic-aibridge-02-story-16-privacy-retention
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-16-privacy-retention
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t01-ttl-default-sliding-activity/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t02-expired-narrative-minimize/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t03-token-purge-consumed-invariant/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t04-ops-session-delete-failclosed/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t05-tombstone-audit-n8n-retention/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-16-privacy-retention/task-aibridge-02-16-t06-story-acceptance-verification/README.md
+activation: active

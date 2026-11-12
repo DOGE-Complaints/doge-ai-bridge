@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-401",
+  "matrix_ids": [
+    "GW-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; gateway 401 → gateway_unauthorized; no secrets in body",
+  "payload": {
+    "status_code": 401,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "error": {
+        "code": "unauthorized",
+        "message": "auth required"
+      }
+    }
+  }
+}

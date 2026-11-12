@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-02-normal-live-stash",
+  "matrix_ids": [
+    "UC-02"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-02 live stash via Recording Gateway 201; one gateway post",
+  "payload": {
+    "refs": {
+      "gateway_script": "gateway/stashed-201",
+      "prior": [
+        "openai/tool-fc-valid"
+      ]
+    },
+    "flow": [
+      "turn",
+      "looks_right",
+      "turn_fc",
+      "send"
+    ],
+    "dry_run": false,
+    "expect": {
+      "outcome": "stashed",
+      "gateway_call_count": 1,
+      "draft_id": "draft_syn_001",
+      "continuation_url_required": true,
+      "final_state": "stashed",
+      "forbid_substrings": [
+        "Story published"
+      ],
+      "must_mention_not_published": true
+    }
+  }
+}

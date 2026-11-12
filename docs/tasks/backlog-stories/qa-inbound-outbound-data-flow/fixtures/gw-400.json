@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "gateway",
+  "fixture_id": "gateway.gw-400",
+  "matrix_ids": [
+    "GW-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; gateway 400 → validation_error",
+  "payload": {
+    "status_code": 400,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "error": {
+        "code": "validation",
+        "message": "bad field"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+schema_version: 1
+package_sequence: 59
+created_at: "2026-11-01T14:34:14Z"
+label: epic-aibridge-09-story-56-keep-pipe-confirm-stash-spa-verify
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff.md
+story_groups:
+- story_key: STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t01-dual-confirm-stages-harness/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t02-confirm-storage-actiontoken-reuse/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t03-tool-intent-freeze-not-gateway-permission/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t04-gateway-executor-config-url-bearer/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t05-factual-stash-success-outcomes/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t06-continuation-spa-hash-draft-id/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t07-bridge-owns-stash-channel-boundary/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-56-keep-pipe-confirm-stash-spa-verify/task-aibridge-56-t08-story-gate-checklist/README.md
+activation: active
+note: "NEW EPIC-09 REQ-11/REQ15. STORY-56 Keep pipe confirm+stash+SPA. AC-AIB-11-01/03/04/05/06. No FSM rewrite. No product invent in P1. Skip grandfather 031/032."

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.tool-fc-malformed-args",
+  "matrix_ids": [
+    "TOOL-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-28-qa-tool-call-validation"
+  ],
+  "notes": "synthetic; malformed JSON arguments string",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_tool",
+      "output": [
+        {
+          "type": "function_call",
+          "call_id": "call_tool_001",
+          "name": "postStoryDraftStash",
+          "arguments": "{not-json"
+        },
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "Ready to stash."
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 8,
+        "output_tokens": 4
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 1
+created_at: "2026-09-12T20:30:51Z"
+label: epic-aibridge-01-story-01-channel-facade
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/EPIC-AIBRIDGE-01-req-01-runtime.md
+story_groups:
+- story_key: STORY-AIBRIDGE-01-channel-facade-auth
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t01-asgi-health-skeleton/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t02-channel-bearer-auth/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t03-channel-turns-actions/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t04-event-dedupe/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t05-contract-tests-ack-docs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-01-channel-facade-auth/task-aibridge-01-01-t06-story-acceptance-verification/README.md
+activation: active

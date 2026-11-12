@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.sec-openai-store-false",
+  "matrix_ids": [
+    "SEC-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+  ],
+  "notes": "synthetic; OpenAI capture store=false; no gateway/channel secrets",
+  "payload": {
+    "store": false,
+    "forbid_in_capture": [
+      "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "channel-token",
+      "gateway-token"
+    ]
+  }
+}

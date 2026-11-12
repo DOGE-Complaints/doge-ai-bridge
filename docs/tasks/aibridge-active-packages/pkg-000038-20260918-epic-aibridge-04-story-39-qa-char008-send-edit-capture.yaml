@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 38
+created_at: "2026-09-18T14:03:38Z"
+label: epic-aibridge-04-story-39-qa-char008-send-edit-capture
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-39-qa-char008-send-edit-capture
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-39-qa-char008-send-edit-capture/task-aibridge-39-t01-observe-workflow-outbound/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-39-qa-char008-send-edit-capture/task-aibridge-39-t02-capture-fixture/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-39-qa-char008-send-edit-capture/task-aibridge-39-t03-bind-behavioral-assert/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-39-qa-char008-send-edit-capture/task-aibridge-39-t04-story-gate/README.md
+activation: active
+note: "Sequences 31/32 reserved on date-gate-grandfather (gateway legacy); aibridge uses 038 after 037."

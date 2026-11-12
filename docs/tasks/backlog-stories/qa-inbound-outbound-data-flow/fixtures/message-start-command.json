@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-start-command",
+  "matrix_ids": [
+    "N8N-002"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; /start as ordinary text; model decides response",
+  "payload": {
+    "update_id": 848301560,
+    "message": {
+      "message_id": 20,
+      "date": 1758099700,
+      "text": "/start",
+      "from": {
+        "id": 501122334,
+        "is_bot": false,
+        "first_name": "Resident",
+        "language_code": "en"
+      },
+      "chat": {
+        "id": 501122334,
+        "type": "private",
+        "first_name": "Resident"
+      }
+    }
+  }
+}

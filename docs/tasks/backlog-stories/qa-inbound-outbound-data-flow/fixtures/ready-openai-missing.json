@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-openai-missing",
+  "matrix_ids": [
+    "READY-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; interview=openai nest incomplete (STORY-59 Adapt of READY-007)",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
+      "SPA_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "",
+      "OPENAI_MODEL": "",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "interview_provider_incomplete"
+    }
+  }
+}

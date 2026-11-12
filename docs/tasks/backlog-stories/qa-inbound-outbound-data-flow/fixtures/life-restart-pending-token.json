@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-restart-pending-token",
+  "matrix_ids": [
+    "LIFE-003"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; restart after buttons — pending token usable until TTL when persistence active",
+  "payload": {
+    "token_usable_after_restart": true,
+    "http_status": 200
+  }
+}

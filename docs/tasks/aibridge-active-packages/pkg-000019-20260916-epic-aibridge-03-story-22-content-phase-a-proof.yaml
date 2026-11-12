@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 19
+created_at: "2026-09-16T13:36:35Z"
+label: epic-aibridge-03-story-22-content-phase-a-proof
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/EPIC-AIBRIDGE-03-req-05-content-phase-a.md
+story_groups:
+- story_key: STORY-AIBRIDGE-22-content-phase-a-proof
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-22-content-phase-a-proof/task-aibridge-22-t01-test-engine-wired/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-22-content-phase-a-proof/task-aibridge-22-t02-test-readyz-fail-closed/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-22-content-phase-a-proof/task-aibridge-22-t03-test-manifest-completeness/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-22-content-phase-a-proof/task-aibridge-22-t04-smoke-checklist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-03-req-05-content-phase-a/stories/STORY-AIBRIDGE-22-content-phase-a-proof/task-aibridge-22-t05-story-gate/README.md
+activation: active

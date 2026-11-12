@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.gw-channel-equals-gateway",
+  "matrix_ids": [
+    "GW-016"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-30-qa-gateway-continuation"
+  ],
+  "notes": "synthetic; Channel Bearer equals Gateway Bearer \u2192 readiness fails; no traffic ready",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "same-bearer-cccccccccccccccccccccccccccc",
+      "GATEWAY_SERVICE_API_TOKEN": "same-bearer-cccccccccccccccccccccccccccc",
+      "GATEWAY_BASE_URL": "https://gateway.example.invalid",
+      "AIBRIDGE_DRY_RUN": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "channel_gateway_bearer_equal"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-send-one-gw",
+  "matrix_ids": [
+    "ACT-004"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; Send \u2014 one authorized gateway attempt",
+  "payload": {
+    "gateway_call_count": 1,
+    "http_status": 200,
+    "openai_call_count": 0
+  }
+}

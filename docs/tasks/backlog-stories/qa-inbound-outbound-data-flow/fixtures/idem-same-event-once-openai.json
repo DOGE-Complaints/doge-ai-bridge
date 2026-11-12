@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.idem-same-event-once-openai",
+  "matrix_ids": ["IDEM-001"],
+  "story_keys": ["STORY-AIBRIDGE-26-qa-idempotency-concurrency"],
+  "notes": "synthetic; same /turns body and event_id posted twice; expect single OpenAI call via dedupe replay; no secrets in logs",
+  "payload": {
+    "openai_call_count": 1,
+    "gateway_call_count": 0,
+    "dedupe": "hit_on_second",
+    "http_status": 200,
+    "error_code": null,
+    "outcome": null,
+    "state": "interviewing",
+    "revision_delta": 0,
+    "forbid_substrings_in_logs": ["Bearer ", "sk-", "callback_data_raw"]
+  }
+}

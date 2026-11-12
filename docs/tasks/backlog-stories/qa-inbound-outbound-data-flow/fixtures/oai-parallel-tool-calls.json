@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.oai-parallel-tool-calls",
+  "matrix_ids": [
+    "OAI-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-27-qa-openai-prompt-behavior"
+  ],
+  "notes": "synthetic; parallel_tool_calls must be false on assemble/recording",
+  "payload": {
+    "kind": "knob_assert",
+    "parallel_tool_calls": false
+  }
+}

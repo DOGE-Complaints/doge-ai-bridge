@@ -1,0 +1,20 @@
+schema_version: 1
+package_sequence: 62
+created_at: "2026-11-01T20:23:26Z"
+label: epic-aibridge-10-story-59-interview-port-env-fail-closed
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers.md
+story_groups:
+- story_key: STORY-AIBRIDGE-59-interview-port-env-fail-closed
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t01-settings-interview-provider-required/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t02-nest-l12-3-deepseek-openai-keys/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t03-fail-closed-unset-unknown-empty/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t04-worker-env-cannot-select-interview/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t05-interview-provider-port-registry-home/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t06-wire-start-bind-fail-closed-before-engine/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t07-trust-channel-bearer-no-model-keys/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-10-req-12-req15-interview-deepseek-openai-providers/stories/STORY-AIBRIDGE-59-interview-port-env-fail-closed/task-aibridge-59-t08-story-gate-checklist/README.md
+activation: active
+note: "NEW EPIC-10 REQ-12. STORY-59 interview port+env fail-closed. Worker orthogonal. No silent OpenAI. OOS 60/61. Skip grandfather 031/032. No product invent in P1."

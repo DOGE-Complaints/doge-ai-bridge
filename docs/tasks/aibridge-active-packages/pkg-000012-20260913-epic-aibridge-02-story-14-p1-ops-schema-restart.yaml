@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 12
+created_at: "2026-09-13T17:03:24Z"
+label: epic-aibridge-02-story-14-p1-ops-schema-restart
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/EPIC-AIBRIDGE-02-req-03-runtime-remediation.md
+story_groups:
+- story_key: STORY-AIBRIDGE-14-p1-ops-schema-restart
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t01-graceful-shutdown-ops03/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t02-rate-limits-budget-defaults/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t03-full-schema-validation-readyz/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t04-restart-race-send-confirm/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t05-gateway-size-timeout-knobs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t06-dockerfile-reproducible-deploy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-02-req-03-runtime-remediation/stories/STORY-AIBRIDGE-14-p1-ops-schema-restart/task-aibridge-02-14-t07-story-acceptance-verification/README.md
+activation: active

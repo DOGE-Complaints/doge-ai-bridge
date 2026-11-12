@@ -1,0 +1,22 @@
+# OP-aibridge.session.yaml — subagent overnight
+builder_project: aibridge
+op_chat_title: OP-aibridge
+builder_chat_title: BLD-aibridge
+validator_chat_title: VAL-aibridge
+builder_agent_id: 9312ee89-9c53-4c63-9399-ddfe24eb8d3a
+validator_agent_id: 64d6888b-61a1-432f-8496-a7cff0a8702e
+bind_mode: task
+delivery: subagent
+overnight: on
+pause_after_story: false
+auto_approve_plan: true
+stop_only_on: explicit operator стоп|stop|pause|halt
+status: queue_exhausted
+process_file: doge-ai-bridge/docs/tasks/run-reports/operator-sessions/OP-aibridge.process.md
+working_plan: .cursor/plans/OP-aibridge-req15-71-72-20261110.plan.md
+wave_file: doge-ai-bridge/docs/tasks/run-reports/operator-waves/wave-20261110-req15-71-72.md
+queue: STORY-AIBRIDGE-71,STORY-AIBRIDGE-72
+queue_spec: "@req15-tg-channel-interviewer-ux STORY-71 STORY-72"
+mode: sequential
+queue_status: exhausted
+Updated: "2026-11-10T16:23:38Z"

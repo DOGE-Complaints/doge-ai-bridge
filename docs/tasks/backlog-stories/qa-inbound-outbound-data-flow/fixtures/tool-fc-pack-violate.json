@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.tool-fc-pack-violate",
+  "matrix_ids": [
+    "TOOL-010"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-28-qa-tool-call-validation"
+  ],
+  "notes": "synthetic; structured_payload violates uus_veerenni_civic v3 (missing signals) — gate2",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_tool",
+      "output": [
+        {
+          "type": "function_call",
+          "call_id": "call_tool_001",
+          "name": "postStoryDraftStash",
+          "arguments": "{\"narrative\": {\"note\": \"n\"}, \"schema_binding\": {\"structured_payload\": {\"geo\": {\"street\": \"x\"}}}}"
+        },
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "Ready to stash."
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 8,
+        "output_tokens": 4
+      }
+    }
+  }
+}

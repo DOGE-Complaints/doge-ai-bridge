@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-foreign-user",
+  "matrix_ids": [
+    "ACT-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; principal user differs from token owner \u2014 PLACEHOLDER minted for owner",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-006",
+      "callback_query_id": "cq-act-006",
+      "principal": {
+        "user_id": "999999001",
+        "chat_id": "501122334"
+      },
+      "action_token": "PLACEHOLDER_TOKEN"
+    },
+    "expect": {
+      "http_status": 403,
+      "error_code": "forbidden"
+    }
+  }
+}

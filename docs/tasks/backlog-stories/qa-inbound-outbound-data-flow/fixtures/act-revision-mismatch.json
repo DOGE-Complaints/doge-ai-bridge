@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-revision-mismatch",
+  "matrix_ids": [
+    "ACT-011"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; revision drift \u2014 PLACEHOLDER",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-011",
+      "callback_query_id": "cq-act-011",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "PLACEHOLDER_TOKEN"
+    },
+    "expect": {
+      "http_status": 409,
+      "error_code": "conflict"
+    }
+  }
+}

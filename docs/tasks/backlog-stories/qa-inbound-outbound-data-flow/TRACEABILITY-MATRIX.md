@@ -35,24 +35,25 @@
 | VAL-016 | Body exceeds `AIBRIDGE_MAX_REQUEST_BYTES` | 413 `payload_too_large`; no OpenAI/DB side effect beyond request handling. | `STORY-AIBRIDGE-24-qa-json-schema-boundary` | covered |
 | VAL-017 | Invalid/negative Content-Length | 400 bounded error. | `STORY-AIBRIDGE-24-qa-json-schema-boundary` | covered |
 | VAL-018 | Missing `Content-Type` but valid JSON | Characterization test; OAS requires JSON even if current parser accepts raw body. | `STORY-AIBRIDGE-24-qa-json-schema-boundary` | covered |
-| N8N-001 | Private text message | Correct `/turns` mapping; one reply. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-002 | `/start` command | Sent as ordinary text; model/instructions decide response. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-003 | Russian text | Unicode preserved; language hint optional. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-004 | Estonian text | Unicode preserved. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-005 | Mixed-language message | Text unchanged; hint must not override actual content. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-006 | Emoji and combining characters | Round-trip without corruption. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-007 | Group message from user A | Principal = A + group chat. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-008 | Same group message from user B | Separate session. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-009 | Edited message update | Must not be silently treated as a new ordinary message unless workflow explicitly supports it. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-010 | Photo/document/voice without text | Do not build invalid `/turns`; route to explicit unsupported-content response or future adapter. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-011 | Media with caption | Product decision/characterization: caption may be mapped as text only if workflow explicitly documents it. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-012 | Channel post, poll, shipping/pre-checkout update | Must not enter this workflow branch. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-013 | Callback query | `answerCallbackQuery` occurs before `/actions`. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-014 | aibridge slow/unavailable after callback | Telegram callback still acknowledged promptly; later resident-safe error handling. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-015 | `actions=[]` | No inline keyboard added. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-016 | Three actions | Labels/tokens mapped in order; token unchanged. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-017 | `outcome=stashed` | Render continuation link; do not claim publication. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
-| N8N-018 | Non-stashed outcome with accidental draft/URL | Adapter should not present link; contract test should fail producer inconsistency. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | covered |
+| N8N-001 | Private text message | Correct `/turns` mapping; one reply. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-002 | `/start` command | Sent as ordinary text; model/instructions decide response. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-003 | Russian text | Unicode preserved; language hint optional. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-004 | Estonian text | Unicode preserved. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-005 | Mixed-language message | Text unchanged; hint must not override actual content. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-006 | Emoji and combining characters | Round-trip without corruption. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-007 | Group message from user A | Principal = A + group chat. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-008 | Same group message from user B | Separate session. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-009 | Edited message update | Must not be silently treated as a new ordinary message unless workflow explicitly supports it. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-010 | Photo/document/voice without text | Do not build invalid `/turns`; route to explicit unsupported-content response or future adapter. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-011 | Media with caption | Product decision/characterization: caption may be mapped as text only if workflow explicitly documents it. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-012 | Channel post, poll, shipping/pre-checkout update | Must not enter this workflow branch. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-013 | Callback query | `answerCallbackQuery` occurs before `/actions`. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-014 | aibridge slow/unavailable after callback | Telegram callback still acknowledged promptly; later resident-safe error handling. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-015 | `actions=[]` | No inline keyboard added. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-016 | Three actions | Labels/tokens mapped in order; token unchanged. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-017 | `outcome=stashed` | Render continuation link; do not claim publication. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-018 | Non-stashed outcome with accidental draft/URL | Adapter should not present link; contract test should fail producer inconsistency. | `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping` | fixture-covered (runtime honesty → STORY-36 / N8N-WF-001) |
+| N8N-WF-001 | n8n workflow export pin + Layer E honesty | Pinned export matches pilot workflow; `tests/n8n/` labeled adapter-contract; optional out-of-CI smoke | `STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty` | deferred (export absent · capture-first · no invent body; Layer E adapter-contract labeled; out-of-CI checklist bound) |
 | IDEM-001 | Same `/turns` request and same event ID twice | Same stored response; one OpenAI call. | `STORY-AIBRIDGE-26-qa-idempotency-concurrency` | covered |
 | IDEM-002 | Retry uses new event ID | Demonstrate why this is wrong: second OpenAI call; n8n test must prevent it. | `STORY-AIBRIDGE-26-qa-idempotency-concurrency` | covered |
 | IDEM-003 | Same event ID but different body | First stored result wins; no second side effect; log safe collision signal if implemented. | `STORY-AIBRIDGE-26-qa-idempotency-concurrency` | covered |
@@ -70,8 +71,8 @@
 | OAI-005 | `store` attempted true by config | Startup/settings or readiness fails closed. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-006 | Both stable prefix and `instructions` used | Fail test; mutually exclusive. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-007 | Parallel tool calls requested | Fail test; must be false. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
-| OAI-008 | OpenAI 429 | Bounded internal channel error under current implementation; no secret/raw response; no gateway. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
-| OAI-009 | OpenAI 5xx | Same bounded failure; retry policy belongs outside unsafe consequential send path. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
+| OAI-008 | OpenAI 429 | Transport `RATE_LIMITED`; channel **429** `rate_limited` retryable (CHAR-006 Option A); no secret/raw; no gateway. Distinct from client middleware RL. | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` · suite STORY-27 | covered |
+| OAI-009 | OpenAI 5xx | Transport `TRANSIENT_FAILURE`; channel **503** `transient_failure` retryable (CHAR-006 Option A); no gateway. | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` · suite STORY-27 | covered |
 | OAI-010 | OpenAI timeout | Bounded 500 `internal_error`, `retryable=true`; dedupe claim aborted so message retry can run. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-011 | Invalid OpenAI JSON/body | Bounded error, no history corruption or gateway. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
 | OAI-012 | Input/output/call/turn budget breach | No gateway; last confirmed state preserved; resident-safe rejection. | `STORY-AIBRIDGE-27-qa-openai-prompt-behavior` | covered |
@@ -153,11 +154,11 @@
 | SEC-008 | Gateway request capture | Gateway Bearer only; no Channel Bearer. | `STORY-AIBRIDGE-32-qa-privacy-logs-observability` | covered |
 | SEC-009 | n8n workflow export | No credentials or secrets committed. | `STORY-AIBRIDGE-32-qa-privacy-logs-observability` | covered |
 | SEC-010 | Prompt injection asks model to call arbitrary URL/tool | Only allowlisted generated function is available; gateway origin/path remain server-owned. | `STORY-AIBRIDGE-32-qa-privacy-logs-observability` | covered |
-| READY-001 | Complete valid configuration and migrated PostgreSQL | 200 `ready`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
+| READY-001 | Complete valid configuration and migrated PostgreSQL | 200 `ready`. Preference A / disposable-PG stand-in OK in CI (`ready-ok-migrated-pg`); memory `ready-ok` remains baseline. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-002 | Channel Bearer missing | 503 `channel_auth_missing`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-003 | Gateway Bearer missing | 503 `gateway_bearer_missing`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-004 | Bearers equal | 503 `channel_gateway_bearer_equal`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
-| READY-005 | Gateway URL missing/conflicting/non-HTTPS | Corresponding bounded reason. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
+| READY-005 | Gateway URL missing/conflicting/non-HTTPS | Corresponding bounded reason. Covered: `intake_base_url_missing` + `intake_base_url_not_https`. «conflicting» **N/A** (no distinct code in `readiness.py`). | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-006 | SPA redirect base invalid | 503 `draft_redirect_base_invalid`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-007 | OpenAI key/model missing | 503 `openai_config_missing`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-008 | OpenAI storage requested true | Settings/readiness fails closed. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
@@ -165,31 +166,34 @@
 | READY-010 | Content manifest/hash/path invalid | 503 bundle reason. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-011 | Tool generation fails | 503 `tool_gen_failed:*`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-012 | PostgreSQL unreachable | 503 `database_unreachable`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
-| READY-013 | Required migration missing/mismatch | 503 migration reason. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
+| READY-013 | Required migration missing/mismatch | 503 migration reason (`migration_version_mismatch` / `migrations_missing` / `migration_version_missing`; Preference A `/readyz`). | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-014 | Non-Postgres store while memory stores forbidden | 503 `database_not_postgres`. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
 | READY-015 | `/readyz` called | No OpenAI generation and no gateway write. | `STORY-AIBRIDGE-33-qa-readiness-configuration` | covered |
-| UC-01 | Normal interview, dry-run | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-02 | Normal live stash | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-03 | Resident cancels at first confirmation | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-04 | Resident cancels immediately before Send | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-05 | Group chat ownership attack | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-06 | Telegram retry storm | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-07 | Ambiguous gateway timeout | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-08 | Geo scope mismatch | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-09 | Unsupported Telegram content | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
-| UC-10 | Multilingual story | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | covered |
+| UC-01 | Normal interview, dry-run | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-02 | Normal live stash | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-03 | Resident cancels at first confirmation | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-04 | Resident cancels immediately before Send | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-05 | Group chat ownership attack | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-06 | Telegram retry storm | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-07 | Ambiguous gateway timeout | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-08 | Geo scope mismatch | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-09 | Unsupported Telegram content | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
+| UC-10 | Multilingual story | See guide §11 full scenario + assertions | `STORY-AIBRIDGE-34-qa-product-journey-scenarios` | PG-journey covered (≠ Gate-5 · see STORY-37) |
 | Gate-1 | channel contract | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | Gate-2 | interview safety | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | Gate-3 | consequential-action safety | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | Gate-4 | durable runtime | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
-| Gate-5 | live channel | See guide §15 pass criteria | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
+| Gate-5 | live channel | See guide §15 pass criteria | `STORY-AIBRIDGE-37-qa-gate5-live-pilot-evidence` | deferred (deferred_live · out of default CI · no pilot env · capture-first · evidence index deferred · no invent live PASS) |
 | CHAR-001 | What starts a fresh story after `cancelled`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-002 | What starts a fresh story after `stashed`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-003 | Should whitespace-only messages be rejected after trimming? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-004 | Should Telegram media captions enter the text-only façade? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
 | CHAR-005 | How should n8n notify a resident when aibridge is unavailable after callback acknowledgement? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
-| CHAR-006 | Should OpenAI 429/5xx remain a channel 500, or later gain a distinct retryable channel outcome? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
+| CHAR-006 | Should OpenAI 429/5xx remain a channel 500, or later gain a distinct retryable channel outcome? | **Option A** recorded: map transport → bounded channel (`429 rate_limited` / `503 transient_failure`); decision fixture + tests; middleware RL distinct | `STORY-AIBRIDGE-38-qa-oai-channel-error-outcome` | covered |
 | CHAR-007 | Should unusual known gateway statuses such as 409 be a specific outcome rather than `unknown_outcome`? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
-| CHAR-008 | Does the n8n workflow use Send Message or Edit Message for each response state, and how does it prevent duplicate outbound Telegram messages after its own retry? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-35-qa-gates-layers-dod` | covered |
+| CHAR-008 | Does the n8n workflow use Send Message or Edit Message for each response state, and how does it prevent duplicate outbound Telegram messages after its own retry? | Characterization — capture current; do not silently guess | `STORY-AIBRIDGE-39-qa-char008-send-edit-capture` | deferred (export absent · capture envelope status=deferred · capture-first · no invent Send/Edit · P3 2026-09-18T14:06:43Z) |
+| QUAL-001 | VAL characterization asserts without tautology HTTP band | Explicit expected status (+ shape); no `100<=status<600` sole success | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | covered (band removed · VAL-014/018 explicit 200 · P3 2026-09-18T14:28:02Z) |
+| QUAL-002 | Fixture promote hash_eq policy | Integrity-only; never sole evidence for matrix Expected | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | covered (INDEX + gaps §40 DoD · P3 2026-09-18T14:28:02Z) |
+| QUAL-003 | Optional non-Recording GW / real-PG concurrency probe | Named probe or explicit WAIVE (not Gate-5) | `STORY-AIBRIDGE-40-qa-suite-assert-hygiene` | waived (gaps §40: UC+LIFE-live PG · Recording GW sufficient · not Gate-5 · P3 2026-09-18T14:28:02Z) |
 
-**Total rows:** 186
+**Total rows:** 190 (was 186 · +N8N-WF-001 · +QUAL-001…003)

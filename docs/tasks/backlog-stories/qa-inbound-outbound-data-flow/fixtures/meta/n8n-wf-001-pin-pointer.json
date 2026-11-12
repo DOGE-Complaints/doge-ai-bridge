@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "cluster": "meta",
+  "fixture_id": "meta.n8n-wf-001-pin-pointer",
+  "matrix_ids": [
+    "N8N-WF-001"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty"
+  ],
+  "notes": "N8N-WF-001 pin pointer; export body must not be invented; promote=copy to tests/fixtures/meta/",
+  "payload": {
+    "status": "deferred",
+    "defer_reason": "Operator has not placed credential-stripped export at docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json; capture-first defer — no invent body (P3 2026-09-18T12:30:18Z)",
+    "relative_path": "docs/ops/n8n-channel-workflow/exports/aibridge-telegram-channel-v1.json",
+    "sha256": null,
+    "verified_at": null,
+    "channel_openapi_version": "aibridge-channel-v1",
+    "layer_e_label": "adapter-contract",
+    "out_of_ci_smoke_checklist": "docs/ops/n8n-channel-workflow/r3-p1-09-live-gate-checklist.md#n8n-wf-001-pinned-export-smoke-out-of-ci",
+    "default_ci": false
+  }
+}

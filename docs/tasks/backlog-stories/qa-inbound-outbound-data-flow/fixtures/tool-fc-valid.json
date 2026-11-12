@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "cluster": "openai",
+  "fixture_id": "openai.tool-fc-valid",
+  "matrix_ids": [
+    "TOOL-002",
+    "TOOL-012",
+    "TOOL-013",
+    "TOOL-014"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-28-qa-tool-call-validation"
+  ],
+  "notes": "synthetic; single allowlisted FC with uus_veerenni_civic v3 structured_payload",
+  "payload": {
+    "kind": "responses_json",
+    "body": {
+      "id": "resp_tool",
+      "output": [
+        {
+          "type": "function_call",
+          "call_id": "call_tool_valid",
+          "name": "postStoryDraftStash",
+          "arguments": "{\"narrative\": {\"note\": \"яма на Вееренни\"}, \"schema_binding\": {\"structured_payload\": {\"signals\": {\"civic_domain\": \"roads\", \"failure_pattern\": \"pothole\", \"canonical_type\": \"infrastructure_defect\"}, \"geo\": {\"settlement\": \"Tallinn\", \"street\": \"Veerenni\", \"district\": \"Kesklinn\"}}}}"
+        },
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "Ready to stash."
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 8,
+        "output_tokens": 4
+      }
+    }
+  }
+}

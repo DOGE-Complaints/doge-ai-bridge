@@ -1,0 +1,20 @@
+schema_version: 1
+package_sequence: 66
+created_at: "2026-11-02T09:05:07Z"
+label: epic-aibridge-11-story-63-roles-coordinator-assembly-fixtures
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly.md
+story_groups:
+- story_key: STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t01-five-roles-version-pins-registry/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t02-coordinator-policy-one-role/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t03-assembly-dir-manifest-session-pin/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t04-in-repo-fixtures-no-gpt-ui/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t05-interview-port-keep-model-calls/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t06-l13-1-ordinary-reply-ne-send/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t07-ac07-fixtures-no-gateway-spa/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-63-roles-coordinator-assembly-fixtures/task-aibridge-63-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-11. STORY-63 roles+coordinator+assembly fixtures. Five roles+pins. Fixtures≠GPT UI. Port Keep. L13-1/AC-07. OOS 62/64. Skip grandfather 031/032. No product invent in P1."

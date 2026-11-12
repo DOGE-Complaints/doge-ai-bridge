@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-reject-403",
+  "matrix_ids": [
+    "ACT-006",
+    "ACT-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; ownership mismatch",
+  "payload": {
+    "http_status": 403,
+    "error_code": "forbidden",
+    "gateway_call_count": 0
+  }
+}

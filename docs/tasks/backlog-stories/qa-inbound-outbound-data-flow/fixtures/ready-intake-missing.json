@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "settings",
+  "fixture_id": "settings.ready-intake-missing",
+  "matrix_ids": [
+    "READY-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-33-qa-readiness-configuration"
+  ],
+  "notes": "synthetic; empty intake URL \u2192 intake_base_url_missing. \u00abconflicting\u00bb N/A \u2014 no distinct reason in readiness.py.",
+  "payload": {
+    "overrides": {
+      "AIBRIDGE_CHANNEL_BEARER_TOKEN": "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "GATEWAY_SERVICE_API_TOKEN": "gateway-token-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "GATEWAY_BASE_URL": "",
+      "SPA_BASE_URL": "https://spa.example.invalid",
+      "OPENAI_API_KEY": "sk-test-not-real",
+      "OPENAI_MODEL": "gpt-test",
+      "AIBRIDGE_DRY_RUN": true,
+      "DATABASE_URL": "memory",
+      "AIBRIDGE_ALLOW_MEMORY_STORES": true,
+      "AIBRIDGE_INTERVIEW_PROVIDER": "openai"
+    },
+    "expect_readyz": {
+      "http_status": 503,
+      "reason": "intake_base_url_missing"
+    }
+  }
+}

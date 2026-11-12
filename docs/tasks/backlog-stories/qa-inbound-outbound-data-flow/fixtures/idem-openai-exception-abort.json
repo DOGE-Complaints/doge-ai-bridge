@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.idem-openai-exception-abort",
+  "matrix_ids": [
+    "IDEM-005"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-26-qa-idempotency-concurrency"
+  ],
+  "notes": "synthetic; claim aborted on OpenAI exception; safe retry processes again",
+  "payload": {
+    "openai_call_count": 1,
+    "gateway_call_count": 0,
+    "dedupe": "miss",
+    "http_status": 200,
+    "error_code": null,
+    "outcome": null,
+    "state": "interviewing",
+    "revision_delta": 0,
+    "forbid_substrings_in_logs": [
+      "Bearer ",
+      "sk-",
+      "callback_data_raw"
+    ]
+  }
+}

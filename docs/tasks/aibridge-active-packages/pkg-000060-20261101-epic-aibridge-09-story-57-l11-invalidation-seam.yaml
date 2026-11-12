@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 60
+created_at: "2026-11-01T14:53:51Z"
+label: epic-aibridge-09-story-57-l11-invalidation-seam
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff.md
+story_groups:
+- story_key: STORY-AIBRIDGE-57-l11-invalidation-seam
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t01-spec-seam-equals-apply-edit-effects/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t02-named-seam-entry-invalidate-send-permission/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t03-harness-transition-c-edit-only-enforce/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t04-unit-seam-invoke-without-telegram-edit/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t05-doc-target-a-partial-vs-done/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-09-req-11-req15-dual-confirm-gateway-submit-spa-handoff/stories/STORY-AIBRIDGE-57-l11-invalidation-seam/task-aibridge-57-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-09 REQ-11. STORY-57 L11-1 invalidation seam. AC-AIB-11-02 transition C + Partial target A. No REQ-13 invent. No product invent in P1. Skip grandfather 031/032."

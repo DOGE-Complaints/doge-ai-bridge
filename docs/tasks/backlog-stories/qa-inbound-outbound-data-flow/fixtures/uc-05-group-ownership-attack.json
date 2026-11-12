@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-05-group-ownership-attack",
+  "matrix_ids": [
+    "UC-05"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-05 group ownership attack; foreign principal 403 forbidden",
+  "payload": {
+    "flow": [
+      "turn",
+      "foreign_action"
+    ],
+    "dry_run": true,
+    "expect": {
+      "http_status": 403,
+      "error_code": "forbidden",
+      "gateway_call_count": 0,
+      "owner_token_still_governed": true
+    }
+  }
+}

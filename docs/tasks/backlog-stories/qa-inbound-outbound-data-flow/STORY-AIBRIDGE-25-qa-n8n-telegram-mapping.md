@@ -2,7 +2,14 @@
 
 ## Meta
 - **Key:** `STORY-AIBRIDGE-25-qa-n8n-telegram-mapping`
-- **Status:** Todo (statement only — no implementation in this wave)
+- **Status:** 🟢 Implemented (P6 closed · next P7)
+- **Pipeline:** [`STORY-AIBRIDGE-25-qa-n8n-telegram-mapping.md`](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping.md)
+- **Active pkg:** `pkg-000022-20260917-epic-aibridge-04-story-25-qa-n8n-telegram-mapping.yaml`
+- **P1 materialize:** 2026-09-17T17:39:14Z
+- **P3 closed:** 2026-09-17T17:44:23Z
+- **Gate:** [acceptance-verification … t04](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t04-story-gate/acceptance-verification-task-aibridge-25-t04-story-gate.md) PASS
+- **Tech arch:** [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md)
+- **Seed originals:** [`fixtures/`](./fixtures/) → promote **copies** to `tests/fixtures/{cluster}/`
 - **Package:** [`qa-inbound-outbound-data-flow/INDEX.md`](INDEX.md)
 - **Parent SSOT:** [`AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md`](../../qa-requirements/AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md)
 - **Guide refs:** §3 E2E flows · §10.3 N8N-*
@@ -13,9 +20,8 @@
 Automated **test/QA acceptance statements** covering the matrix IDs listed below. Preserve ownership table from guide §1 (Telegram / n8n thin adapter / aibridge / OpenAI / gateway / SPA / PostgreSQL).
 
 ## Вне scope
-- Implementing tests, fixtures, or code changes in this story wave.
-- Nested pipeline tasks / epic folders (name ≠ create until explicit P1).
-- Moving product logic into n8n; inventing channel OAS paths; Railway SUCCESS invent.
+- Deleting or moving package [`fixtures/`](./fixtures/) originals (promote = **copy** only).
+- Moving product logic into n8n; inventing channel OAS paths; Railway SUCCESS invent; live Telegram in default CI.
 
 ## Context
 
@@ -44,9 +50,29 @@ n8n is a thin adapter only: map update→request, answerCallbackQuery before `/a
 | N8N-017 | `outcome=stashed` | Render continuation link; do not claim publication. |
 | N8N-018 | Non-stashed outcome with accidental draft/URL | Adapter should not present link; contract test should fail producer inconsistency. |
 
-## Acceptance criteria (statement)
+## Fixture convention (tech-arch §6 · ADR-Q1/Q2)
 
-- [ ] Every matrix ID in Scope appears in TRACEABILITY-MATRIX with this story key.
-- [ ] Characterization IDs (if any) are marked characterization — not silent product invent.
-- [ ] No nested implementation tasks created by this wave.
-- [ ] Future automation must treat guide **must** as automated asserts; **characterization** as capture-first.
+- **Originals (SSOT for generated envelopes):** [`fixtures/`](./fixtures/) — do **not** delete/move after promote.
+- **Runtime test tree (after story execution):** `tests/fixtures/{cluster}/{name}.json` — **copy** from package `fixtures/` (or generate into package `fixtures/` first, then copy).
+- Envelope: `schema_version=1.0` fields per [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md) §6.2.
+
+## Nested tasks (materialized under EPIC-04)
+
+> Arch: [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md) §4–§6 · §5.1 layers.  
+> **Seed fixtures (package):** `telegram.message-private-ru-pothole`; `n8n.callback-ack-before-actions`  
+> **Clusters:** `telegram`, `n8n`, `channel` · **Layer:** `tests/n8n/` = **adapter-contract** (fixture + Python helpers; not live workflow e2e) · **Harness:** Fixture-driven mapping asserts (no live Telegram) · Runtime pin honesty → [`STORY-AIBRIDGE-36`](./STORY-AIBRIDGE-36-qa-n8n-workflow-contract-honesty.md) / N8N-WF-001
+
+| Task | Folder | Status | Essence |
+|------|--------|--------|---------|
+| **T01** | [task-aibridge-25-t01-promote-seed-fixtures](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t01-promote-seed-fixtures/README.md) | Done | Copy telegram + n8n seed JSON → `tests/fixtures/telegram/` and `tests/fixtures/n8n/`; originals stay |
+| **T02** | [task-aibridge-25-t02-generate-n8n-matrix-fixtures](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t02-generate-n8n-matrix-fixtures/README.md) | Done | Generate remaining N8N-002…018 (+ linked channel refs) into package `fixtures/`, copy to `tests/fixtures/` |
+| **T03** | [task-aibridge-25-t03-implement-n8n-mapping-tests](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t03-implement-n8n-mapping-tests/README.md) | Done | Tests in `tests/n8n/` for mapping + ack_order; no live TG |
+| **T04** | [task-aibridge-25-t04-story-gate](../../epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-25-qa-n8n-telegram-mapping/task-aibridge-25-t04-story-gate/README.md) | Done | All N8N-* covered; claim_published_forbidden on stashed; originals intact |
+
+## Acceptance criteria
+
+- [x] Every matrix ID in Scope appears in TRACEABILITY-MATRIX with this story key.
+- [x] Characterization IDs (if any) are marked characterization — not silent product invent.
+- [x] Guide **must** → automated asserts; **characterization** → capture-first.
+- [x] Nested tasks materialized under EPIC-04 (P1.3 APPLY).
+- [x] On story Done: all required envelopes exist under `tests/fixtures/{cluster}/` as **copies**; originals remain in package [`fixtures/`](./fixtures/).

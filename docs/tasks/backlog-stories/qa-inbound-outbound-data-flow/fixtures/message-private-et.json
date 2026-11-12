@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-private-et",
+  "matrix_ids": [
+    "N8N-004"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; Estonian Unicode; language_code=et",
+  "payload": {
+    "update_id": 848301561,
+    "message": {
+      "message_id": 21,
+      "date": 1758099701,
+      "text": "Vana-Pärnu tänaval on teeauk, autod peavad ümber sõitma.",
+      "from": {
+        "id": 501122335,
+        "is_bot": false,
+        "first_name": "Elanik",
+        "language_code": "et"
+      },
+      "chat": {
+        "id": 501122335,
+        "type": "private",
+        "first_name": "Elanik"
+      }
+    }
+  }
+}

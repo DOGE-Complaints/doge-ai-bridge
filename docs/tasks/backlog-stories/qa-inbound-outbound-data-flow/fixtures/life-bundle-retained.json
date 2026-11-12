@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.life-bundle-retained",
+  "matrix_ids": [
+    "LIFE-007"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-31-qa-restart-lifecycle-retention"
+  ],
+  "notes": "synthetic; active session ref retains bundle from GC",
+  "payload": {
+    "deleted_hashes": [],
+    "bundle_present": true
+  }
+}

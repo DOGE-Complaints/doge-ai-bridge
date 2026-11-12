@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "telegram",
+  "fixture_id": "telegram.message-group-user-b",
+  "matrix_ids": [
+    "N8N-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-25-qa-n8n-telegram-mapping"
+  ],
+  "notes": "synthetic; same group; principal=user B separate session",
+  "payload": {
+    "update_id": 848301565,
+    "message": {
+      "message_id": 25,
+      "date": 1758099705,
+      "text": "Group report from B",
+      "from": {
+        "id": 601100002,
+        "is_bot": false,
+        "first_name": "UserB",
+        "language_code": "en"
+      },
+      "chat": {
+        "id": -10042424201,
+        "type": "supergroup",
+        "title": "Civic Syn Group"
+      }
+    }
+  }
+}

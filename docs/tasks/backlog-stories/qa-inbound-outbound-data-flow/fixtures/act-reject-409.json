@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-reject-409",
+  "matrix_ids": [
+    "ACT-008",
+    "ACT-009",
+    "ACT-010",
+    "ACT-011",
+    "ACT-012",
+    "ACT-013",
+    "ACT-014",
+    "ACT-015",
+    "ACT-016"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; conflict family for expired/consumed/invalidated/revision/state/deploy/hash/frozen/illegal",
+  "payload": {
+    "http_status": 409,
+    "error_code": "conflict",
+    "gateway_call_count": 0
+  }
+}

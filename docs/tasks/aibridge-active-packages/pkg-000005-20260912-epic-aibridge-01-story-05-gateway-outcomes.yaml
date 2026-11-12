@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 5
+created_at: "2026-09-12T21:50:08Z"
+label: epic-aibridge-01-story-05-gateway-outcomes
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/EPIC-AIBRIDGE-01-req-01-runtime.md
+story_groups:
+- story_key: STORY-AIBRIDGE-05-gateway-outcomes
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t01-constrained-https-bearer/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t02-verify-201-draft-trace/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t03-outcome-map-unknown/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t04-dry-run-no-stash/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t05-continuation-url-copy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-05-gateway-outcomes/task-aibridge-01-05-t06-story-acceptance-verification/README.md
+activation: active

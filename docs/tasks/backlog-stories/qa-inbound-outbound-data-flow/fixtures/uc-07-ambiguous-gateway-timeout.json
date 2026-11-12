@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.uc-07-ambiguous-gateway-timeout",
+  "matrix_ids": [
+    "UC-07"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "UC-07 gateway timeout → unknown_outcome; no auto-retry; restart preserves ambiguity via rebuild_app_same_pg; runbook docs/runtime-docs/01-api.md",
+  "payload": {
+    "flow": [
+      "turn",
+      "looks_right",
+      "turn_fc",
+      "send"
+    ],
+    "dry_run": false,
+    "gateway_raise": "TimeoutError",
+    "expect": {
+      "outcome": "unknown_outcome",
+      "gateway_call_count": 1,
+      "auto_retry": false,
+      "resend_blocked": true,
+      "restart_preserves_ambiguity": true,
+      "runbook_path": "docs/runtime-docs/01-api.md"
+    }
+  }
+}

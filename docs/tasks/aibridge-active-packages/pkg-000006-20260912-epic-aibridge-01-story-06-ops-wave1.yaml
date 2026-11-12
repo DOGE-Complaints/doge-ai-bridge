@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 6
+created_at: "2026-09-12T22:02:06Z"
+label: epic-aibridge-01-story-06-ops-wave1
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/EPIC-AIBRIDGE-01-req-01-runtime.md
+story_groups:
+- story_key: STORY-AIBRIDGE-06-ops-wave1-proof
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t01-metrics-prometheus/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t02-redacted-audit-logs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t03-ops-readme-runbook-verify/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t04-wave1-gate-checklist/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t05-env-example-knobs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-01-req-01-runtime/stories/STORY-AIBRIDGE-06-ops-wave1-proof/task-aibridge-01-06-t06-story-acceptance-verification/README.md
+activation: active

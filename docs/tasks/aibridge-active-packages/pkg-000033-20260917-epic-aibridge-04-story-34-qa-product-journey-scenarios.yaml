@@ -1,0 +1,17 @@
+schema_version: 1
+package_sequence: 33
+created_at: "2026-09-17T21:16:58Z"
+label: epic-aibridge-04-story-34-qa-product-journey-scenarios
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-34-qa-product-journey-scenarios
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-34-qa-product-journey-scenarios/task-aibridge-34-t01-compose-uc-fixture-packs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-34-qa-product-journey-scenarios/task-aibridge-34-t02-promote-uc-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-34-qa-product-journey-scenarios/task-aibridge-34-t03-implement-journey-e2e/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-34-qa-product-journey-scenarios/task-aibridge-34-t04-story-gate/README.md
+activation: superseded
+superseded_by: pkg-000034-20260917-epic-aibridge-04-story-35-qa-gates-layers-dod.yaml
+note: "Superseded 2026-09-17T21:40:06Z — STORY-34 wave complete; active pointer → pkg-000034 (STORY-35). Sequences 31/32 remain grandfather-reserved."

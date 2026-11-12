@@ -1,0 +1,15 @@
+schema_version: 1
+package_sequence: 29
+created_at: "2026-09-17T20:27:34Z"
+label: epic-aibridge-04-story-32-qa-privacy-logs-observability
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-32-qa-privacy-logs-observability
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-32-qa-privacy-logs-observability/task-aibridge-32-t01-generate-sec-spy-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-32-qa-privacy-logs-observability/task-aibridge-32-t02-promote-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-32-qa-privacy-logs-observability/task-aibridge-32-t03-implement-privacy-obs-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-32-qa-privacy-logs-observability/task-aibridge-32-t04-story-gate/README.md
+activation: active

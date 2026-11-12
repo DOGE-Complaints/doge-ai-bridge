@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.val-channel-not-telegram",
+  "matrix_ids": [
+    "VAL-008"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-24-qa-json-schema-boundary"
+  ],
+  "notes": "synthetic; channel other than telegram",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/turns",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "whatsapp",
+      "event_id": "848301552",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "message": {
+        "message_id": "14",
+        "text": "На улице Вана-Пярну яма на дороге, машины еле объезжают.",
+        "language_code": "ru"
+      }
+    },
+    "expect": {
+      "http_status": 422,
+      "error_code": "semantic_invalid"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+schema_version: 1
+package_sequence: 28
+created_at: "2026-09-17T20:05:23Z"
+label: epic-aibridge-04-story-31-qa-restart-lifecycle-retention
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/EPIC-AIBRIDGE-04-qa-inbound-outbound.md
+story_groups:
+- story_key: STORY-AIBRIDGE-31-qa-restart-lifecycle-retention
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-31-qa-restart-lifecycle-retention/task-aibridge-31-t01-generate-life-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-31-qa-restart-lifecycle-retention/task-aibridge-31-t02-promote-fixtures/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-31-qa-restart-lifecycle-retention/task-aibridge-31-t03-implement-lifecycle-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-04-qa-inbound-outbound/stories/STORY-AIBRIDGE-31-qa-restart-lifecycle-retention/task-aibridge-31-t04-story-gate/README.md
+activation: active

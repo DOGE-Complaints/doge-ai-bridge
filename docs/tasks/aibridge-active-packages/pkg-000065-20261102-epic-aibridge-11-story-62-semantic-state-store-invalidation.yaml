@@ -1,0 +1,19 @@
+schema_version: 1
+package_sequence: 65
+created_at: "2026-11-02T08:41:40Z"
+label: epic-aibridge-11-story-62-semantic-state-store-invalidation
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly.md
+story_groups:
+- story_key: STORY-AIBRIDGE-62-semantic-state-store-invalidation
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t01-semantic-store-boundary-not-history/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t02-postgres-semantic-persist-logical-classes/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t03-ac01-multi-turn-harness-no-gpt-ui/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t04-l13-3-target-a-meaning-invalidate/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t05-transition-c-edit-enforce-until-wired/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t06-history-utterance-log-orthogonality/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-62-semantic-state-store-invalidation/task-aibridge-62-t08-story-gate-checklist/README.md
+activation: active
+note: "NEW EPIC-11. STORY-62 semantic store + invalidation. Store≠History/last_confirmed_state. L13-3 Target A + Transition C. Open DDL/hash. OOS 63/64. Skip grandfather 031/032. No product invent in P1."

@@ -1,0 +1,41 @@
+schema_version: 1
+package_sequence: 70
+created_at: "2026-11-05T11:57:24Z"
+label: epic-aibridge-11-story-67-consume-parity-volume-evidence
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly.md
+story_groups:
+- story_key: STORY-AIBRIDGE-67-consume-parity-volume-evidence
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t01-export-preflight-reconfirm-e1/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t02-lock-joint-inventory-e1/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t03-consume-comparator-module/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t04-readyz-parity-fail-closed-seam/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t05-harness-parity-matrix/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t06-hybrid-c-volume-runbook/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t07-live-volume-evidence-ops-window/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-67-consume-parity-volume-evidence/task-aibridge-67-t08-story-gate-checklist/README.md
+activation: none
+p3_completed_at: "2026-11-05T12:02:38Z"
+p8_completed_at: "2026-11-05T12:30:45Z"
+product_done: true
+code_done: true
+ac05_live: Explicit Partial
+task_dispositions:
+  t01: Done
+  t02: Done
+  t03: Done
+  t04: Done
+  t05: Done
+  t06: Done
+  t07: Partial
+  t08: Done
+note: "REUSE EPIC-11. STORY-67 Done Product Done Code Done P8 2026-11-05T12:30:45Z. AC-05 live Explicit Partial (t07). stale≠Export Pass. No invent Railway/live SUCCESS. next=DONE."
+p5_applied_at: "2026-11-05T12:22:28Z"
+p6_completed_at: "2026-11-05T12:26:35Z"
+audit_run_mode: aibridge_67_audit_20261105
+audit_task_dispositions:
+  t09: Done
+  t10: Done
+  g03_live: WAIVE

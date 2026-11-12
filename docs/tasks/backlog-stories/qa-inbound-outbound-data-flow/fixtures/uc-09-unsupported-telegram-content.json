@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "cluster": "n8n",
+  "fixture_id": "n8n.uc-09-unsupported-telegram-content",
+  "matrix_ids": [
+    "UC-09"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-34-qa-product-journey-scenarios"
+  ],
+  "notes": "characterization capture-first — UC-09 unsupported TG content; adapter must not fabricate empty /turns (capture-first; no product invent)",
+  "payload": {
+    "refs": {
+      "inbound_telegram_fixture": "telegram/message-photo-no-text",
+      "map_fixture": "n8n/map-unsupported-media"
+    },
+    "expect": {
+      "must_not_build_turns": true,
+      "unsupported_prompt": true,
+      "aibridge_text_only_v1": true
+    }
+  },
+  "characterization": true
+}

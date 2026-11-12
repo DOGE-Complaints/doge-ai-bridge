@@ -1,0 +1,18 @@
+schema_version: 1
+package_sequence: 67
+created_at: "2026-11-02T10:28:38Z"
+label: epic-aibridge-11-story-64-content-parity-stub-live-evidence
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly.md
+story_groups:
+- story_key: STORY-AIBRIDGE-64-content-parity-stub-live-evidence
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t01-stub-evidence-matrix-62-63-harness/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t02-prod-volume-path-l13-2-docs/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t03-ac06-fail-closed-incomplete-fixture/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t04-ac05-parity-gate-explicit-partial/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t05-package-index-honesty-stub-ne-ac05/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-11-req-13-req15-semantic-state-roles-instruction-assembly/stories/STORY-AIBRIDGE-64-content-parity-stub-live-evidence/task-aibridge-64-t08-story-gate-checklist/README.md
+activation: active
+note: "REUSE EPIC-11. STORY-64 content volume/parity + stub/live evidence. AC-04/05/06. Explicit Partial AC-05. No invent live SUCCESS / hash SSOT. Skip grandfather 031/032. No product invent in P1."

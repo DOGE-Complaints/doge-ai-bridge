@@ -1,0 +1,488 @@
+# DOGEstonia — Story Intake wire OpenAPI (aibridge ↔ gateway / Actions-compatible).
+#
+# Renamed 2026-09-12 from mislabeled aibridge-channel-v1.openapi.yaml.
+# This file is NOT the n8n channel façade — see aibridge-channel-v1.openapi.yaml for /v1/channel/*.
+#
+# Auth (ChatGPT -> Configure -> Actions): API Key -> Bearer = server GPT_ACTIONS_BEARER_SECRET.
+# servers.url: replace with public HTTPS origin of DOGEstonia Bot API when deployed.
+#
+# STATUS: CONTRACT CANDIDATE — lock paths/schemas to node GET /openapi.json when available.
+# SSOT companion: GPT UI/instructions/story-api-methods-reference.md (cross-repo)
+# Lockstep: doge-complaints-gateway/src/core/intake/contracts.py (m2.story_intake_envelope.v2 + REQ-42/43 behavioral blocks)
+#
+openapi: 3.1.0
+info:
+  title: DOGEstonia Bot API — Story Intake (Custom GPT Actions, draft)
+  version: "0.8.0"
+  description: >
+    Minimal subset for GPT Actions targeting story intake runtime (wire contract v2 + REQ-23 behavioral extensions).
+    GPT-SUBMIT-02 (GIM-201): single stash contract — POST /story-drafts only; StoryDraftStashRequest (author at browser submit, GW-DRAFT-02).
+    GPT-TAX-01 (GIM-209): narrative.taxonomy per-axis SoT; canonical_labels deprecated/derived flat compat.
+    GPT-TAX-02 (GIM-232): TaxonomyAxisEntry.label is an English snake_case / SSOT token — not et/ru prose; no vocabulary HTTP 422.
+    GPT-SSR-02 (GIM-256…260): required root schema_binding + optional geo_detail (gateway-named only; REQ-45).
+    Operator: re-import Custom GPT Actions after this contract bump (unlike pack-only Instruction upload).
+    All operations use Bearer when GPT_ACTIONS_BEARER_SECRET is set.
+    Lockstep: operationId/method/path/request/response/auth/version parity with story-api-methods-reference.md.
+    VERSION DUAL-TRACKING: this file tracks GPT behavioral contract version (0.8.0); the runtime server
+    tracks its own implementation version (currently 0.1.0 at GET /openapi.json). These are separate versioning
+    axes and are NOT expected to be equal. Increment this version when operationId/method/path/required fields/
+    response envelope/auth semantics change (see story-api-methods-reference.md §4 lockstep policy).
+    Axis/disposition enums lockstep with gateway GW-TAX-01 (TAXONOMY_AXIS_VALUES + LabelDisposition).
+
+servers:
+  - url: https://dogestonia-tallinn.up.railway.app
+    description: DOGEstonia node public origin (no trailing path). DO NOT import from live GET /openapi.json — FastAPI auto-generated schema omits request body, uses wrong operationId and HTTP 200 instead of 202, and has no security scheme. This hand-crafted YAML is the authoritative GPT Actions import artifact.
+
+security:
+  - GptActionsBearer: []
+
+components:
+  securitySchemes:
+    GptActionsBearer:
+      # corresponds to server BearerAuth / Authorization: Bearer <token>
+      type: http
+      scheme: bearer
+      description: >
+        Shared secret = GPT_ACTIONS_BEARER_SECRET on the API host. Same value as ChatGPT Actions API Key (Bearer).
+        Custom headers (e.g. X-User-Id) are typically NOT available from Actions — see gpt-actions-bot-api-auth-mapping.md.
+        Current model is app-level integration bearer (no per-user OAuth identity claims in this schema).
+
+  schemas:
+    I18nText:
+      type: object
+      required: [et, ru, en]
+      properties:
+        et:
+          type: string
+        ru:
+          type: string
+        en:
+          type: string
+
+    TaxonomyAxisEntry:
+      type: object
+      required: [label, disposition]
+      description: >
+        One label on a taxonomy axis (GPT-TAX-01 / D-TAX-1). disposition lockstep with gateway
+        LabelDisposition: canonical | metadata_only | needs_clarification | rejected | internal.
+      properties:
+        label:
+          type: string
+          description: >
+            English snake_case / taxonomy-SSOT token (GPT-TAX-02). Estonian or Russian
+            prose is not a wire label value. Not an HTTP 422 / server vocabulary enum.
+        disposition:
+          type: string
+          enum:
+            - canonical
+            - metadata_only
+            - needs_clarification
+            - rejected
+            - internal
+          description: >
+            Wire disposition. internal = §6 internal-only labels (gateway filters from public surfaces).
+
+    NarrativeTaxonomy:
+      type: object
+      description: >
+        Per-axis taxonomy source of truth (GPT-TAX-01). Keys = TAXONOMY_AXIS_VALUES (13 axes,
+        gateway axes.py). Each axis maps to an array of TaxonomyAxisEntry. Omit empty axes.
+        Do not collapse axes into a flat list — axis membership is preserved on the wire.
+        Residual (GPT-SSR-02 / T06): the 13 civic axes remain for MVP civic lockstep.
+        Multi-node soften (legal_process / mobility_observation) is a follow-up story — not this contract.
+      properties:
+        topic_domain:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        service_object:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        location_context:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        failure_mode:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        issue_archetype_support:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        affected_scope:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        civic_signal:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        deep_need:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        desired_outcome:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        ecosystem_signal:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        governance_signal:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        risk_privacy_safety:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+        confidence_state:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxonomyAxisEntry"
+      additionalProperties: false
+
+    Narrative:
+      type: object
+      required:
+        - original_text
+        - language
+        - session_language
+        - title
+        - description
+      properties:
+        original_text:
+          type: string
+        language:
+          type: string
+          enum: [et, ru, en]
+          description: Auto-detected language of user narrative input (detected_input_language).
+        session_language:
+          type: string
+          enum: [et, ru, en]
+          description: Primary session / UI language from normalization_metadata.session_language.
+        title:
+          $ref: "#/components/schemas/I18nText"
+        description:
+          $ref: "#/components/schemas/I18nText"
+        summary:
+          allOf:
+            - $ref: "#/components/schemas/I18nText"
+          nullable: true
+          description: >
+            Omit entire block if any et/ru/en slot is empty (REQ-25). Do not send null — omit the key.
+        location_query:
+          type: string
+          nullable: true
+        canonical_type:
+          type: string
+          nullable: true
+        taxonomy:
+          $ref: "#/components/schemas/NarrativeTaxonomy"
+          description: >
+            GPT-TAX-01 / D-TAX-1 source of truth for labels by axis. Prefer this over
+            canonical_labels. Gateway parse_taxonomy_payload consumes this object.
+        canonical_labels:
+          type: array
+          items:
+            type: string
+          deprecated: true
+          description: >
+            DEPRECATED / DERIVED (GPT-TAX-01): flat list of disposition=canonical label keys
+            only, derived from narrative.taxonomy when present. Per-axis taxonomy is SoT.
+            Kept for backward compatibility with older consumers. Prefer taxonomy.
+        institution:
+          allOf:
+            - $ref: "#/components/schemas/I18nText"
+          nullable: true
+          description: >
+            DEMO SCOPE: always omit — do not populate (REQ-28 pre-flight #7; gate lifted by REQ-43).
+            Post-demo: include only when all et/ru/en are non-empty (REQ-23 §2.5 / REQ-43).
+            Omit the key; do not send null.
+
+    GptSignals:
+      type: object
+      description: GPT classification signals (REQ-42 / REQ-23 §2).
+      properties:
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+        impact_estimation:
+          type: string
+          enum: [LOCAL, DISTRICT, CITY, NATIONAL]
+        problem_status:
+          type: string
+          enum: [ONGOING, RESOLVED, RECURRING, UNKNOWN]
+
+    Origin:
+      type: object
+      properties:
+        source:
+          type: string
+          nullable: true
+        conversation_id:
+          type: string
+          nullable: true
+        tool_call_id:
+          type: string
+          nullable: true
+
+    Privacy:
+      type: object
+      description: >
+        Optional risk flags only. They do not replace scrub and do not authorize
+        HTTP. GPT-PII-01: if normalizer §4.4 types remain in wire text, the GPT
+        MUST STOP before postStoryDraftStash. Not a server PII-reject / 422.
+      properties:
+        contains_pii:
+          type: boolean
+          default: false
+          description: Signal that PII was detected. Never a send permit.
+        redaction_requested:
+          type: boolean
+          default: false
+          description: User agreed to edit. Never a send permit if §4.4 types remain.
+
+    LiveStoryContext:
+      type: object
+      properties:
+        consistency_notes:
+          type: string
+          nullable: true
+
+    SchemaBinding:
+      type: object
+      additionalProperties: false
+      required: [schema_id, schema_version, structured_payload]
+      description: >
+        Required root sidecar (gateway schema_binding / contracts.py SchemaBinding).
+        schema_id + schema_version are the semantic pack pair (e.g. tallinn_civic / v1)
+        and MUST NOT equal the envelope identifier m2.story_intake_envelope.v2
+        (gateway rejects equality). Absent / empty / null → 4xx. Optional profile_id /
+        profile_version. Unknown keys rejected.
+      properties:
+        schema_id:
+          type: string
+          description: Node pack id. Gateway-named only (contracts.py schema_id).
+        schema_version:
+          type: string
+          description: >
+            Semantic pack version (e.g. v1). Must not equal envelope schema_version
+            m2.story_intake_envelope.v2.
+        structured_payload:
+          type: object
+          additionalProperties: true
+          description: >
+            Pack JSON Schema object. Not a wire home for pack geo_intake / merge /
+            mirror_to_payload (node config only).
+        profile_id:
+          type: string
+          nullable: true
+        profile_version:
+          type: string
+          nullable: true
+
+    GeoDetailAddress:
+      type: object
+      additionalProperties: false
+      description: >
+        Optional address block (gateway GeoDetailAddress). Use at most one of house,
+        house_range, or houses[] (XOR). Unknown keys rejected.
+      properties:
+        country:
+          type: string
+        region:
+          type: string
+        settlement:
+          type: string
+        district:
+          type: string
+        street:
+          type: string
+        house:
+          type: string
+        house_range:
+          type: string
+        houses:
+          type: array
+          items:
+            type: string
+
+    GeoDetail:
+      type: object
+      additionalProperties: false
+      description: >
+        Optional root sidecar (gateway geo_detail / GeoDetail). latitude and longitude
+        must be provided together when either is sent. Pack geo_intake / merge /
+        mirror_to_payload are node config only — not wire properties.
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          $ref: "#/components/schemas/GeoDetailAddress"
+        normalized_label:
+          type: string
+        confidence:
+          type: number
+        provider:
+          type: string
+
+    StoryDraftStashRequest:
+      type: object
+      required: [schema_version, narrative, schema_binding]
+      properties:
+        schema_version:
+          type: string
+          enum: [m2.story_intake_envelope.v2]
+          description: >
+            Wire contract version (required). Shown in operator God Mode preview; minimize
+            citizen-facing discussion per api-orchestrator §5.2.0b (REQ-31).
+        narrative:
+          $ref: "#/components/schemas/Narrative"
+        schema_binding:
+          $ref: "#/components/schemas/SchemaBinding"
+          description: >
+            Required semantic binding sidecar. MUST be present on the HTTP body.
+            Citizen conversational preview MAY omit binding fields (REQ-31/32 display vs
+            transport); do not omit from the Actions request.
+        geo_detail:
+          $ref: "#/components/schemas/GeoDetail"
+          description: >
+            Optional geo sidecar. Omit the key when unused. Not a substitute for
+            narrative.location_query.
+        origin:
+          $ref: "#/components/schemas/Origin"
+          description: >
+            Optional traceability sidecar. Always include origin.source='openai_gpt_action' in
+            every StoryDraftStashRequest regardless of Citizen/God Mode. Do NOT omit from the API
+            request body — "omit from citizen summaries" means do not display origin fields in
+            the conversational preview, not that the block should be absent from the request.
+            (REQ-32 / REQ-31 §2.5.3 display vs transport.)
+        privacy:
+          $ref: "#/components/schemas/Privacy"
+        live_story_context:
+          $ref: "#/components/schemas/LiveStoryContext"
+        gpt_signals:
+          $ref: "#/components/schemas/GptSignals"
+          description: >
+            Optional classification block (REQ-42). Use human labels in Citizen Mode; full block in God Mode.
+      description: >
+        GPT Actions stash request body. Author resolved at browser submit (GW-DRAFT-02).
+        GPT-SSR-02: schema_binding required; geo_detail optional. Gateway-named tokens only.
+
+    StoryDraftStashResponseData:
+      type: object
+      required: [draft_id]
+      properties:
+        draft_id:
+          type: string
+          description: Opaque draft id for SPA redirect (API_REFERENCE §6.8).
+
+    SuccessEnvelope_StoryDraftStash:
+      type: object
+      required: [data, trace_id]
+      properties:
+        data:
+          $ref: "#/components/schemas/StoryDraftStashResponseData"
+        trace_id:
+          type: string
+
+    ErrorEnvelope:
+      type: object
+      required: [error, trace_id]
+      properties:
+        error:
+          type: object
+          required: [code, type, message, details]
+          properties:
+            code:
+              type: string
+            type:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+        trace_id:
+          type: string
+
+paths:
+  /story-drafts:
+    post:
+      operationId: postStoryDraftStash
+      summary: Stash a story draft for browser submit
+      description: >
+        Stash the resident's validated StoryDraftStashRequest after interview normalization and confirmation.
+        Returns draft_id for SPA redirect — no story is created. User completes submit in browser
+        (POST /story-drafts/{draft_id}/submit). Re-import Actions after contract bump.
+      x-openai-isConsequential: true
+      security:
+        - GptActionsBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryDraftStashRequest"
+            example:
+              schema_version: m2.story_intake_envelope.v2
+              schema_binding:
+                schema_id: tallinn_civic
+                schema_version: v1
+                structured_payload:
+                  signals:
+                    civic_domain: example
+                    failure_pattern: example
+              narrative:
+                original_text: Example stash body for Actions import.
+                language: en
+                session_language: en
+                title:
+                  et: Naide
+                  ru: Primer
+                  en: Example
+                description:
+                  et: Naide
+                  ru: Primer
+                  en: Example
+              origin:
+                source: openai_gpt_action
+      responses:
+        "201":
+          description: Draft stashed; no story created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope_StoryDraftStash"
+        "400":
+          description: Stash validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "422":
+          description: >
+            Geo scope mismatch (GEO_SCOPE_MISMATCH) — location_query outside configured
+            region. Schema/domain validation errors use HTTP 400, not 422.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"

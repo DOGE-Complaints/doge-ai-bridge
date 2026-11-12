@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.sec-channel-audit-bounded",
+  "matrix_ids": [
+    "SEC-003"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+  ],
+  "notes": "synthetic; channel audit bounded IDs/statuses/lengths; no raw Bearer or full narrative",
+  "payload": {
+    "forbid_in_audit": [
+      "channel-token-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "Bearer ",
+      "email alice.smith@example.com phone +3725551234 name Ivan Petrov"
+    ],
+    "allow_bounded_markers": true
+  }
+}

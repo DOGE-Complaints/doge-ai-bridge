@@ -2,7 +2,9 @@
 
 ## Meta
 - **Key:** `STORY-AIBRIDGE-32-qa-privacy-logs-observability`
-- **Status:** Todo (statement only — no implementation in this wave)
+- **Status:** Implemented (P3 closed · next P4)
+- **Tech arch:** [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md)
+- **Seed originals:** [`fixtures/`](./fixtures/) → promote **copies** to `tests/fixtures/{cluster}/`
 - **Package:** [`qa-inbound-outbound-data-flow/INDEX.md`](INDEX.md)
 - **Parent SSOT:** [`AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md`](../../qa-requirements/AIBRIDGE-QA-INBOUND-OUTBOUND-DATA-FLOW-GUIDE.md)
 - **Guide refs:** §2 trust · §10.10 SEC-* · §14 spies
@@ -13,9 +15,9 @@
 Automated **test/QA acceptance statements** covering the matrix IDs listed below. Preserve ownership table from guide §1 (Telegram / n8n thin adapter / aibridge / OpenAI / gateway / SPA / PostgreSQL).
 
 ## Вне scope
-- Implementing tests, fixtures, or code changes in this story wave.
-- Nested pipeline tasks / epic folders (name ≠ create until explicit P1).
-- Moving product logic into n8n; inventing channel OAS paths; Railway SUCCESS invent.
+- Materializing `task-*` / epic folders before explicit P1 (this story only **names** tasks).
+- Deleting or moving package [`fixtures/`](./fixtures/) originals (promote = **copy** only).
+- Moving product logic into n8n; inventing channel OAS paths; Railway SUCCESS invent; live Telegram in default CI.
 
 ## Context
 
@@ -36,9 +38,30 @@ No PII/narrative/secrets in audit/metrics. Token hashes only in DB. Channel vs G
 | SEC-009 | n8n workflow export | No credentials or secrets committed. |
 | SEC-010 | Prompt injection asks model to call arbitrary URL/tool | Only allowlisted generated function is available; gateway origin/path remain server-owned. |
 
-## Acceptance criteria (statement)
+## Fixture convention (tech-arch §6 · ADR-Q1/Q2)
 
-- [ ] Every matrix ID in Scope appears in TRACEABILITY-MATRIX with this story key.
-- [ ] Characterization IDs (if any) are marked characterization — not silent product invent.
-- [ ] No nested implementation tasks created by this wave.
-- [ ] Future automation must treat guide **must** as automated asserts; **characterization** as capture-first.
+- **Originals (SSOT for generated envelopes):** [`fixtures/`](./fixtures/) — do **not** delete/move after promote.
+- **Runtime test tree (after story execution):** `tests/fixtures/{cluster}/{name}.json` — **copy** from package `fixtures/` (or generate into package `fixtures/` first, then copy).
+- Envelope: `schema_version=1.0` fields per [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md) §6.2.
+- `task-*` folders below are **named only** — not materialized until explicit P1 (analysis.mdc: name ≠ create).
+
+## Nested tasks (named — not materialized)
+
+> Arch: [`TECHNICAL-ARCHITECTURE.md`](./TECHNICAL-ARCHITECTURE.md) §4–§6 · §5.1 layers.  
+> **Seed fixtures (package):** reuse spies/channel/openai/gateway seeds; generate SEC-* spy snapshots  
+> **Clusters:** `spies`, `channel`, `openai`, `gateway` · **Layer:** `tests/integration/` · **Harness:** spy bag §14; Recording* call captures without printing secrets
+
+| Task | Folder | Status | Essence |
+|------|--------|--------|---------|
+| **T01** | `task-aibridge-32-t01-generate-sec-spy-fixtures` | Done | Generate SEC-* spies envelopes into package `fixtures/` |
+| **T02** | `task-aibridge-32-t02-promote-fixtures` | Done | Copy to `tests/fixtures/spies/` (+ related clusters); originals stay |
+| **T03** | `task-aibridge-32-t03-implement-privacy-obs-tests` | Done | Assert redaction; metrics scrub; token hash-only |
+| **T04** | `task-aibridge-32-t04-story-gate` | Done | All SEC-*; CI artifacts secret-free; originals intact |
+
+## Acceptance criteria
+
+- [x] Every matrix ID in Scope appears in TRACEABILITY-MATRIX with this story key.
+- [x] Characterization IDs (if any) are marked characterization — not silent product invent.
+- [x] Guide **must** → automated asserts; **characterization** → capture-first.
+- [x] Nested tasks named in this story; `task-*` folders **not** created until P1.
+- [x] On story Done: all required envelopes exist under `tests/fixtures/{cluster}/` as **copies**; originals remain in package [`fixtures/`](./fixtures/).

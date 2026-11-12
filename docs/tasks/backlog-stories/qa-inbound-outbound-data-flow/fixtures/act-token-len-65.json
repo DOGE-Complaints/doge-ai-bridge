@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "cluster": "channel",
+  "fixture_id": "channel.act-token-len-65",
+  "matrix_ids": [
+    "ACT-018"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; action_token length 65 \u2192 fa\u00e7ade 422",
+  "payload": {
+    "method": "POST",
+    "path": "/v1/channel/actions",
+    "auth_ref": "channel",
+    "body": {
+      "channel": "telegram",
+      "event_id": "act-018",
+      "callback_query_id": "cq-act-018",
+      "principal": {
+        "user_id": "501122334",
+        "chat_id": "501122334"
+      },
+      "action_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "expect": {
+      "http_status": 422,
+      "error_code": "semantic_invalid"
+    }
+  }
+}

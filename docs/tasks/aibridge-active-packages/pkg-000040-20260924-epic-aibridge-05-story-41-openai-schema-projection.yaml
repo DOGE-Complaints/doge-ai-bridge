@@ -1,0 +1,16 @@
+schema_version: 1
+package_sequence: 40
+created_at: "2026-09-24T10:55:45Z"
+label: epic-aibridge-05-story-41-openai-schema-projection
+input_kind: epic_story_tree
+tasks_root: doge-ai-bridge/docs/tasks/
+epic_file: doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat.md
+story_groups:
+- story_key: STORY-AIBRIDGE-41-openai-schema-projection
+  paths:
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat/stories/STORY-AIBRIDGE-41-openai-schema-projection/task-aibridge-41-t01-openai-unsupported-keywords-policy/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat/stories/STORY-AIBRIDGE-41-openai-schema-projection/task-aibridge-41-t02-generate-strict-tool-projection/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat/stories/STORY-AIBRIDGE-41-openai-schema-projection/task-aibridge-41-t03-compat-projection-tests/README.md
+  - doge-ai-bridge/docs/tasks/epics/EPIC-AIBRIDGE-05-req-07-openai-strict-schema-compat/stories/STORY-AIBRIDGE-41-openai-schema-projection/task-aibridge-41-t04-story-gate/README.md
+activation: active
+note: "Sequences 31/32 reserved on date-gate-grandfather (gateway legacy); aibridge uses 040 after 039."

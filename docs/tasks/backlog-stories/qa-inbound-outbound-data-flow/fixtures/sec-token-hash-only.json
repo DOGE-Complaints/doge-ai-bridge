@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.sec-token-hash-only",
+  "matrix_ids": [
+    "SEC-006"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-32-qa-privacy-logs-observability"
+  ],
+  "notes": "synthetic; PostgreSQL/token store persists hash only; raw forbidden",
+  "payload": {
+    "raw_stored": false,
+    "forbid_substrings_in_store_keys": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "cluster": "spies",
+  "fixture_id": "spies.act-hash-only-persist",
+  "matrix_ids": [
+    "ACT-017"
+  ],
+  "story_keys": [
+    "STORY-AIBRIDGE-29-qa-action-token-fsm"
+  ],
+  "notes": "synthetic; only token hash may persist; raw forbidden in store/logs",
+  "payload": {
+    "raw_stored": false,
+    "forbid_substrings_in_store_keys": true,
+    "mint_max_utf8_bytes": 64
+  }
+}
