@@ -17,7 +17,7 @@ Thin runtime note. Arch: [`../architecture/req15-semantic-state-roles/02-roles-c
 
 ## Local consume (MVP light)
 
-- Configure DIR/MANIFEST to Present GPT UI export: `GPT UI/instructions-roles-req15/` (+ `roles.manifest.json`).
+- Configure DIR/MANIFEST to Present GPT UI export: `GPT UI/instructions-roles/` (+ `roles.manifest.json`).
 - Prove inventory: core + five v1 role files load; no invent instruction bodies.
 - **OOS:** Railway volume / AC-14 full → **STORY-67**. Hash SSOT invent → joint Open with GPT-48.
 
@@ -25,4 +25,4 @@ Thin runtime note. Arch: [`../architecture/req15-semantic-state-roles/02-roles-c
 
 - Code: `src/aibridge/content.py` · `channel_wire.py` · `app.py` bind unify · `roles/assembly.py`
 - Tests: `tests/test_story_66_roles_schema_channel_cutover.py`
-- Peer export: `GPT UI/instructions-roles-req15/roles.manifest.json`
+- Peer export: `GPT UI/instructions-roles/roles.manifest.json`

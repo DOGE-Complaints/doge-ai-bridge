@@ -1,4 +1,5 @@
-# doge-ai-bridge — Channel façade OpenAPI (n8n ↔ aibridge)
+# doge-ai-bridge — Channel façade OpenAPI (doge-telegram-channel ↔ aibridge;
+# n8n = historical optional client)
 #
 # Contract SSOT for POST /v1/channel/turns and POST /v1/channel/actions.
 # NOT Story Intake wire (see story-intake-actions.openapi.yaml for postStoryDraftStash).
@@ -10,10 +11,11 @@ info:
   title: doge-ai-bridge Channel Façade v1
   version: "1.0.0"
   description: >
-    Server-to-server API for n8n Telegram UI. Bounded envelopes only.
+    Server-to-server API for doge-telegram-channel (primary target client).
+    Bounded envelopes only. n8n Telegram UI = historical optional client.
     Does not describe gateway Story Intake. callback_ack_text is intentionally omitted;
-    n8n must answerCallbackQuery immediately with neutral/empty text, then call /actions,
-    then Send/Edit Message from reply_text / actions.
+    the channel client must answerCallbackQuery immediately with neutral/empty text,
+    then call /actions, then Send/Edit Message from reply_text / actions.
 
 servers:
   - url: http://aibridge.railway.internal:{port}
@@ -104,8 +106,9 @@ components:
       type: http
       scheme: bearer
       description: >
-        Opaque channel token = AIBRIDGE_CHANNEL_BEARER_TOKEN on aibridge.
-        Distinct from GATEWAY_SERVICE_API_TOKEN (gateway). n8n Header Auth only.
+        Opaque channel token = AIBRIDGE_CHANNEL_BEARER_TOKEN on aibridge
+        (pairs with doge-telegram CHANNEL_BEARER — same value, different name).
+        Distinct from GATEWAY_SERVICE_API_TOKEN (gateway). Header Auth Bearer only.
 
   schemas:
     ChannelPrincipal:
@@ -203,7 +206,7 @@ components:
           description: Opaque session reference; not an authorization credential
         state:
           type: string
-          description: Session FSM state for display/routing; n8n must not enforce security from this alone
+          description: Session FSM state for display/routing; channel client must not enforce security from this alone
         reply_text:
           type: string
           description: Resident-safe Telegram text; must not claim Story published after stash

@@ -107,6 +107,8 @@ Preserve dual human confirms + factual gateway stash + SPA continuation as **app
 | Whether Responses tool loop remains internal vs pure role chat | **Locked in arch (D4)** | Keep internal tool-intent as transition; hard-cut = REQ-13/48 later |
 | When live evidence window is mandatory for Done | **Locked policy (D5) + ops calendar Open** | Stub required; live Pass only with window; else AC-07 Partial |
 | Sensitivity: which state updates = meaning change | **REQ-13** + thin product | Under L11-1 / L13-3; named seam in arch `02-l11-invalidation-seam.md` |
+| **AC-AIB-11-07 vs per-provider** | **Peer split** | This AC = **transport/gateway** live path (Telegram→bridge→gateway→SPA). Parent **AC-REQ15-10 per provider** closes jointly with **AC-AIB-12-04** — do not claim full AC-REQ15-10 from 11-07 alone |
+| Checker / submit ownership | **Locked peer** | GPT-48 Checker = **prose rules** only; REQ-13 **invokes** Checker role; REQ-11 **code gates** final send/submit — prompts must **not** own stash URL or SPA redirect (REQ-13 AC-07 · GPT-48 strip) |
 
 ## 8) Functional vs tech split
 
@@ -114,8 +116,6 @@ Preserve dual human confirms + factual gateway stash + SPA continuation as **app
 |-------|----------|
 | Product / AC | This REQ + parent REQ15 |
 | Target tech | [`../architecture/req15-dual-confirm-handoff/00-overview.md`](../architecture/req15-dual-confirm-handoff/00-overview.md) |
-| Work items | backlog STORY (later) |
+| Work items | [`STORY-AIBRIDGE-56…58`](../tasks/backlog-stories/req-11-req15-dual-confirm-gateway-submit-spa-handoff/INDEX.md) Present · wave exhausted · AC-07 live Partial |
 
-**Backlog stories:** [`../tasks/backlog-stories/req-11-req15-dual-confirm-gateway-submit-spa-handoff/INDEX.md`](../tasks/backlog-stories/req-11-req15-dual-confirm-gateway-submit-spa-handoff/INDEX.md) — STORY-AIBRIDGE-56…58 Todo (2026-11-01T14:15:37Z)  
-
-**Next process step (operator):** optional PA.3 refine stories · P1.3 per story when go-ahead · next aibridge arch wave = **REQ-12**.
+**Next process step (operator):** peer GPT UI REQ-48 (strip stash/SPA from prompts) · residual live AC-07 when ops window · no re-open dual-confirm redesign.

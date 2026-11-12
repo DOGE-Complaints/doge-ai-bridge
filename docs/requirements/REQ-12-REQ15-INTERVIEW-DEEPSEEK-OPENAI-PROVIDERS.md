@@ -61,9 +61,9 @@ Selectable interview providers `deepseek` (primary) | `openai`; shared port for 
 ## 4) Target behavior
 
 1. Explicit interview provider id via **`AIBRIDGE_INTERVIEW_PROVIDER`** (`deepseek`\|`openai`); primary DeepSeek when enabled (L12-1).  
-2. Role runtime calls only the shared port.  
+2. Role runtime calls only the shared port — **all five REQ-13 roles** (`communication_setup` · `interviewer` · `extractor` · `normalizer` · `checker`) invoke models **only** through this interview port (`interview_providers/` · `bind_role_interview_engine`); never worker `AIBRIDGE_WORKER_*_PROVIDER`.  
 3. No silent fallback to paid OpenAI when DeepSeek selected.  
-4. Stub + live evidence recorded **per** provider (parent AC-10).  
+4. Stub + live evidence recorded **per** provider (parent AC-10). Provider comparison / parity claims must cite the **same** exported role bundle + session pin (REQ-13 assembly); otherwise DeepSeek vs OpenAI evidence is not role-outcome parity.  
 5. Mid-conversation switch: controlled restore from canonical state + re-validate (not silent flip).
 
 ## 5) Acceptance criteria
@@ -100,6 +100,6 @@ Selectable interview providers `deepseek` (primary) | `openai`; shared port for 
 |-------|----------|
 | Product / AC | This REQ + parent REQ15 |
 | Target tech | [`../architecture/req15-interview-providers/00-overview.md`](../architecture/req15-interview-providers/00-overview.md) |
-| Work items | backlog STORY (later) |
+| Work items | [`STORY-AIBRIDGE-59…61`](../tasks/backlog-stories/req-12-req15-interview-deepseek-openai-providers/INDEX.md) Present · P8 Done · AC-04 live Partial |
 
-**Next process step (operator):** backlog STORY-59…61 Present → optional PA.3 refine → P1.3 per story · next aibridge arch wave = **REQ-13**.
+**Next process step (operator):** REQ-13 STORY-62…64 Product Done (ASGI residual WAIVED) · peer **GPT UI REQ-48** for export/consume · residual live **AC-AIB-12-04** per provider when ops window (joint with AC-AIB-11-07 for full AC-REQ15-10).
