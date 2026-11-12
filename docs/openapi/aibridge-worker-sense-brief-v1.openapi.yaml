@@ -1,0 +1,171 @@
+# doge-ai-bridge — Sense-brief worker accept OpenAPI
+#
+# Contract for POST /v1/worker/sense-brief/accept (gateway → aibridge nudge).
+# Auth: Authorization: Bearer = AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN
+#       (never channel Bearer / citizen / GATEWAY_SERVICE_API_TOKEN).
+# Parent: docs/requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md
+# As-built: src/aibridge/worker_accept.py · app.py worker_sense_brief_accept
+#
+# Outbound bind-in (aibridge → gateway) is NOT an aibridge-served route.
+# Client posts to {GATEWAY_BASE_URL}/v1/issue-sense-brief/bind — see
+# docs/analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md
+#
+openapi: 3.1.0
+info:
+  title: doge-ai-bridge Sense-Brief Worker v1
+  version: "1.0.0"
+  description: >
+    Gateway thin-nudge accept for Issue sense brief + civic poster.
+    Separate from /v1/channel/* interview façade. Idempotent on
+    (issue_id, generation_version). Fail-closed when worker enabled
+    and S2S / model / storage slots missing.
+
+servers:
+  - url: http://aibridge.railway.internal:{port}
+    description: Railway private hostname (typical).
+    variables:
+      port:
+        default: "8080"
+
+security:
+  - WorkerS2SBearer: []
+
+paths:
+  /v1/worker/sense-brief/accept:
+    post:
+      operationId: acceptSenseBriefJob
+      summary: Accept sense-brief + poster job (gateway nudge)
+      tags: [worker]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkerAcceptRequest"
+      responses:
+        "200":
+          description: Accepted (new work or idempotent replay)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkerAcceptResponse"
+        "400":
+          description: Malformed JSON / validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "401":
+          description: Missing/invalid worker S2S (channel Bearer rejected)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "413":
+          description: Payload too large
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "422":
+          description: corpus_insufficient (no fake brief)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "500":
+          description: brief/poster generation or storage failure class
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "502":
+          description: gateway bind rejected / bind failure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+        "503":
+          description: Worker disabled or fail-closed (missing S2S/slots/creds)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelErrorEnvelope"
+
+components:
+  securitySchemes:
+    WorkerS2SBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: >
+        AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN only.
+        Must not equal AIBRIDGE_CHANNEL_BEARER_TOKEN or GATEWAY_SERVICE_API_TOKEN.
+
+  schemas:
+    WorkerAcceptRequest:
+      type: object
+      additionalProperties: true
+      required: [issue_id, generation_version]
+      properties:
+        issue_id:
+          type: string
+          minLength: 1
+        generation_version:
+          type: string
+          minLength: 1
+          description: Idempotency key with issue_id; bump on regenerate
+        corpus:
+          description: Stories text/metadata for brief (shape opaque to channel OAS)
+          nullable: true
+
+    WorkerAcceptResponse:
+      type: object
+      required: [status, issue_id, generation_version, idempotent, pipeline]
+      properties:
+        status:
+          type: string
+          example: accepted
+        issue_id:
+          type: string
+        generation_version:
+          type: string
+        idempotent:
+          type: boolean
+          description: true when same Issue+version replayed (no second compute)
+        pipeline:
+          type: string
+          description: e.g. deferred | brief_ready | bind_ready
+        brief:
+          type: object
+          description: Present when brief produced (L2 fields)
+          additionalProperties: true
+        poster_url:
+          type: string
+          format: uri
+          description: Public https:// URL when poster uploaded
+        bind_outcome:
+          type: string
+          nullable: true
+        bind_reason_class:
+          type: string
+          nullable: true
+          description: DP9 class when bind failed
+
+    ChannelErrorEnvelope:
+      type: object
+      description: Reuses channel error body shape from aibridge.app error_body
+      required: [request_id, error]
+      properties:
+        request_id:
+          type: string
+        error:
+          type: object
+          required: [code, message, retryable]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            retryable:
+              type: boolean

@@ -7,8 +7,9 @@ Related — style pack (future image input): [REQ14](../../../docs/requirements%
 Related channel runtime: [`REQ-01`](./REQ-01-doge-ai-bridge-runtime.md) (interview stays OpenAI-only in this REQ — lock §6)  
 Architecture: [`../architecture/ai-provider-selection/00-overview.md`](../architecture/ai-provider-selection/00-overview.md) · interview [`../analysis/zeya888.target-tech-arch-interview-ai-provider-selection-2026-10-16.md`](../analysis/zeya888.target-tech-arch-interview-ai-provider-selection-2026-10-16.md)  
 **Related — Backlog:** [`../tasks/backlog-stories/req-10-ai-provider-selection-and-mock-mode/INDEX.md`](../tasks/backlog-stories/req-10-ai-provider-selection-and-mock-mode/INDEX.md) (STORY-AIBRIDGE-51…55)  
+**Related — Validation:** [`../analysis/zeya888.req-10-stories-51-55-code-validation-and-startup-2026-10-16.md`](../analysis/zeya888.req-10-stories-51-55-code-validation-and-startup-2026-10-16.md) (AC Present · startup RCA Postgres)  
 Status: Draft — **interview locks closed** 2026-10-16 · tech-arch + backlog materialized 2026-10-16 · awaiting PA.2  
-Дата: 2026-10-15 · Locks: 2026-10-16 · Arch: 2026-10-16T10:23:21Z · Backlog: 2026-10-16T10:29:41Z
+Дата: 2026-10-15 · Locks: 2026-10-16 · Arch: 2026-10-16T10:23:21Z · Backlog: 2026-10-16T10:29:41Z · Validation: 2026-10-16T12:27:56Z
 
 ---
 

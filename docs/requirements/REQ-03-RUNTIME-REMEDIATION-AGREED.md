@@ -6,7 +6,7 @@
 **Related analysis:** [req-01-runtime-code-gap-2026-09-13.md](../analysis/req-01-runtime-code-gap-2026-09-13.md) · [req-01-gap-validator-disagreements-2026-09-13.md](../analysis/req-01-gap-validator-disagreements-2026-09-13.md)  
 **Related privacy:** [privacy-pilot.md](../runbooks/privacy-pilot.md)  
 **Status:** Ready for implementation  
-**Version:** 0.2.1 · 2026-09-13  
+**Version:** 0.2.2 · 2026-09-15  
 **Baseline code:** commit `55f4165` (validator) — pytest 100 passed, 1 skipped (live Postgres)
 
 ---
@@ -195,16 +195,14 @@ Optional dependency connectivity probes must be read-only, bounded and cached.
 
 ### 5.6 R3-P0-10 — Env normalization
 
-Canonical gateway variable: **`DOGESTONIA_API_BASE_URL`**.
+Mandatory intake origin: **`DOGESTONIA_INTAKE_BASE_URL`** (HTTPS, no path).  
+This is the public base URL of the node **intake** service (complaints node: doge-complaints-gateway; other node types may use a different intake service).
 
-`DOGESTONIA_GATEWAY_ORIGIN`:
+- No compatibility aliases (`DOGESTONIA_API_BASE_URL` / `DOGESTONIA_GATEWAY_ORIGIN` **removed**).
+- Empty → readiness `intake_base_url_missing`.
+- Non-HTTPS → readiness `intake_base_url_not_https`.
 
-- either removed;
-- or accepted only as a temporary **documented** compatibility alias.
-
-If both are present with **different** values, readiness fails.
-
-`Settings` must actually accept (names from REQ-01 §17):
+`Settings` must actually accept (names from REQ-01 §17, plus intake rename above):
 
 - `AIBRIDGE_SESSION_TTL_SECONDS`;
 - `AIBRIDGE_ACTION_TOKEN_TTL_SECONDS`;
@@ -314,3 +312,4 @@ If both are present with **different** values, readiness fails.
 - v0.1.0 — 2026-09-13: backlog from gap-report + validator; D1 accepted; REQ-01 body not modified.
 - v0.2.0 — 2026-09-13: validator polish — Status Draft; Acceptance criteria; wave 1 dry-run vs wave 2; pause/resume tool loop; Postgres transactions/migrations; concurrency vs replicas split; Responses adapter checklist; env canon; `/readyz` no side effects; P0 dual-instructions; P1 n8n gate + privacy retention; dry-run gate until full schema validation.
 - v0.2.1 — 2026-09-13: Status Ready for implementation; commit-before-HTTPS + `unknown_outcome` no auto-resend; Telegram→channel field mapping; AC #2/#9 stored status+body + OpenAPI path SSOT; privacy delete/tombstone clarifications.
+- v0.2.2 — 2026-09-15: §5.6 — single mandatory `DOGESTONIA_INTAKE_BASE_URL`; removed `DOGESTONIA_API_BASE_URL` / `DOGESTONIA_GATEWAY_ORIGIN` aliases (REQ-01 env table not modified).

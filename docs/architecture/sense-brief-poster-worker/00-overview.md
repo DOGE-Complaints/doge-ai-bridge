@@ -5,18 +5,20 @@
 | **Focus** | aibridge AI worker: Issue sense brief + civic poster → object storage HTTPS URL → gateway bind-in |
 | **Parent REQ** | [`../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md`](../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) |
 | **Parent product** | [`docs/requirements backlog/REQ13-DOGEstonia-Issue-Sense-Brief-And-Civic-Poster.md`](../../../../docs/requirements%20backlog/REQ13-DOGEstonia-Issue-Sense-Brief-And-Civic-Poster.md) §11 Wave 2 |
-| **Story scope** | none (0 STORY files) |
+| **Story scope** | [`req-09-req13-sense-brief-poster-worker`](../../tasks/backlog-stories/req-09-req13-sense-brief-poster-worker/INDEX.md) — STORY-AIBRIDGE-46…50 |
 | **Interview** | [`../../analysis/zeya888.target-tech-arch-interview-sense-brief-poster-worker-2026-10-14.md`](../../analysis/zeya888.target-tech-arch-interview-sense-brief-poster-worker-2026-10-14.md) |
-| **Recorded** | 2026-10-14T11:23:06Z |
-| **Mode** | Target technical architecture of the focus — **not** implementation tasks / STORY / pkg |
+| **Recorded** | 2026-10-14T11:23:06Z · **As-built refresh** 2026-10-15T10:13:28Z |
+| **Mode** | Target technical architecture + as-built implement freeze (code Present) |
 | **Slug** | `sense-brief-poster-worker` |
 | **Layout** | system (`archDocMode=auto` → ≥3 concerns) |
+| **Validation** | [`../../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md`](../../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md) |
+| **Gateway handoff** | [`../../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md`](../../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md) |
 
-**Levels:** functional = REQ-09 · this folder = how the focus is realized in `doge-ai-bridge` · work items = backlog / P1.3 elsewhere.
+**Levels:** functional = REQ-09 · this folder = how the focus is realized in `doge-ai-bridge` · work items = backlog STORY-46…50.
 
 **Siblings (contracts only):** gateway [`issue-sense-brief-poster`](../../../../doge-complaints-gateway/docs/architecture/issue-sense-brief-poster/00-overview.md) (Issue SSOT, nudge, bind-in); spa [23](../../../../spa-app/docs/requirements/23-req13-issue-poster-board-surfaces.md) (reads gateway public Issue only — no SPA↔aibridge MVP).
 
-**Wave lock:** Wave 2 after gateway Wave-1 locks (bind-in + thin nudge + sweep; worker uploads; public status/version/URL; no public raw brief blob). HTTP paths / exact JSON keys remain **Open** (joint freeze — do not invent as SSOT here).
+**Wave lock:** Wave 2 after gateway Wave-1 locks. Operator interview left paths/keys **Open**; **as-built** (below) records implement choices from STORY-46…50 — joint freeze with gateway receiver still required for public board SSOT.
 
 ---
 
@@ -30,7 +32,30 @@
 
 **Use case:** aibridge hosts a **separate** worker path (≠ Telegram interview / channel) that builds a structured Issue sense brief, generates a civic poster image, uploads to aibridge-owned object storage, and binds success/failure onto the gateway Issue — without becoming board SSOT.
 
-**Packaging:** same deployable image as aibridge runtime; **separate worker entry** (AC-09-01). Git ownership ≠ image packaging: worker module + dedicated prompts must be present in the production image for the worker start path (exact module/argv — **Open**).
+**Packaging:** same deployable image as aibridge runtime; **separate worker entry** (AC-09-01). Worker modules + dedicated prompts ship under `src/aibridge/` with ASGI app `aibridge.app:app` (`make serve`).
+
+---
+
+## 1b) As-built implement freeze (2026-10-15)
+
+Implement choices Present in code (not gateway public SSOT until sibling freeze):
+
+| Concern | As-built | Cite |
+|---------|----------|------|
+| Accept path | `POST /v1/worker/sense-brief/accept` · prefix `/v1/worker/` | `worker_accept.py:21–22`; `app.py:684–685` |
+| Accept auth | `Authorization: Bearer` = `AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN`; channel Bearer rejected | `auth.py:45–58`; `app.py:566–626` |
+| Accept JSON | `issue_id`, `generation_version`, optional `corpus` | `worker_accept.py:25–32` |
+| Enable / slots | `AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED`, `_S2S_TOKEN`, `_TEXT_BRIEF_MODEL`, `_IMAGE_POSTER_MODEL`, `_STORAGE_UPLOAD_CREDENTIAL` | `config.py:197–219` |
+| Brief L2 keys | `title`, `summary.{et,ru,en}`, `problem`, `context`, `severity`, `audience`, `desired_outcome`, `evidence_refs` | `sense_brief/model.py` |
+| Bind client path | `POST {GATEWAY_BASE_URL}/v1/issue-sense-brief/bind` | `sense_bind/client.py:32` |
+| Bind auth | `GATEWAY_SERVICE_API_TOKEN` (≠ channel / worker S2S) | `sense_bind/client.py:59–88` |
+| Bind success | `outcome=success`, `poster_url`, `apply.{title,summary}`, `issue_id`, `generation_version` | `sense_bind/payload.py:31–40` |
+| Bind failure | `outcome=failure`, `reason_class` (no brief/apply) | `sense_bind/payload.py:55–64` |
+| Reason classes | `accept_unauthorized`, `corpus_insufficient`, `brief_generation_failed`, `image_generation_failed`, `storage_upload_failed`, `bind_rejected`, `internal_error` | `sense_bind/errors.py:8–17` |
+| Modules | `worker_accept.py`, `sense_brief/`, `poster/`, `sense_bind/` | `src/aibridge/` |
+| OpenAPI | [`../../openapi/aibridge-worker-sense-brief-v1.openapi.yaml`](../../openapi/aibridge-worker-sense-brief-v1.openapi.yaml) | docs |
+
+**Still residual Open:** production object-storage provider/CDN; concrete model vendor strings; gateway **bind receiver** + public Issue wire keys (sibling 57); multi-replica idempotency store (current = in-process).
 
 ---
 
@@ -76,22 +101,22 @@ Siblings:
 ## 4) Primary flows (logical)
 
 ```text
-Gateway: Issue pending + thin nudge (path Open)
-  → Worker accept (dedicated S2S)
+Gateway: Issue pending + thin nudge
+  → POST /v1/worker/sense-brief/accept (worker S2S)
   → Idempotency: same Issue+generation-version → no-op / same outcome
-  → Brief (text-brief slot + dedicated prompts) → logical L2 JSON
+  → Brief (text-brief slot + sense_brief prompts) → L2 JSON
   → Poster (image-poster slot) → bytes
-  → Upload (aibridge-owned storage) → public HTTPS URL
-  → Bind-in on gateway (service-auth):
-        success → brief apply payload + URL + version
-        fail    → reason class (no fake brief)  // AC-09-04
-  → Gateway remains Issue SSOT (status/version/URL public)
+  → Upload (aibridge-owned creds) → public HTTPS URL
+  → POST {GATEWAY_BASE_URL}/v1/issue-sense-brief/bind (GATEWAY_SERVICE_API_TOKEN):
+        success → apply + URL + version
+        fail    → reason_class (no fake brief)
+  → Gateway remains Issue SSOT
 
 Manual regenerate (gateway service token)
-  → version bump → new pending → nudge → new URL/asset (AC-09-06)
+  → version bump → new pending → nudge → new URL/asset
 
 Sweep/retry duplicate nudge
-  → same version → idempotent at worker
+  → same version → idempotent at worker (in-process store)
 ```
 
 ---
@@ -100,10 +125,10 @@ Sweep/retry duplicate nudge
 
 | Theme | Target |
 |-------|--------|
-| Runtime | Same aibridge deployable image; **separate** worker entry from interview/channel |
-| Packaging seam | Worker code + dedicated prompt module must ship in image used by worker start; do not verify only interview unit tests |
-| Env (names Open) | Worker S2S token; storage credentials; text-brief + image-poster model ids; gateway bind-in base/URL + gateway service token for outbound bind — **fail-closed** when worker enabled and required vars missing |
-| Deploy residual | Live LLM+image+bucket smoke = optional ops; arch gate = isolation harness (DP8) |
+| Runtime | Same image; worker routes on `aibridge.app:app` (`make serve`) |
+| Packaging seam | `sense_brief/`, `poster/`, `sense_bind/`, `worker_accept.py` in image |
+| Env (as-built names) | See §1b; fail-closed when worker enabled and required vars missing |
+| Deploy residual | Live LLM+image+bucket+gateway receiver smoke = optional ops; arch gate = isolation harness (DP8) — 48 tests green 2026-10-15 |
 
 ---
 
@@ -112,30 +137,30 @@ Sweep/retry duplicate nudge
 | Fact | Evidence |
 |------|----------|
 | Interview + content runtime present | [`../runtime/00-overview.md`](../runtime/00-overview.md) and siblings |
-| Issue sense-brief / civic poster worker in `src/aibridge` | **Absent** (REQ-09 §3; workspace skim 2026-10-14 — no matching module) |
+| Issue sense-brief / civic poster worker | **Present** — `worker_accept.py`, `sense_brief/`, `poster/`, `sense_bind/` (2026-10-15) |
 | Gateway Wave-1 target | [`doge-complaints-gateway/.../issue-sense-brief-poster/00-overview.md`](../../../../doge-complaints-gateway/docs/architecture/issue-sense-brief-poster/00-overview.md) DP1–6 |
-| aibridge → gateway intake direction | Present (parent REQ13 / REQ-09 transport lean) |
-| Channel Bearer trust domain | Existing channel façade — **must not** authorize worker accept |
+| aibridge → gateway intake direction | Present (`gateway.py` stash + `sense_bind` bind client) |
+| Channel Bearer trust domain | Must not authorize worker accept — enforced `auth.py:45–58` |
 
 ---
 
 ## 7) Open questions (residual)
 
-1. Literal HTTP paths for worker accept and gateway bind-in.  
-2. Exact JSON keys for brief L2 and bind success/fail payloads.  
-3. Object storage provider / bucket id / CDN.  
-4. Env var names (worker token, storage, model slots, bind client).  
+1. ~~Literal HTTP paths for worker accept and aibridge bind client~~ → **as-built §1b**; gateway **receiver** path still needs sibling confirm.  
+2. ~~Exact JSON keys for brief L2 and bind payloads (aibridge side)~~ → **as-built §1b**; gateway public wire keys still Open.  
+3. Object storage provider / bucket id / CDN (production).  
+4. ~~Env var names (worker side)~~ → **as-built §1b**.  
 5. Concrete model/vendor strings for capability slots.  
-6. Exact fail reason wire enum strings.  
-7. Prompt module filesystem path inside the image.  
-8. Production start command / process split detail (separate entry locked; argv/module Open).
+6. ~~Fail reason wire strings (aibridge enums)~~ → **as-built §1b**.  
+7. Production CDN vs fixture mint host (`aibridge-poster.test`).  
+8. Shared idempotency store for multi-replica.
 
 ---
 
 ## 8) Explicit not in this doc
 
-- NEW STORY keys, pkg YAML, P3 tasks, or product code  
-- Invented final HTTP paths, bucket names, or model IDs as SSOT  
+- Closing P7/P8 process for stories  
 - Gateway public Issue field rename; aibridge as board SSOT  
 - SPA UI / SPA↔aibridge MVP calls  
 - Reuse of interview/channel entry as worker accept  
+- Inventing production bucket/model catalog as SSOT  

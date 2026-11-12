@@ -4,8 +4,15 @@
 |-------|--------|
 | **Parent overview** | [`00-overview.md`](./00-overview.md) |
 | **Parent REQ** | [`../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md`](../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) |
-| **Recorded** | 2026-10-14T11:23:06Z |
+| **Recorded** | 2026-10-14T11:23:06Z · as-built 2026-10-15T10:13:28Z |
 | **Mode** | Target technical architecture — not STORY/pkg |
+
+### As-built (STORY-46)
+
+- Path: `POST /v1/worker/sense-brief/accept` (`worker_accept.py:21–22`; `app.py:684–685`)  
+- Env: `AIBRIDGE_WORKER_SENSE_BRIEF_ENABLED`, `AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN` (`config.py:197–204`)  
+- Auth: `is_worker_s2s_authorized` rejects channel Bearer (`auth.py:45–58`)  
+- Idempotency: in-process `WorkerIdempotencyStore` on `(issue_id, generation_version)` (`worker_accept.py:48–69`)  
 
 ---
 
@@ -21,13 +28,13 @@ How the worker is **reached**, who may call it, and how duplicate nudges / sweep
 
 - Worker accept lives on a **distinct** entry from Telegram interview / channel façade handlers.  
 - Same deployable image is allowed; sharing the interview request path as accept is **out**.  
-- Exact route string / process argv — **Open**.
+- Exact route — **as-built** § above (was Open at interview).
 
 ### Trust boundary (DP3, F12)
 
 | Caller | Credential | Worker accept |
 |--------|------------|---------------|
-| Gateway thin nudge | Dedicated **worker S2S** token (env name Open) | **Allowed** when valid |
+| Gateway thin nudge | Dedicated **worker S2S** (`AIBRIDGE_WORKER_SENSE_BRIEF_S2S_TOKEN`) | **Allowed** when valid |
 | Channel / n8n / Telegram path | Channel Bearer | **Rejected** |
 | Citizen SPA / public | Citizen Bearer or none | **Rejected** |
 
@@ -43,7 +50,7 @@ Fail-closed: if worker is enabled and the worker S2S token (or required peer URL
 | Gateway manual regenerate (version bump) then nudge | New version → new work → new poster URL/asset distinguishable from prior |
 | Sweep re-nudge while pending same version | Safe duplicate at worker |
 
-Exact payload field names for Issue id / generation-version — **Open** (joint with gateway).
+Payload fields as-built: `issue_id`, `generation_version`, optional `corpus` (`worker_accept.py:25–32`). Gateway nudge must send these names until joint rename.
 
 ---
 
@@ -68,6 +75,6 @@ Exact payload field names for Issue id / generation-version — **Open** (joint 
 
 ## 5) Explicit not in this doc
 
-- Exact path/header names  
 - mTLS-only / network-only auth as MVP  
 - Citizen-triggered regenerate on worker  
+- Multi-replica shared idempotency store (current = in-process)  

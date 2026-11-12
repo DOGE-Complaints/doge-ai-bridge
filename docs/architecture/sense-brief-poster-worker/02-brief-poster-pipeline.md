@@ -4,8 +4,16 @@
 |-------|--------|
 | **Parent overview** | [`00-overview.md`](./00-overview.md) |
 | **Parent REQ** | [`../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md`](../../requirements/REQ-09-REQ13-SENSE-BRIEF-AND-CIVIC-POSTER-WORKER.md) |
-| **Recorded** | 2026-10-14T11:23:06Z |
+| **Recorded** | 2026-10-14T11:23:06Z · as-built 2026-10-15T10:13:28Z |
 | **Mode** | Target technical architecture — not STORY/pkg |
+
+### As-built (STORY-47 / 48)
+
+- Modules: `src/aibridge/sense_brief/`, `src/aibridge/poster/`  
+- L2 keys: `sense_brief/model.py` (title≤80, summary et/ru/en, …)  
+- Env slots: `AIBRIDGE_WORKER_TEXT_BRIEF_MODEL`, `AIBRIDGE_WORKER_IMAGE_POSTER_MODEL`, `AIBRIDGE_WORKER_STORAGE_UPLOAD_CREDENTIAL`  
+- Prompts: `sense_brief/prompts.py`, `poster/prompts.py` (≠ interview templates)  
+- Default upload mint (CI/fixture): `https://aibridge-poster.test/objects/…` — not production CDN SSOT (`poster/storage.py:16–17`)  
 
 ---
 
@@ -87,7 +95,6 @@ No model catalog SSOT in this package. Worker enabled ⇒ both slots configured 
 
 ## 5) Explicit not in this doc
 
-- Exact JSON Schema file path or key spellings  
-- Exact OpenAI (or other) model string IDs  
-- Prompt body text  
+- Exact OpenAI (or other) model string IDs as production SSOT  
 - Multi-provider abstraction v1  
+- Production CDN/bucket product choice  

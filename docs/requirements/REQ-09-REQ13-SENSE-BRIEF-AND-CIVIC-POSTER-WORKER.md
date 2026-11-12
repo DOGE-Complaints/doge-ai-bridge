@@ -5,12 +5,16 @@ Parent-id: REQ13-issue-sense-brief-civic-poster
 Siblings:
 - [gateway 57](../../../doge-complaints-gateway/docs/requirements/57-req13-issue-sense-brief-poster-projection.md) (contract: consume enqueue; return bindable brief + poster HTTPS URL / failure)
 - [spa-app 23](../../../spa-app/docs/requirements/23-req13-issue-poster-board-surfaces.md) (no direct aibridge↔spa MVP contract; SPA reads gateway public Issue)  
-Status: Draft — awaiting PA.2  
-Дата: 2026-10-13
+Status: Draft — Wave-2 implement Present (STORY-46…50); PA.2 residual Open on gateway joint freeze  
+Дата: 2026-10-13 · Validation: 2026-10-15
 
 **Related — Architecture:** [`../architecture/sense-brief-poster-worker/00-overview.md`](../architecture/sense-brief-poster-worker/00-overview.md) · [01-entry-auth-idempotency](../architecture/sense-brief-poster-worker/01-entry-auth-idempotency.md) · [02-brief-poster-pipeline](../architecture/sense-brief-poster-worker/02-brief-poster-pipeline.md) · [03-storage-bind-verify](../architecture/sense-brief-poster-worker/03-storage-bind-verify.md)  
 **Related — Interview:** [`../analysis/zeya888.target-tech-arch-interview-sense-brief-poster-worker-2026-10-14.md`](../analysis/zeya888.target-tech-arch-interview-sense-brief-poster-worker-2026-10-14.md)  
 **Related — Backlog:** [`../tasks/backlog-stories/req-09-req13-sense-brief-poster-worker/INDEX.md`](../tasks/backlog-stories/req-09-req13-sense-brief-poster-worker/INDEX.md) (STORY-AIBRIDGE-46…50)  
+**Related — Code validation:** [`../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md`](../analysis/zeya888.req-09-stories-46-50-code-validation-2026-10-15.md)  
+**Related — Test coverage:** [`../analysis/zeya888.req-09-test-coverage-unit-integration-e2e-2026-10-15.md`](../analysis/zeya888.req-09-test-coverage-unit-integration-e2e-2026-10-15.md)  
+**Related — Gateway handoff:** [`../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md`](../analysis/handoff-gateway-req13-sense-brief-worker-2026-10-15.md)  
+**Related — OpenAPI worker:** [`../openapi/aibridge-worker-sense-brief-v1.openapi.yaml`](../openapi/aibridge-worker-sense-brief-v1.openapi.yaml) · runtime [`../runtime-docs/01-api.md`](../runtime-docs/01-api.md)  
 **Related — Sibling gateway arch:** [`../../../doge-complaints-gateway/docs/architecture/issue-sense-brief-poster/00-overview.md`](../../../doge-complaints-gateway/docs/architecture/issue-sense-brief-poster/00-overview.md)
 
 ---
@@ -22,7 +26,7 @@ Status: Draft — awaiting PA.2
 1. по триггеру от gateway строит **Issue sense brief** (структурированный JSON: title ≤80, summary i18n, problem/context/severity/audience/desired_outcome/evidence_refs…);
 2. из brief генерирует **civic poster image**;
 3. публикует изображение в **object storage** (public HTTPS URL);
-4. возвращает/биндит результат на gateway Issue (механизм Open).
+4. возвращает/биндит результат на gateway Issue (`POST {GATEWAY_BASE_URL}/v1/issue-sense-brief/bind` — as-built client; gateway receiver sibling).
 
 REQ13: worker ≠ interview (L5); LLM+image; EN prompt, et/ru/en outputs; no invented facts (L11).
 
@@ -51,9 +55,10 @@ REQ13: worker ≠ interview (L5); LLM+image; EN prompt, et/ru/en outputs; no inv
 
 | Fact | Path / note |
 |------|-------------|
-| aibridge = interview + content paths | REQ-01 runtime, REQ-05 content Phase A — **no** Issue sense-brief worker Present |
-| Image generation for Issues | **Absent** in aibridge (verified by product interview + code skim) |
-| Gateway alpha projection | sibling gateway `extraction_policy.py` — consumer of worker output later |
+| aibridge = interview + content paths | REQ-01 runtime, REQ-05 content Phase A — **Present** |
+| Issue sense-brief / civic poster worker | **Present** (2026-10-15): `worker_accept.py`, `sense_brief/`, `poster/`, `sense_bind/`; accept `POST /v1/worker/sense-brief/accept` — see code validation analysis |
+| Image generation for Issues | **Present** under `poster/` (CI uses mock HTTPS mint; live CDN/provider residual Open) |
+| Gateway alpha projection | sibling gateway `extraction_policy.py` — consumer of bind apply (receiver still sibling work) |
 
 ## 4) Target behavior
 
